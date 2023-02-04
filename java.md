@@ -39,6 +39,14 @@ https://sp18.datastructur.es/materials/lectures/lec2/lec2.html
 
 <img src=".\note_pics\javaClassTerminology.png" style="zoom:80%;" />
 
+
+
+## static vs non-static
+
+you'd better access **static things** by class name and access **non-static things** by specific instance.
+
+
+
 # Git things
 
 [Git Help Document](https://sp18.datastructur.es/materials/guides/using-git.html)
