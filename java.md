@@ -24,7 +24,7 @@ rules:
 
 The standard tools for executing Java programs use a two step process:
 
-<img src="F:\awsl\Java\note_pics\javaCompilation.png" style="zoom:80%;" />
+<img src=".\note_pics\javaCompilation.png" style="zoom:80%;" />
 
 - Why make a .class file at all?
   - .class file has been type checked. Distributed code is safer.
@@ -37,7 +37,7 @@ https://joshhug.gitbooks.io/hug61b/content/chap1/chap12.html
 
 https://sp18.datastructur.es/materials/lectures/lec2/lec2.html
 
-<img src="F:\awsl\Java\note_pics\javaClassTerminology.png" style="zoom:80%;" />
+<img src=".\note_pics\javaClassTerminology.png" style="zoom:80%;" />
 
 # Git things
 
