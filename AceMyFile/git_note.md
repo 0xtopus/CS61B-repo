@@ -108,7 +108,7 @@ git branch -D <branch name> #合并之后可以删除不需要的分支
 
 在装了插件的VScode里面的COMMIT DETAILS里，可以通过graph来查看所有分支的情况
 
-<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221219172950437.png" alt="image-20221219172950437" style="zoom:50%;" />
+<img src=".\note_pics\gitPics\image-20221219172950437.png" alt="image-20221219172950437" style="zoom:50%;" />
 
 有的时候，分支可以快速合并（fast-forward)，但有时候，合并时分支的文件之间会产生冲突。git会帮助你标识出冲突所在，这时候需要手动合并，然后暂存和提交：
 
@@ -152,49 +152,7 @@ git switch <filename>
 git rebase <target filename>
 ```
 
-# 远程仓库(remote)
 
-- GitHub
-- Gitee
-
-上传到github：
-
-```bash
-git remote add origin https://github.com/lilichao/git-demo.git
-# git remote add <remote name> <url>
-
-git branch -M main
-# 修改分支的名字的为main
-
-git push -u origin main
-# git push 将代码上传服务器上
-```
-
-# 远程库的操作的命令
-
-```bash
-git remote # 列出当前的关联的远程库
-git remote add <远程库名> <url> # 关联远程仓库
-git remote remove <远程库名>  # 删除远程库
-
-git push -u <远程库名> <分支名> # 向远程库推送代码，并和当前分支关联
-git push <远程库> <本地分支>:<远程分支> #推送到指定的远程分支
-
-git clone <url> # 从远程库下载代码
-git clone <url> <new filename># 从远程库下载代码,并重命名
-
-git push # 如果本地的版本低于远程库，push默认是推不上去
-git fetch # 要想推送成功，必须先确保本地库和远程库的版本一致，fetch它会从远程仓库下载所有代码，但是它不会将代码和当前分支自动合并
-		 # 使用fetch拉取代码后，必须要手动对代码进行合并
-git merge origin/master #手动合并
-git pull  # 从服务器上拉取代码并自动合并 
-```
-
-==注意：==
-
-==1. 推送代码之前，一定要先从远程库中拉取最新的代码==
-
-==2. 写自己的代码前，一定要创建新分支==
 
 # tag标签
 
@@ -238,6 +196,122 @@ git push <remote> --delete <tagname> #删除远程仓库的标签
 git switch -c <tag name>
 ```
 
+
+
+# 远程仓库(remote)
+
+- GitHub
+- Gitee
+
+上传到github：
+
+```bash
+git remote add origin https://github.com/lilichao/git-demo.git
+# git remote add <remote name> <url>
+
+git branch -M main
+# 修改分支的名字的为main
+
+git push -u origin main
+# git push 将代码上传服务器上
+```
+
+
+
+## 远程库的操作的命令
+
+```bash
+git remote # 列出当前的关联的远程库
+git remote add <远程库名> <url> # 关联远程仓库
+git remote remove <远程库名>  # 删除远程库
+
+git push -u <远程库名> <分支名> # 向远程库推送代码，并和当前分支关联
+git push <远程库> <本地分支>:<远程分支> #推送到指定的远程分支
+
+git clone <url> # 从远程库下载代码
+git clone <url> <new filename># 从远程库下载代码,并重命名
+
+git push # 如果本地的版本低于远程库，push默认是推不上去
+git fetch # 要想推送成功，必须先确保本地库和远程库的版本一致，fetch它会从远程仓库下载所有代码，但是它不会将代码和当前分支自动合并
+		 # 使用fetch拉取代码后，必须要手动对代码进行合并
+git merge origin/master #手动合并
+git pull  # 从服务器上拉取代码并自动合并 
+```
+
+==注意：==
+
+==1. 推送代码之前，一定要先从远程库中拉取最新的代码==
+
+==2. 写自己的代码前，一定要创建新分支==
+
+
+
+## origin/main/master
+
+来源：https://blog.csdn.net/reykou/article/details/104866348
+
+1. GIT 初始化：本地默认分支叫 master、服务器默认名为 origin。本地分支 master 同步到服务器上、服务器节点变成 orgin/master
+2. 本地创建分支名为 branch，本地分支 branch 同步到服务器上、服务器节点变成 orgin/branch
+3. 更新本地分支 master，用本地分支 master 更新服务器节点 orgin/master
+
+
+
+## git代理的设置
+
+远程库连接很缓慢，那么，我们可以通过配置代理来解决这个问题。
+
+首先查看你的代理软件的相关设置，搞清楚你代理使用的本地socks端口：
+
+<img src="F:\awsl\Java\cs61b\AceMyFile\note_pics\gitPics\socksPort.png" style="zoom:100%;" />
+
+```bash
+git config --global https.proxy http://127.0.0.1:10808  #设置为你自己的端口，比如我的是10808
+
+git config --global https.proxy https://127.0.0.1:10808
+
+git config --global --unset http.proxy
+
+git config --global --unset https.proxy
+```
+
+参考：https://gist.github.com/laispace/666dd7b27e9116faece6
+
+
+
+## 远程库解决push授权问题
+
+配置完代理，可能会引发如下问题：
+
+```bash
+Administrator@USER-20160428EL MINGW64 /f/awsl/Java/cs61b/AceMyFile (master)
+$ git push origin master
+fatal: NotSupportedException encountered.
+   The ServicePointManager does not support proxies with the socks5h scheme.
+error: unable to read askpass response from 'E:/git/Git/mingw64/libexec/git-core/git-gui--askpass'
+Username for 'https://github.com': xxxx
+remote: Support for password authentication was removed on August 13, 2021.
+remote: Please see https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls for information on currently recommended modes of authentication.
+fatal: Authentication failed for 'https://github.com/xxxx/xxxx.git/'
+
+```
+
+如果用VSCode推送好像可以绕开这个问题。
+
+但是，如果使用命令行来推送：
+
+
+
+## GitHub添加/删除关联的远程仓库
+
+参考：https://blog.csdn.net/ltstud/article/details/79935001
+
+```bash
+git remote add <远程仓库名> <本地库名>
+git remote rm <远程仓库名> 
+```
+
+
+
 # gitignore
 
 - 默认情况下，git会监视项目里所有的文件。但是有时候，不是所有的文件都需要被git监视。
@@ -251,9 +325,19 @@ yarn.lock
 *.log
 ```
 
-# GitHub静态页面
 
-待填
+
+## git ignore 配置
+
+1. 使用`!<filename>`来使git不忽略某个文件。比如你需要git不忽略某个叫做`MyFile`的文件夹下的所有文件，在`.gitignore`里你可以这样写：
+
+   ```txt
+   !MyFile/*
+   ```
+
+   
+
+2. 
 
 
 
@@ -264,6 +348,8 @@ git config <配置名> #查看某个配置情况
 ```
 
 更多配置：https://www.atlassian.com/zh/git/tutorials/setting-up-a-repository/git-config
+
+
 
 # GitHub 只添加已追踪的文件
 
@@ -425,24 +511,9 @@ $ git reset 7ef79fc
 
 ```
 
-# origin/main/master
-
-来源：https://blog.csdn.net/reykou/article/details/104866348
-
-1. GIT 初始化：本地默认分支叫 master、服务器默认名为 origin。本地分支 master 同步到服务器上、服务器节点变成 orgin/master
-2. 本地创建分支名为 branch，本地分支 branch 同步到服务器上、服务器节点变成 orgin/branch
-3. 更新本地分支 master，用本地分支 master 更新服务器节点 orgin/master
 
 
 
-# GitHub添加/删除关联的远程仓库
-
-参考：https://blog.csdn.net/ltstud/article/details/79935001
-
-```bash
-git remote add <远程仓库名> <本地库名>
-git remote rm <远程仓库名> 
-```
 
 
 
@@ -479,3 +550,7 @@ code .
 # 深入研究
 
 https://git-scm.com/book/en/v2
+
+# GitHub部署静态页面
+
+待填
