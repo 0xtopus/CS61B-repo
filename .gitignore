@@ -48,3 +48,4 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
+!AceMyFile/*
