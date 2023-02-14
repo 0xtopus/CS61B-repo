@@ -65,6 +65,16 @@ git restore --stage <filename> #取消暂存状态，不会取消删除的文件
    - 注意，`checkout`命令不会改变提交记录，且必须==指定要恢复的文件名==，否则会出现bug（如遇此种情况，见：[Git WTFs](https://sp18.datastructur.es/materials/guides/git-wtfs.html)）
    - 回滚之后，需要再`commit`一次。
 
+   
+
+3. 修改最近的提交信息：
+
+   ```bash
+   git commit --amend
+   ```
+
+   
+
 3. 删除文件
 
 ```bash
@@ -262,7 +272,7 @@ git pull  # 从服务器上拉取代码并自动合并
 
 首先查看你的代理软件的相关设置，搞清楚你代理使用的本地socks端口：
 
-<img src="F:\awsl\Java\cs61b\AceMyFile\note_pics\gitPics\socksPort.png" style="zoom:100%;" />
+<img src=".\note_pics\gitPics\socksPort.png" style="zoom:100%;" />
 
 ```bash
 git config --global https.proxy http://127.0.0.1:10808  #设置为你自己的端口，比如我的是10808
@@ -298,6 +308,152 @@ fatal: Authentication failed for 'https://github.com/xxxx/xxxx.git/'
 如果用VSCode推送好像可以绕开这个问题。
 
 但是，如果使用命令行来推送：
+
+```bash
+$ git push origin master
+fatal: NotSupportedException encountered.
+   The ServicePointManager does not support proxies with the socks5h scheme.
+error: unable to read askpass response from 'E:/apps/git/Git/mingw64/libexec/git-core/git-gui--askpass'
+remote: Support for password authentication was removed on August 13, 2021.
+remote: Please see https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls for information on currently recommended modes of authentication.
+fatal: Authentication failed for 'https://github.com/0xtopus/CS61B-repo.git/'
+```
+
+发现2021年8月13日之后URL推送的方法就已经不支持了。
+
+于是，我们可以采用ssh的方法来推送。
+
+### ssh方法
+
+参考1：https://www.cnblogs.com/yuqiliu/p/12551258.html
+
+参考2：https://blog.csdn.net/lonyw/article/details/75392410
+
+
+
+1. 先查看自己本地设置的邮箱：
+
+   ```bash
+   git config –global user.email
+   ```
+
+2. 然后输入：
+
+   ```bash
+   ssh-keygen -t rsa -C "你设置的邮箱"
+   ```
+
+   代码参数含义：
+
+   -t 指定密钥类型，默认是 rsa ，可以省略。
+   -C 设置注释文字，比如邮箱。
+   -f 指定密钥文件存储文件名。
+
+   然后会输出一些提示让你操作。连续按三个回车，全部默认即可。
+
+   （三个操作分别是：选择使用默认路径存放ssh秘钥（`/c/Users/Administrator/.ssh/id_rsa`），不使用`paaphrase`私钥，确认私钥。
+
+   关于私钥的作用，一般可以不要：
+
+   > What is passphrase in git?
+   >
+   > With SSH keys, if someone gains access to your computer, the attacker can gain access to every system that uses that key. **To add an extra layer of security, you can add a passphrase to your SSH key**. To avoid entering the passphrase every time you connect, you can securely save your passphrase in the SSH agent. 
+   >
+   > source: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/working-with-ssh-key-passphrases
+
+   完成以上操作，你会看到类似下面的输出：
+
+   ```bash
+   Generating public/private rsa key pair.
+   Enter file in which to save the key (/c/Users/Administrator/.ssh/id_rsa):
+   Created directory '/c/Users/Administrator/.ssh'.
+   Enter passphrase (empty for no passphrase):
+   Enter same passphrase again:
+   Your identification has been saved in /c/Users/Administrator/.ssh/id_rsa
+   Your public key has been saved in /c/Users/Administrator/.ssh/id_rsa.pub
+   The key fingerprint is:
+   SHA256:lhiwE3T6NRzcttxFPBj5LDpy0CtmnYG/55NqOuRK3Tk gsy@gsy123mailbox.com
+   The key's randomart image is:
+   +---[RSA 3072]----+
+   |   .+ ....  .*.  |
+   |     * ...o o +  |
+   |    + . += o + . |
+   |     o +oo= o o  |
+   |      o S+ = .   |
+   |       o*.O.     |
+   |      .=.+Eo .   |
+   |     .  o o.+    |
+   |      ...+.+..   |
+   +----[SHA256]-----+
+   
+   ```
+
+3. 然后输入：
+
+   ```bash
+   ssh -T git@github.com
+   ```
+
+   得到输出：
+
+   ```bash
+   The authenticity of host 'github.com (140.82.112.4)' can't be established.
+   ECDSA key fingerprint is SHA256:xxxxxx.
+   Are you sure you want to continue connecting (yes/no/[fingerprint])? 
+   ```
+
+   输入yes，回车继续，看到如下输出即成功：
+
+   ```bash
+   Warning: Permanently added 'github.com,140.82.112.4' (ECDSA) to the list of known hosts.
+   Hi xxxx! You've successfully authenticated, but GitHub does not provide shell access.
+   ```
+
+   
+
+4. 接下来可以通过`git remote -v`查看远程主机的状态，看到：
+
+   ```bash
+   origin  https://github.com/xxxx.git (fetch)
+   origin  https://github.com/xxxx.git (push)
+   ```
+
+   说明还是通过URL方式访问，接下来我们来修改为ssh方式。
+
+5. 打开你的github仓库页面：
+
+   <img src=".\note_pics\gitPics\ssh.png" style="zoom:75%;" />
+
+6.  输入下列命令：
+
+   ```bash
+   git remote set-url origin git@github.com:xxxx.git
+   ```
+
+   `git@github.com:xxxx.git`就是你刚刚复制的内容。
+
+   再次`git remote -v`
+
+   看到：
+
+   ```bash
+   origin  git@github.com:xxxx.git (fetch)
+   origin  git@github.com:xxxx.git (push)
+   ```
+
+   就大功告成啦！
+
+   现在就可以直接push了：
+
+   ```bash
+    git push origin master
+   ```
+
+   
+
+
+
+
 
 
 
