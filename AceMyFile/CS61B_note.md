@@ -132,6 +132,16 @@ public class IntList {
 
 
 
+# Private keyword
+
+Private variables and methods can only be accessed by code inside the same `.java` file, e.g. in this case `SLList.java`
+
+
+
+# Prjct 1
+
+It is suggested that you should use **Sentinel node** in project 1.
+
 
 
 # Supplementary Knowledge
