@@ -1,4 +1,6 @@
-# Intro
+# Java
+
+## Intro
 
 *J*ava is an object oriented language.
 
@@ -20,7 +22,7 @@ rules:
 
 6. All parameters of a function must have a declared type. Functions in Java return only one value!
 
-# Compilation
+## Compilation
 
 The standard tools for executing Java programs use a two step process:
 
@@ -31,7 +33,7 @@ The standard tools for executing Java programs use a two step process:
   - .class files are simpler for computers to execute. Distributed code is faster.
   - And it can also protect your intellectual property for no need to give out source.
 
-# Defining and Using Classes
+## Defining and Using Classes
 
 https://joshhug.gitbooks.io/hug61b/content/chap1/chap12.html
 
@@ -46,6 +48,24 @@ https://sp18.datastructur.es/materials/lectures/lec2/lec2.html
 ## static vs non-static
 
 you'd better access **static things** by class name and access **non-static things** by specific instance.
+
+
+
+
+
+## Java的数据类型
+
+8种基本类型(primitive)：byte、short、int、long、float、double、boolean、char
+
+plus one **reference type**: Objects，arrays.... ect.
+
+to both types, the *Golden Rules of Equation* is effective. However, the latter stores either **null** or **an arrow** points to where the data is.
+
+
+
+## Private keyword
+
+Private variables and methods can only be accessed by code inside the same `.java` file, e.g. in this case `SLList.java`
 
 
 
@@ -89,7 +109,7 @@ The Git reference has a great section on [undoing things](http://git-scm.com/boo
   This next command is useful if you would like to actually undo your work. Let’s say that you have modified a certain `file` since committing previously, but you would like your file back to how it was before your modifications.
 
   **Note**: This command is potentially quite dangerous because any changes you made to the file since your last commit will be removed. Use this with caution!
-  
+
 ## Remote
 
 ```bash
@@ -98,19 +118,15 @@ git push origin main  //push your latest commit to github
 
 
 
-# Java的数据类型
 
-8种基本类型(primitive)：byte、short、int、long、float、double、boolean、char
 
-plus one **reference type**: Objects，arrays.... ect.
+# Data Structure
 
-to both types, the *Golden Rules of Equation* is effective. However, the latter stores either **null** or **an arrow** points to where the data is.
-
-# Linked List
+## Linked List
 
 [linked list](https://www.javatpoint.com/singly-linked-list): an ordered set of data elements, each containing a link to its successor (and sometimes its predecessor).
 
-## a way to build list in Java
+### a way to build list in Java
 
 ```java
 public class IntList {
@@ -132,11 +148,21 @@ public class IntList {
 
 
 
-# Private keyword
+### single linked list
 
-Private variables and methods can only be accessed by code inside the same `.java` file, e.g. in this case `SLList.java`
+<img src=".\note_pics\SLList.png" style="zoom:75%;" />
+
+### double linked list
+
+1. Two-Sentinel DLList
+
+<img src=".\note_pics\2SentinelsDLList.png" style="zoom:75%;" />
 
 
+
+2. Circular DLList
+
+<img src=".\note_pics\CircularDLList.png" style="zoom:75%;" />
 
 # Prjct 1
 

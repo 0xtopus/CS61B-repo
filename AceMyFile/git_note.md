@@ -73,16 +73,20 @@ git restore --stage <filename> #取消暂存状态，不会取消删除的文件
    git commit --amend
    ```
 
-   
+   更多请参考：https://blog.csdn.net/qq_17011423/article/details/104648075
 
-3. 删除文件
+4. 删除文件
 
 ```bash
 git rm <filename>
 git rm -f <filename> #强制删除
+
 ```
 
-3. 移动文件（重命名）
+
+
+
+5. 移动文件（重命名）
 
 ```bash
 git mv from to #移动文件/重命名文件
@@ -465,6 +469,12 @@ fatal: Authentication failed for 'https://github.com/0xtopus/CS61B-repo.git/'
 git remote add <远程仓库名> <本地库名>
 git remote rm <远程仓库名> 
 ```
+
+
+
+# 换邮箱后的配置
+
+比如ssh什么的，参见：https://gist.github.com/Heron-Wang/1f608c4c93065d1ebd67f7b29e3be791
 
 
 
