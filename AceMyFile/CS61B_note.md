@@ -22,6 +22,66 @@ rules:
 
 6. All parameters of a function must have a declared type. Functions in Java return only one value!
 
+
+
+## Array
+
+to create a array:
+
+```java
+int[] numbers = new int[3];
+numbers[0] = 4;
+numbers[1] = 7;
+numbers[2] = 10;
+System.out.println(numbers[1]);
+```
+
+and here's another way:
+
+```java
+int[] numbers = new int[]{4, 7, 10};
+System.out.println(numbers[1]);
+```
+
+
+
+## The Enhanced For Loop
+
+```java
+public static void main(String[] args) {
+	String[] a = {"cat", "dog", "laser horse", "ketchup", "horse", "horbse"};
+
+	for (String s : a) {
+        System.out.println(s);
+    }
+}
+```
+
+用字符变量 `s` 把字符数组`a`的每个元素再循环中遍历。
+
+
+
+## set debug config in vsCode
+
+- if you want to pass command line args in command when using vscode debug tool, go to debug section, open `lauch.json` and add `"args":["<arg1>", "<arg2>", ...]` within the same bracket where the `name` of  file you desired to run nested, like this  in which I add `"157788000.0"`, `25000.0"`,` "data/awesome.txt"` these three args for the file `NBody.java`.
+
+  ```json
+  {
+     "type": "java",
+     "name": "Launch NBody",
+     "args": [
+                "157788000.0",
+                "25000.0",
+                "data/awesome.txt"
+              ],
+     "request": "launch",
+     "mainClass": "NBody",
+     "projectName": "proj0_33252093"
+  }
+  ```
+
+  you can also refer to this link :https://stackoverflow.com/questions/59638889/passing-java-an-argument-while-debugging-in-vs-code
+
 ## Compilation
 
 The standard tools for executing Java programs use a two step process:
@@ -32,6 +92,8 @@ The standard tools for executing Java programs use a two step process:
   - .class file has been type checked. Distributed code is safer.
   - .class files are simpler for computers to execute. Distributed code is faster.
   - And it can also protect your intellectual property for no need to give out source.
+  
+  
 
 ## Defining and Using Classes
 
@@ -63,11 +125,26 @@ to both types, the *Golden Rules of Equation* is effective. However, the latter 
 
 
 
+- convert one type to another:
+
+  - simply google like this: "java convert string to double", and you will get: 
+
+  > "We can *parse String to double* using parseDouble() method. *String* can start with “-” to denote negative number or “+” to denote positive number."
+
+
+
 ## Private keyword
 
 Private variables and methods can only be accessed by code inside the same `.java` file, e.g. in this case `SLList.java`
 
 
+
+## Troubleshooting
+
+-  **错误： 编码 GBK 的不可映射字符**
+  - 解决方案：
+    1. 使用 `javac -encoding UTF-8 <filename>`编译;
+    2. java源程序代码在保存时把java文件转换成ANSI编码格式即可。
 
 # Git things
 
