@@ -51,3 +51,4 @@ $RECYCLE.BIN/
 !AceMyFile/*
 !AceMyFile/note_pics/*.png
 !AceMyFile/note_pics/gitPics/*.png
+.vscode

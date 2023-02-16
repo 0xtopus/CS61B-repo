@@ -6,6 +6,9 @@ public class Planet{
     double mass;
     String imgFileName;
 
+    /* 
+     * planet constructor 1
+     */
     public Planet(double xP, double yP, double xV,
      double yV, double m, String img){
         xxPos = xP;
@@ -16,6 +19,9 @@ public class Planet{
         imgFileName = img;
     }
 
+    /* 
+     * planet constructor 2
+     */
     public Planet(Planet p){
         xxPos = p.xxPos;
         yyPos = p.yyPos;
@@ -85,9 +91,23 @@ public class Planet{
         return sumYForce;
     }
 
-    public static void main(String[] args) {
-        Planet p1 = new Planet(1.0, 1.0, 3.0, 4.0, 5.0, "jupiter.gif");
-        Planet p2 = new Planet(2.0, 1.0, 3.0, 4.0, 5.0, "jupiter.gif");
-        System.out.println(p1.calcForceExertedBy(p2));
+    /* 
+     * update planet's position and velocity
+     */
+    public void update(double dt,double fX,double fY){
+        double aX = fX / this.mass;
+        double aY = fY / this.mass;
+        this.xxVel += aX*dt; 
+        this.yyVel += aY*dt;
+        this.xxPos += xxVel*dt;
+        this.yyPos += yyVel*dt; 
+    }
+
+    /* 
+     * draw a planet
+     */
+    public void draw(){
+        // System.out.println("img/"+imgFileName);
+        StdDraw.picture(xxPos, yyPos, "images/"+imgFileName);
     }
 }
