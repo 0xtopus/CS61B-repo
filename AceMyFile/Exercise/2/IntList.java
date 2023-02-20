@@ -20,7 +20,7 @@ public class IntList{
 
         // size test
         System.out.println("\n*****recursive*****");
-        System.out.println("the size is: " + IntList.size(1,L));
+        System.out.println("the size is: " + L.size());
         System.out.println("\n*****iterative*****");
         System.out.println("the size is: " + L.iterativeSize());
         
@@ -30,18 +30,27 @@ public class IntList{
 
     }
 
+        /** Returns the number of items in the list using recursion. */
+        public int size() {
+            if (this.rest == null) {
+                return 1;
+            }
+            return 1 + this.rest.size();
+    
+        }
+
     /*
     *method: size()
     *desc: return the number of items in L recursively (static method)
     */
-    public static int size(int num,IntList L){
+/*     public static int size(int num,IntList L){
         if (L.rest == null) {
             return 1;
         } else {
             num += IntList.size(num,L.rest);
             return num;
         }
-    }
+    } */
 
     /*
     *method: iterativeSize()

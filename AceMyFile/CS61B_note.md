@@ -82,6 +82,8 @@ public static void main(String[] args) {
 
   you can also refer to this link :https://stackoverflow.com/questions/59638889/passing-java-an-argument-while-debugging-in-vs-code
 
+
+
 ## Compilation
 
 The standard tools for executing Java programs use a two step process:
@@ -240,6 +242,105 @@ public class IntList {
 2. Circular DLList
 
 <img src=".\note_pics\CircularDLList.png" style="zoom:75%;" />
+
+- create a **generic DLList**: any type is welcome!
+
+```java
+public class DLList<T> { ... }
+```
+
+- using generic DLList:
+
+  - `T` is a placeholder object type.
+
+  - If we now want to create a `DLList` holding `String` objects, then we must say:
+
+    ```
+    DLList<String> list = new DLList<>("bone");
+    ```
+
+    On list creation, the compiler replaces all instances of `T` with `String`! We will cover generic typing in more detail in later lectures.
+
+    
+
+# Array
+
+3 ways of creating an array in *Java*：
+
+```java
+int[] x;
+int[] y;
+
+x = new int[3];			//all elements are with the default value 0
+y = new int[]{1,2,3,4};
+int[] z = {1,2,3,4};
+```
+
+
+
+- each element of an array should have the same type.
+
+
+
+- there is one way you can copy an array fast and easy:
+
+```java
+x = new int[]{2,3,4,5};
+int[] y = {6,7,8,9,10};
+System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
+/* so y[5] = {6,7,8,2,3} */
+```
+
+- this demonstrates one way to copy information from one array to another. `System.arraycopy` takes five parameters:
+
+  - The array to use as a source
+
+  - Where to start in the source array
+
+  - The array to use as a destination
+
+  - Where to start in the destination array
+
+  - How many items to copy
+
+
+
+- you can specify the index of array at runtime while you can't do such thing with class.
+
+  ```java
+  int indexOfInterest = askUserForInteger();
+  int[] x = {100, 101, 102, 103};
+  int k = x[indexOfInterest];
+  System.out.println(k);
+  ```
+
+  
+
+
+
+- 2D array:
+
+  ```java
+  int[][] x = new int[][]{{1,2}, {3,4}, {5,6}};
+  int[][] z = new int[3][3];
+  int[][] matrix;
+  matrix = new int[4][];
+  matrix = new int[4][4];
+  ```
+
+  kind like C:  `int x[3][2]`
+
+  - the default value of 2D array
+
+  ```java
+  int[][] x = new int[4][];	// x[n] = null
+  int[] y = x[0];	// y = null
+  x[0] = {1,2,3};
+  ```
+
+  - now x[0] stores an address points to a box stores the address of this array  `{1,2,3}`, meanwhile y still has the value "`null`" because "`null`" **points to no address**, so y's pointer won't change with x
+
+  - <img src=".\note_pics\2DArray.png" style="zoom:75%;" />
 
 # Prjct 1
 

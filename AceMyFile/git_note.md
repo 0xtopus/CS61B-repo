@@ -69,13 +69,17 @@ git restore --stage <filename> #取消暂存状态，不会取消删除的文件
 
    
 
-3. 修改最近的提交信息：
+3. 修改最近的提交注释信息：
 
    ```bash
    git commit --amend
    ```
 
    更多请参考：https://blog.csdn.net/qq_17011423/article/details/104648075
+
+   - 修改前几次的提交注释信息：https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/changing-a-commit-message
+
+   
 
 4. 删除文件
 
