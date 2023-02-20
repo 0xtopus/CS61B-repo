@@ -231,6 +231,9 @@ public class IntList {
 
 <img src=".\note_pics\SLList.png" style="zoom:75%;" />
 
+- size variable
+- sentinel node
+
 ### double linked list
 
 1. Two-Sentinel DLList
@@ -263,7 +266,7 @@ public class DLList<T> { ... }
 
     
 
-# Array
+## Array
 
 3 ways of creating an array in *Java*：
 
