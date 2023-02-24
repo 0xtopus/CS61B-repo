@@ -59,7 +59,13 @@ public static void main(String[] args) {
 
 用字符变量 `s` 把字符数组`a`的每个元素再循环中遍历。
 
+这种方法不能改变原数组内的值，具体事例见 [An awesome exercise][https://sp18.datastructur.es/materials/discussion/examprep02sol.pdf] 的第四题。
 
+## An awesome exercise on Java basics
+
+https://sp18.datastructur.es/materials/discussion/examprep02sol.pdf
+
+探究了*Static变量，Scope*，以及*作用域* 等重要概念，非常棒的练习！！
 
 ## set debug config in vsCode
 
@@ -264,7 +270,14 @@ public class DLList<T> { ... }
 
     On list creation, the compiler replaces all instances of `T` with `String`! We will cover generic typing in more detail in later lectures.
 
-    
+
+## invariant
+
+**Invariants** An invariant is a fact about a data structure that is guaranteed to be true (assuming there are no bugs in your code). This gives us a convenient checklist every time we add a feature to our data structure. Users are also guaranteed certain properties that they trust will be maintained. For example, an `SLList` with a sentinel node has at least the following invariants:
+
+- The sentinel reference always points to a sentinel node.
+- The front item (if it exists), is always at sentinel.next.item.
+- The size variable is always the total number of items that have been added.
 
 ## Array
 
@@ -354,4 +367,6 @@ It is suggested that you should use **Sentinel node** in project 1.
 # Supplementary Knowledge
 
 1. git issue : [LF will be replaced by CRLF in git - What is that and is it important?](https://stackoverflow.com/questions/5834014/lf-will-be-replaced-by-crlf-in-git-what-is-that-and-is-it-important)
+
+
 
