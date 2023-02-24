@@ -26,7 +26,7 @@ rules:
 
 ## Array
 
-to create a array:
+to create an array:
 
 ```java
 int[] numbers = new int[3];
@@ -43,7 +43,7 @@ int[] numbers = new int[]{4, 7, 10};
 System.out.println(numbers[1]);
 ```
 
-
+see more in: <a href="#Array Plus">here</a>
 
 ## The Enhanced For Loop
 
@@ -112,6 +112,8 @@ https://sp18.datastructur.es/materials/lectures/lec2/lec2.html
 <img src=".\note_pics\javaClassTerminology.png" style="zoom:80%;" />
 
 <img src=".\note_pics\defAClass.png" style="zoom:80%;" />
+
+Create a generic class: <a href="#Generic List">here</a>
 
 
 
@@ -252,6 +254,8 @@ public class IntList {
 
 <img src=".\note_pics\CircularDLList.png" style="zoom:75%;" />
 
+### Generic List
+
 - create a **generic DLList**: any type is welcome!
 
 ```java
@@ -279,7 +283,7 @@ public class DLList<T> { ... }
 - The front item (if it exists), is always at sentinel.next.item.
 - The size variable is always the total number of items that have been added.
 
-## Array
+## Array Plus
 
 3 ways of creating an array in *Java*：
 
@@ -330,7 +334,6 @@ System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
   System.out.println(k);
   ```
 
-  
 
 
 
@@ -357,6 +360,26 @@ System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
   - now x[0] stores an address points to a box stores the address of this array  `{1,2,3}`, meanwhile y still has the value "`null`" because "`null`" **points to no address**, so y's pointer won't change with x
 
   - <img src=".\note_pics\2DArray.png" style="zoom:75%;" />
+
+- Generic Array:
+
+  ```java
+  public class AList<Glorp> {
+      ...
+      private Glorp[] arr = (Glorp[]) new Object[8]; 
+      ...
+  }
+  ```
+
+  create a generic array is a little bit special... Take care about syntax !!!
+
+  <img src=".\note_pics\genericArray.png" alt="Generic Array" style="zoom:75%;" />
+
+​		
+
+**also to remember that once you want to delete the last item of your generic object array, ==set the last box to "null"== !!!**
+
+
 
 # Prjct 1
 

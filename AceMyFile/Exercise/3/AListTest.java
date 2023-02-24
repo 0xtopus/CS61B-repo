@@ -60,13 +60,15 @@ public class AListTest {
     @Test
     public void testMegaInsert() {
         AList L = new AList();
-        int N = 1000;
+        int N = 100000;
         for (int i = 0; i < N; i += 1) {
-            L.addLast(i);
+            // L.addLast(i);
+            L.insertBack(i);
         }
 
         for (int i = 0; i < N; i += 1) {
-            L.addLast(L.get(i));
+            // L.addLast(L.get(i));
+            L.insertBack(L.get(i));
         }
     }
 

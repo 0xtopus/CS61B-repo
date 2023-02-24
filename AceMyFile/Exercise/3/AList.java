@@ -3,8 +3,8 @@
  */
 
 public class AList {
-    int size;
-    int[] arr;  
+    private int size;
+    private int[] arr;  
     /** Creates an empty list. */
     public AList() {
         /* init AList */
@@ -13,6 +13,7 @@ public class AList {
     }
 
     /** Inserts X into the back of the list. */
+    /* This method is way too slow!!! */
     public void addLast(int x) {
         if (size>=100) {
             int[] arrMega = new int[size+1];
@@ -22,6 +23,21 @@ public class AList {
         } else {
             arr[size] = x;
         }
+        size++;
+    }
+
+    /* A better way to insert back */
+    private void resizing(int capacity){
+        int[] arrMega = new int[capacity];
+        System.arraycopy(arr,0,arrMega,0,size);
+        arr = arrMega;
+    }
+
+    public void insertBack(int x){
+        if (size == arr.length) {
+            resizing(arr.length * 10);
+        }
+        arr[size] = x;
         size++;
     }
 
