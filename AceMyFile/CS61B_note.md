@@ -115,13 +115,35 @@ https://sp18.datastructur.es/materials/lectures/lec2/lec2.html
 
 Create a generic class: <a href="#Generic List">here</a>
 
+## A Generic Variable Constructor
+
+click <a href="#Generic List">here</a> to create a generic class constructor that takes any kinds of variable.
+
+- If you need to instantiate a generic over a primitive type, use `Integer`, `Double`, `Character`, `Boolean`, `Long`, `Short`, `Byte`, or `Float` instead of their primitive equivalents.
+
 
 
 ## static vs non-static
 
-you'd better access **static things** by class name and access **non-static things** by specific instance.
+- you'd better access **static things** by class name and access **non-static things** by specific instance.
 
+- nested class case
+  - If the nested class has no need to use any of the instance methods or variables of `SLList`, you may declare the nested class `static`, as follows. Declaring a nested class as `static` means that methods inside the static class can ==not access any of the members of the enclosing class.== In this case, it means that no method in `IntNode` would be able to access `first`, `addFirst`, or `getFirst`.
 
+```java
+public class SLList {
+       public static class IntNode {
+            public int item;
+            public IntNode next;
+            public IntNode(int i, IntNode n) {
+                item = i;
+                next = n;
+            }
+       }
+
+       private IntNode first;
+...
+```
 
 
 
@@ -143,6 +165,12 @@ to both types, the *Golden Rules of Equation* is effective. However, the latter 
 
 
 
+## Overload
+
+Two methods with the same name is allowed in Java, since they **have different parameters**. We say that two methods with the same name but different signatures are **overloaded**.
+
+
+
 ## Private keyword
 
 Private variables and methods can only be accessed by code inside the same `.java` file, e.g. in this case `SLList.java`
@@ -155,6 +183,12 @@ Private variables and methods can only be accessed by code inside the same `.jav
   - 解决方案：
     1. 使用 `javac -encoding UTF-8 <filename>`编译;
     2. java源程序代码在保存时把java文件转换成ANSI编码格式即可。
+-  check *IntelliJ* key board shortcut: `Ctrl` + `Alt` +`S` --> `Keymap`
+   - ref: https://www.jetbrains.com/help/idea/configuring-keyboard-and-mouse-shortcuts.html
+
+-  <a href="https://www.cnblogs.com/huangguoming/p/15682942.html">warning: commented out code</a> 建议不要注释代码
+
+​	
 
 # Git things
 
@@ -273,9 +307,15 @@ public class DLList<T> { ... }
     ```
 
     On list creation, the compiler replaces all instances of `T` with `String`! We will cover generic typing in more detail in later lectures.
+  
+- Since generics only work with reference types, we **cannot put primitives** like `int` or `double` inside of angle brackets, e.g. `<int>`. Instead, we use the reference version of the primitive type, which in the case of `int` case is `Integer`, e.g.
 
+  ```java
+  DLList<Integer> d1 = new DLList<>(5);
+  d1.insertFront(10);
+  ```
 
-## invariant
+## Invariant
 
 **Invariants** An invariant is a fact about a data structure that is guaranteed to be true (assuming there are no bugs in your code). This gives us a convenient checklist every time we add a feature to our data structure. Users are also guaranteed certain properties that they trust will be maintained. For example, an `SLList` with a sentinel node has at least the following invariants:
 
@@ -314,14 +354,24 @@ System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
 - this demonstrates one way to copy information from one array to another. `System.arraycopy` takes five parameters:
 
   - The array to use as a source
-
-  - Where to start in the source array
-
+- Where to start in the source array
   - The array to use as a destination
-
-  - Where to start in the destination array
-
+- Where to start in the destination array
   - How many items to copy
+
+  
+
+- **Array resizing**: 
+
+  When the array gets too full, we can resize the array. However, we have learned that **array size cannot change**. The solution is, instead, to create a new array of a larger size, then copy our old array values to the new array. Now, we have all of our old values, but we have more space to add items.
+
+  - **Resizing Speed** In the lecture video, we started off resizing the array by one more each time we hit our array size limit. This turns out to be extremely slow, because copying the array over to the new array means we have to perform the copy operation for each item. The worst part is, since we only resized by one extra box, if we choose to add another item, we have to do this again each time we add to the array.
+
+    **Improving Resize Performance** Instead of adding by an extra box, we can instead ==create a new array with `size * FACTOR` items==, where `FACTOR` could be any number, like 2 for example. We will discuss why this is fast later in the course.
+
+    **Downsizing Array Size** What happens if we have a 1 million length array, but we remove 990,000 elements of the array? Well, similarly, we can downsize our array by creating an array of half the size, if we reach 250,000 elements, for example. Again, we will discuss this more rigorously later in the course.
+
+  
 
 
 
@@ -358,8 +408,9 @@ System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
   ```
 
   - now x[0] stores an address points to a box stores the address of this array  `{1,2,3}`, meanwhile y still has the value "`null`" because "`null`" **points to no address**, so y's pointer won't change with x
-
   - <img src=".\note_pics\2DArray.png" style="zoom:75%;" />
+
+  
 
 - Generic Array:
 
@@ -381,11 +432,15 @@ System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
 
 
 
+
+
+
+
 # Prjct 1
 
 It is suggested that you should use **Sentinel node** in project 1.
 
-
+style guide: https://sp19.datastructur.es/materials/guides/style-guide.html
 
 # Supplementary Knowledge
 
