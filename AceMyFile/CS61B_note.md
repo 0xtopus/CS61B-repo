@@ -24,6 +24,18 @@ rules:
 
 
 
+## Conditional
+
+三目运算符：
+
+```java
+return size==0 ? true : false;
+```
+
+
+
+
+
 ## Array
 
 to create an array:
@@ -174,6 +186,12 @@ Two methods with the same name is allowed in Java, since they **have different p
 ## Private keyword
 
 Private variables and methods can only be accessed by code inside the same `.java` file, e.g. in this case `SLList.java`
+
+
+
+## Style Guide
+
+here is the <a href="https://sp19.datastructur.es/materials/guides/style-guide.html">style guide</a> for CS 61B.
 
 
 
