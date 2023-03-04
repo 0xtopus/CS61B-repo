@@ -12,19 +12,18 @@ public class LinkedListDeque<T>{
 
     private int size;
     // create a sentinel node
-    private Node sentinel;
+    private Node sentinel = new Node(null, null, null);
 
     /* create an empty list */
     public LinkedListDeque(){
-        sentinel = new Node(null,null,null);
         size = 0;
     }
 
-    /* create a deep copy of other */
-    public LinkedListDeque(T other){
-        sentinel.next = new Node(other, sentinel, sentinel);
-//        sentinel.prev = sentinel.next;
-//        size = 1;
+    /* create a deep copy of a given LinkedListDeque */
+    public LinkedListDeque(LinkedListDeque other){
+        for (int i = 0; i < other.size; i++) {
+            this.addLast((T) other.get(i));
+        }
     }
 
     /* desc: add item at the first place
@@ -109,32 +108,43 @@ public class LinkedListDeque<T>{
         return p.first;
     }
 
+    /* execute get method recursively */
+    public T getRecursive(int index){
+        if (index >= size){
+            return null;
+        }
+        return getHandler(index,this.sentinel.next);
+    }
 
-    /*    private Node getHandler(int index, Node sentinel){
-            if (index >= size){
-
-            }
-        }*/
+    /* the helper method of getRecursive() */
+    private T getHandler(int index, Node N){
+        if (index == 0 ){
+            return N.first;
+        }
+        return getHandler(index - 1,N.next);
+    }
 
     public static void main(String[] args) {
         LinkedListDeque<String> L = new LinkedListDeque<>();
-        System.out.println(L.get(0));
+        LinkedListDeque<String> L3 = new LinkedListDeque<>(L);
+        L3.removeFirst();
+        System.out.println(L.getRecursive(0));
         L.addLast("the 0 msg");
         L.addLast("the 1 msg");
         L.addLast("the 2 msg");
-        System.out.println(L.get(99));
+        System.out.println(L.getRecursive(2));
 
-/*        System.out.println(L.isEmpty());
-        L.addLast("the 0 msg");
+        System.out.println(L.isEmpty());
+        L.addLast("the last msg");
         System.out.println("\n Remove first");
         System.out.println(L.removeFirst());
         L.addFirst("the 2nd msg");
         L.addFirst("the 3rd msg");
-        L.addFirst("the 10th msg");
+        L.addLast("the 10th msg");
         L.addFirst("the 11th msg");
         L.removeFirst();
         L.removeLast();
-        System.out.println("\n Remove first");
+        System.out.println("\n Remove");
         System.out.println(L.removeLast());
         System.out.println(L.removeFirst());
         L.addLast("the -1 msg ");
@@ -148,6 +158,14 @@ public class LinkedListDeque<T>{
         System.out.println("\n isEmpty");
         System.out.println(L.isEmpty());
         System.out.println("\n print Deque");
-        L.printDeque();*/
+        L.printDeque();
+        L.addLast("lastlast");
+        L.addFirst("firstBaby!");
+        System.out.println(L.getRecursive(3));
+
+        LinkedListDeque<String> L2 = new LinkedListDeque<>(L);
+        L.addLast("nwlast");
+        L.addLast("thelastofus");
+        L2.removeFirst();
     }
 }
