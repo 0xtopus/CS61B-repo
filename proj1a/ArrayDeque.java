@@ -14,13 +14,13 @@ public class ArrayDeque<T> {
     }
 
     /* create a deep copy of the given arrayDeque */
-    public ArrayDeque(ArrayDeque other) {
+/*    public ArrayDeque(ArrayDeque other) {
         arrayDeque = (T []) new Object[other.arrayDeque.length];
         System.arraycopy(other.arrayDeque, 0, arrayDeque, 0, arrayDeque.length);
         front = other.front;
         end = other.end;
         size = other.size;
-    }
+    }*/
 
     /* resizing arrayDeque */
     // shrink func is needed
@@ -133,87 +133,4 @@ public class ArrayDeque<T> {
         }
         return arrayDeque[(front + index + 1) % arrayDeque.length];
     }
-
-/*    public static void main(String[] args) {
-        ArrayDeque<String> Arr = new ArrayDeque();
-        Arr.removeLast();
-        System.out.println(Arr.get(4));
-        Arr.printDeque();
-        System.out.println(Arr.isEmpty());
-        Arr.addFirst("the " + 1 + " msg");
-        Arr.addFirst("the " + 2 + " msg");
-        Arr.addLast("the " + -1 + " msg");
-        Arr.addLast("the " + -2 + " msg");
-        Arr.addLast("the " + -3 + " msg");
-        Arr.addLast("the " + -4 + " msg");
-        Arr.addLast("the " + -5 + " msg");
-        Arr.get(6);
-        System.out.println(Arr.get(2));
-        System.out.println(Arr.get(9));
-        System.out.println(Arr.get(0));
-    }*/
-
-/*
-    public static void main(String[] args) {
-        ArrayDeque<String> Arr = new ArrayDeque();
-        Arr.removeLast();
-        Arr.printDeque();
-        System.out.println(Arr.isEmpty());
-        Arr.addFirst("the " + 1 + " msg");
-        Arr.addFirst("the " + 2 + " msg");
-        Arr.addLast("the " + -1 + " msg");
-        Arr.addLast("the " + -2 + " msg");
-        Arr.addLast("the " + -3 + " msg");
-        Arr.addLast("the " + -4 + " msg");
-        Arr.addLast("the " + -5 + " msg");
-        Arr.addFirst("the 3 msg");
-        Arr.addFirst("the 4 msg");
-        Arr.addLast("the -6 msg");
-        Arr.addFirst("the 5 msg");
-        Arr.addFirst("the 6 msg");
-        Arr.addFirst("the 7 msg");
-        Arr.addLast("the -7 msg");
-
-        Arr.printDeque();
-
-        Arr.addLast("the last of msg");
-        Arr.addFirst("the 8 msg");
-        Arr.addFirst("the 9 msg");
-        Arr.addFirst("the 10 msg");
-        Arr.addLast("the -1000000 msg");
-
-        for (int i = 0; i < 13; i++) {
-            Arr.removeFirst();
-        }
-        Arr.removeLast();
-
-        for (int i = 0; i < 6; i++) {
-            Arr.removeLast();
-        }
-
-        Arr.addLast("they are fking annoying");
-        Arr.addLast("they are fking annoying");
-        Arr.addFirst("they are fking annoying");
-        Arr.addLast("they are fking annoying");
-        Arr.addLast("they are fking annoying");
-        Arr.addLast("they are fking annoying");
-        Arr.addFirst("they are fking annoying");
-        Arr.addFirst("they are fking annoying");
-        Arr.addFirst("they are fking annoying");
-
-        for (int i = 0; i < 10; i++) {
-            Arr.addFirst("the " + i + " msg");
-        }
-        for (int i = -1; i > -15; i--) {
-            Arr.addLast("the " + i + " msg");
-        }
-        for (int i = 0; i < Arr.size; i++) {
-            System.out.println(Arr.get(i) + "\n");
-        }
-        Arr.printDeque();
-        ArrayDeque Arr2 = new ArrayDeque(Arr);
-        Arr.addLast("the real end of Arr");
-        System.out.println(Arr.size());
-        System.out.println(Arr.isEmpty());
-    }*/
 }
