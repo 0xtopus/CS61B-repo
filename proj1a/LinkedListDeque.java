@@ -1,9 +1,9 @@
-public class LinkedListDeque<T>{
-    public class Node{
+public class LinkedListDeque<T> {
+    private class Node{
         private T first;
         private Node prev;
         private Node next;
-        private Node(T i, Node p, Node n){
+        private Node(T i, Node p, Node n) {
             first = i;
             next = n;
             prev = p;
@@ -15,12 +15,12 @@ public class LinkedListDeque<T>{
     private Node sentinel = new Node(null, null, null);
 
     /* create an empty list */
-    public LinkedListDeque(){
+    public LinkedListDeque() {
         size = 0;
     }
 
     /* create a deep copy of a given LinkedListDeque */
-    public LinkedListDeque(LinkedListDeque other){
+    public LinkedListDeque(LinkedListDeque other) {
         for (int i = 0; i < other.size; i++) {
             this.addLast((T) other.get(i));
         }
@@ -29,8 +29,8 @@ public class LinkedListDeque<T>{
     /* desc: add item at the first place
     * @param: T item
     *  */
-    public void addFirst(T item){
-        if (sentinel.next == null){
+    public void addFirst(T item) {
+        if (sentinel.next == null) {
             sentinel.next = new Node(item, sentinel, sentinel);
             sentinel.prev = sentinel.next;
         } else {
@@ -41,7 +41,7 @@ public class LinkedListDeque<T>{
     }
 
     /* add item at the last place */
-    public void addLast(T item){
+    public void addLast(T item) {
         if (sentinel.prev == null) {
             sentinel.prev = new Node(item, sentinel, sentinel);
             sentinel.next = sentinel.prev;
@@ -53,17 +53,17 @@ public class LinkedListDeque<T>{
     }
 
     /* get the size of the deque */
-    public int size(){
+    public int size() {
         return size;
     }
 
     /* Returns true if deque is empty, false otherwise */
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return size == 0 ? true : false;
     }
 
     /* Print every Node's first(or item in official file) */
-    public void printDeque(){
+    public void printDeque() {
         Node p = sentinel.next;
         for (int i = 0; i < size; i++) {
             System.out.println(p.first);
@@ -71,8 +71,9 @@ public class LinkedListDeque<T>{
         }
     }
 
-    /* Removes and returns the item at the front of the deque. If no such item exists, returns null */
-    public T removeFirst(){
+    /* Removes and returns the item at the front of the deque.
+    If no such item exists, returns null */
+    public T removeFirst() {
         if (size == 0) {
             return null;
         }
@@ -83,9 +84,10 @@ public class LinkedListDeque<T>{
         return temp;
     }
 
-    /* Removes and returns the item at the back of the deque. If no such item exists, returns null. */
-    public T removeLast(){
-        if (size == 0){
+    /* Removes and returns the item at the back of the deque.
+     If no such item exists, returns null. */
+    public T removeLast() {
+        if (size == 0) {
             return null;
         }
         T temp = sentinel.prev.first;
@@ -95,13 +97,14 @@ public class LinkedListDeque<T>{
         return  temp;
     }
 
-    /* Gets the item at the given index, where 0 is the front. If no such item exists, returns null. */
-    public T get(int index){
-        if (index >= size){
+    /* Gets the item at the given index, where 0 is the front.
+     If no such item exists, returns null. */
+    public T get(int index) {
+        if (index >= size) {
             return null;
         }
         Node p = sentinel.next;
-        while(index != 0){
+        while (index != 0) {
             p = p.next;
             index--;
         }
@@ -109,19 +112,19 @@ public class LinkedListDeque<T>{
     }
 
     /* execute get method recursively */
-    public T getRecursive(int index){
-        if (index >= size){
+    public T getRecursive(int index) {
+        if (index >= size) {
             return null;
         }
-        return getHandler(index,this.sentinel.next);
+        return getHandler(index, this.sentinel.next);
     }
 
     /* the helper method of getRecursive() */
-    private T getHandler(int index, Node N){
-        if (index == 0 ){
+    private T getHandler(int index, Node N) {
+        if (index == 0) {
             return N.first;
         }
-        return getHandler(index - 1,N.next);
+        return getHandler(index - 1, N.next);
     }
 
 /*    public static void main(String[] args) {

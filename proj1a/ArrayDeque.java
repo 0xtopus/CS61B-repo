@@ -6,7 +6,7 @@ public class ArrayDeque<T> {
     private int end;
 
     /* create an empty arrayDeque */
-    public ArrayDeque(){
+    public ArrayDeque() {
         arrayDeque = (T []) new Object[8];  // initial length is 8
         front = 3;
         end = 4;
@@ -14,7 +14,7 @@ public class ArrayDeque<T> {
     }
 
     /* create a deep copy of the given arrayDeque */
-    public ArrayDeque(ArrayDeque other){
+    public ArrayDeque(ArrayDeque other) {
         arrayDeque = (T []) new Object[other.arrayDeque.length];
         System.arraycopy(other.arrayDeque, 0, arrayDeque, 0, arrayDeque.length);
         front = other.front;
@@ -24,12 +24,12 @@ public class ArrayDeque<T> {
 
     /* resizing arrayDeque */
     // shrink func is needed
-    private void resizing(int capacity){
+    private void resizing(int capacity) {
         T[] newArrayDeque = (T []) new Object[capacity];
         /* assign original items to the expanded array in order */
         for (int i = front + 1, j = 0; j < size; i++, j++) {
             /* if i exceeds the length then go back to 0 */
-            if (i >= arrayDeque.length){
+            if (i >= arrayDeque.length) {
                 i = 0;
             }
             newArrayDeque[j] = arrayDeque[i];
@@ -41,8 +41,8 @@ public class ArrayDeque<T> {
     }
 
     /* add content to the first place of arrayDeque */
-    public void addFirst(T item){
-        if (size >= arrayDeque.length){
+    public void addFirst(T item) {
+        if (size >= arrayDeque.length) {
             resizing(arrayDeque.length * 2);
         }
         size++;     //increase size
@@ -51,8 +51,8 @@ public class ArrayDeque<T> {
     }
 
     /* add content to the last place of arrayDeque */
-    public void addLast(T item){
-        if (size >= arrayDeque.length){
+    public void addLast(T item) {
+        if (size >= arrayDeque.length) {
             resizing(arrayDeque.length * 2);
         }
         size++;     //increase size
@@ -60,13 +60,14 @@ public class ArrayDeque<T> {
         end = end < arrayDeque.length - 1 ? end + 1 : 0; // update the position of front
     }
 
-    public T removeFirst(){
+    /* remove the first item of arrayDeque */
+    public T removeFirst() {
         // if it is empty, return null
-        if(isEmpty()){
+        if (isEmpty()) {
             return null;
         }
         // go to the next box and change position of front
-        if (++front >= arrayDeque.length){
+        if (++front >= arrayDeque.length) {
             front = 0;
         }
         // get the delete item
@@ -76,21 +77,21 @@ public class ArrayDeque<T> {
         // decrease size
         size--;
         // resizing the array if it is too "empty"
-        if (size < arrayDeque.length / 4 && arrayDeque.length > 8){
+        if (size < arrayDeque.length / 4 && arrayDeque.length > 8) {
             resizing(arrayDeque.length / 2);
         }
         return temp;
     }
 
     /* remove the last item of arrayDeque */
-    public T removeLast(){
+    public T removeLast() {
         // if it is empty, return null
-        if(isEmpty()){
+        if (isEmpty()) {
             return null;
         }
         // go to the box in front of end and change position of end
-        if (--end < 0){
-            end = arrayDeque.length;
+        if (--end < 0) {
+            end = arrayDeque.length - 1;
         }
         // get the delete item
         T temp = arrayDeque[end];
@@ -99,26 +100,26 @@ public class ArrayDeque<T> {
         // decrease size
         size--;
         // resizing the array if it is too "empty"
-        if (size < arrayDeque.length / 4 && arrayDeque.length > 8){
+        if (size < arrayDeque.length / 4 && arrayDeque.length > 8) {
             resizing(arrayDeque.length / 2);
         }
         return temp;
     }
 
     /* get the size of arrayDeque */
-    public int size(){
+    public int size() {
         return size;
     }
 
     /* check if arrayDeque is empty */
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return size == 0 ? true : false;
     }
 
     /* print all items in arraydeque */
-    public void printDeque(){
-        for (int i = front + 1; i != end; i++){
-            if (i >= arrayDeque.length){
+    public void printDeque() {
+        for (int i = front + 1; i != end; i++) {
+            if (i >= arrayDeque.length) {
                 i = 0;
             }
             System.out.println(arrayDeque[i]);
@@ -126,12 +127,34 @@ public class ArrayDeque<T> {
     }
 
     /* get the content of arrayDeque at given index*/
-    public T get(int index){
-        return arrayDeque[index];
+    public T get(int index) {
+        if (index > size) {
+            return null;
+        }
+        return arrayDeque[(front + index + 1) % arrayDeque.length];
     }
 
+/*    public static void main(String[] args) {
+        ArrayDeque<String> Arr = new ArrayDeque();
+        Arr.removeLast();
+        System.out.println(Arr.get(4));
+        Arr.printDeque();
+        System.out.println(Arr.isEmpty());
+        Arr.addFirst("the " + 1 + " msg");
+        Arr.addFirst("the " + 2 + " msg");
+        Arr.addLast("the " + -1 + " msg");
+        Arr.addLast("the " + -2 + " msg");
+        Arr.addLast("the " + -3 + " msg");
+        Arr.addLast("the " + -4 + " msg");
+        Arr.addLast("the " + -5 + " msg");
+        Arr.get(6);
+        System.out.println(Arr.get(2));
+        System.out.println(Arr.get(9));
+        System.out.println(Arr.get(0));
+    }*/
 
- /*   public static void main(String[] args) {
+/*
+    public static void main(String[] args) {
         ArrayDeque<String> Arr = new ArrayDeque();
         Arr.removeLast();
         Arr.printDeque();
@@ -178,15 +201,15 @@ public class ArrayDeque<T> {
         Arr.addFirst("they are fking annoying");
         Arr.addFirst("they are fking annoying");
 
-*//*        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             Arr.addFirst("the " + i + " msg");
-        }*//*
-*//*        for (int i = -1; i > -15; i--) {
+        }
+        for (int i = -1; i > -15; i--) {
             Arr.addLast("the " + i + " msg");
-        }*//*
-*//*        for (int i = 0; i < Arr.size; i++) {
+        }
+        for (int i = 0; i < Arr.size; i++) {
             System.out.println(Arr.get(i) + "\n");
-        }*//*
+        }
         Arr.printDeque();
         ArrayDeque Arr2 = new ArrayDeque(Arr);
         Arr.addLast("the real end of Arr");

@@ -193,6 +193,24 @@ Private variables and methods can only be accessed by code inside the same `.jav
 
 here is the <a href="https://sp19.datastructur.es/materials/guides/style-guide.html">style guide</a> for CS 61B.
 
+- mistakes I encountered:
+
+  - Line is longer than 100 characters.
+
+  - File does not end with a newline.
+
+  - ' , ' is not followed by whitespace.
+
+  - '{' is not preceded with whitespace.
+
+    - you can use regex to fix this by replacing  `\)\{` with `) {` 
+
+  - 'while' is not followed by whitespace.
+
+  - 'if' is not followed by whitespace.
+
+    
+
 
 
 ## Troubleshooting
