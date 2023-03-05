@@ -124,7 +124,7 @@ public class LinkedListDeque<T>{
         return getHandler(index - 1,N.next);
     }
 
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         LinkedListDeque<String> L = new LinkedListDeque<>();
         LinkedListDeque<String> L3 = new LinkedListDeque<>(L);
         L3.removeFirst();
@@ -167,5 +167,5 @@ public class LinkedListDeque<T>{
         L.addLast("nwlast");
         L.addLast("thelastofus");
         L2.removeFirst();
-    }
+    }*/
 }
