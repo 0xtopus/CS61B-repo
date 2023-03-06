@@ -189,6 +189,46 @@ Private variables and methods can only be accessed by code inside the same `.jav
 
 
 
+## Writing Tests
+
+```java
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+public class FlikTest {
+    
+    @Test
+    public void testSomething() {
+        ...
+        // use asserts to help you judge whether you get right  
+        assertEquals(expected, actual);
+        ...
+    }
+}
+```
+
+
+
+- why using test?
+
+<img src=".\note_pics\usingTest.png" style="zoom:75%;" />
+
+
+
+**Test-Driven Development (TDD)\**
+
+TDD is a development process in which we write tests for code before writing the code itself. The steps are as follows:
+
+1. Identify a new feature.
+2. Write a unit test for that feature.
+3. Run the test. It should fail.
+4. Write code that passes the test. Yay!
+5. Optional: refactor code to make it faster, cleaner, etc. Except now we have a reference to tests that should pass.
+
+Test-Driven Development is not required in this class and may not be your style but unit testing in general is most definitely a good idea.
+
+
+
 ## Style Guide
 
 here is the <a href="https://sp19.datastructur.es/materials/guides/style-guide.html">style guide</a> for CS 61B.
@@ -211,7 +251,7 @@ here is the <a href="https://sp19.datastructur.es/materials/guides/style-guide.h
 
     
 
-
+you can use **61B Style Checker** in IntelliJ CS61B plugin to help you check your style.
 
 ## Troubleshooting
 
@@ -477,6 +517,16 @@ System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
 It is suggested that you should use **Sentinel node** in project 1.
 
 style guide: https://sp19.datastructur.es/materials/guides/style-guide.html
+
+
+
+guide: https://docs.google.com/presentation/d/1XBJOht0xWz1tEvLuvOL4lOIaY0NSfArXAvqgkrx0zpc/edit#slide=id.g15cbbcb770b_47_40
+
+## Resource
+
+latest code: https://github.com/Berkeley-CS61B/lectureCode-fa22
+
+
 
 # Supplementary Knowledge
 
