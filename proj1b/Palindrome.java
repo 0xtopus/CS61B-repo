@@ -8,7 +8,7 @@ public class Palindrome {
         return D;
     }
     
-    /* Dicide if a word is a Palindrome */
+    /* Decide if a word is a Palindrome */
     public boolean isPalindrome(String word) {
         Deque<Character> D = wordToDeque(word);
         return isPalindromeHelper(D);
@@ -24,10 +24,11 @@ public class Palindrome {
         return isPalindromeHelper(D);
     }
 
+    /* Decide if a word is a Palindrome according to the given CharacterComparator */
     public boolean isPalindrome(String word, CharacterComparator cc) {
         Deque<Character> D = wordToDeque(word);
         for (int i = 0; i < (D.size() / 2); i++) {
-            if (! cc.equalChars(D.removeFirst(), D.removeLast())) {
+            if (!cc.equalChars(D.removeFirst(), D.removeLast())) {
                 return false;
             }
         }
