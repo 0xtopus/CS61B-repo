@@ -177,12 +177,6 @@ to both types, the *Golden Rules of Equation* is effective. However, the latter 
 
 
 
-## Overload
-
-Two methods with the same name is allowed in Java, since they **have different parameters**. We say that two methods with the same name but different signatures are **overloaded**.
-
-
-
 ## Private keyword
 
 Private variables and methods can only be accessed by code inside the same `.java` file, e.g. in this case `SLList.java`
@@ -226,6 +220,64 @@ TDD is a development process in which we write tests for code before writing the
 5. Optional: refactor code to make it faster, cleaner, etc. Except now we have a reference to tests that should pass.
 
 Test-Driven Development is not required in this class and may not be your style but unit testing in general is most definitely a good idea.
+
+
+
+## Overloading
+
+Two methods with the same name is allowed in Java, since they **have different parameters**. We say that two methods with the same name but different signatures are **overloaded**.
+
+
+
+## Making code general
+
+Sometimes we might need to, say, if we want to execute a method (like `largestNumber()`) that applies to both two different classes, such as `AList` and `SLList`, then we can use **a new reference type** to make `AList` and `SLList` become *hyponyms* of the new reference type.
+
+In order to do so, we can use the key word `interface` to define our new reference type:
+
+```java
+public interface List<Item> { 
+	/* put signitures of what all subclasses of List can do inside! */
+    ...
+        
+    /* And you can put some default methods inside too! */
+    default public void method() { ... }
+    
+}
+```
+
+**Interface Inheritance**: Formally, we say that subclasses inherit from the superclass. Interfaces contain all the method signatures, and each subclass must implement every single signature.
+
+
+
+And we should declare who are its subclasses using key word `implement` like this:
+
+```java
+public AList<Item> implements List<Item> { ... }
+```
+
+
+
+## Overriding
+
+For each method in `AList` that we also defined in `List`, we will add an **@Override** right above the method signature. As an example:
+
+```java
+@Override
+public Item get(int i) { ... }
+```
+
+The subclasses do not have to re-implement the default method anywhere; they can simply call it for free. However, we can still override default methods, and re-define the method in our subclass.
+
+
+
+## Static vs. Dynamic Type
+
+Every variable in Java has a static type. This is the type specified when the variable is declared, and is checked at compile time. Every variable also has a dynamic type; this type is specified when the variable is instantiated, and is checked at runtime. 
+
+**Dynamic Method Selection -- Overriding only!** The rule is, if we have a static type `X`, and a dynamic type `Y`, then if `Y` overrides the method from `X`, then on runtime, we use the method in `Y` instead. 
+
+**Overloading and Dynamic Method Selection** Dynamic method selection plays no role when it comes to overloaded methods.
 
 
 
