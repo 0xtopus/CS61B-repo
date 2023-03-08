@@ -326,9 +326,66 @@ Poodle largerPoodle = (Poodle) maxDog(frank, frankJr);
 
 
 
-## High Order Function
+## Understanding Static vs Dynamic Types in Java
+
+The static type of an object is its declared type, which determines the set of methods and fields that can be accessed at **compile-time**. The dynamic type of an object is its actual type at runtime, which may be a subtype of the static type, and determines the specific implementation of overridden methods. When a variable of a supertype is used to hold a subtype object, ==the static type limits the access to subtype-specific features, and may require explicit casting to access them.== This can lead to compile-time errors or runtime errors if the wrong type is assumed. **And casting won't help under this situation.**
 
 
+
+### Inheritance Cheatsheet
+
+`VengefulSLList extends SLList` means VengefulSLList "is-an" SLList, and inherits all of SLList's members:
+
+- Variables, methods nested classes
+- Not constructors Subclass constructors must invoke superclass constructor first. The `super` keyword can be used to invoke overridden superclass methods and constructors.
+
+Invocation of overridden methods follows two simple rules:
+
+- Compiler plays it safe and only allows us to do things according to the static type.
+- For overridden methods (*not overloaded methods*), the actual method invoked is based on the dynamic type of the invoking expression
+- Can use casting to overrule compiler type checking.
+
+
+
+## Higher Order Function
+
+ A higher order function is a function that treats other functions as data. 
+
+In old school Java (Java 7 and earlier), memory boxes (variables) could not contain pointers to functions. What that means is that we could not write a function that has a "Function" type, as there was simply no type for functions.
+
+To get around this we can take advantage of interface inheritance. Let's write an interface that defines any function that takes in an integer and returns an integer - an `IntUnaryFunction`.
+
+```java
+public interface IntUnaryFunction {
+    int apply(int x);
+}
+```
+
+Now we can write a class which `implements IntUnaryFunction` to represent a concrete function. Let's make a function that takes in an integer and returns 10 times that integer.
+
+```java
+public class TenX implements IntUnaryFunction {
+    /* Returns ten times the argument. */
+    public int apply(int x) {
+        return 10 * x;
+    }
+}
+```
+
+At this point, we've written in Java the  `tenX` function. Let's write `do_twice` now.
+
+```java
+public static int do_twice(IntUnaryFunction f, int x) {
+    return f.apply(f.apply(x));
+}
+```
+
+A call to `print(do_twice(tenX, 2))` in Java would look like this:
+
+```java
+System.out.println(do_twice(new TenX(), 2));
+// do_twice(new TenX(), 2);
+```
 
 
 
