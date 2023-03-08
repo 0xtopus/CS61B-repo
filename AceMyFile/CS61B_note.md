@@ -281,6 +281,57 @@ Every variable in Java has a static type. This is the type specified when the va
 
 
 
+## Extends
+
+define a hierarchical relationship between classes:
+
+```java
+public class RotatingSLList<Item> extends SLList<Item>
+```
+
+- extends allow the class `RotatingSLList` to inherit:
+  - instance and static variables
+  - all methods
+  - all nested classes (This changes a little bit with the introduction of private variables but don’t worry about that right now. **The one item that is not inherited is a class’s constructor.**)
+- Similarly it shares an "is-a" relationship with the `SLList` class.
+
+**The Special Case of the Constructor?** Even though constructor’s are not inherited, we still use them. We can call the constructor explicitly by using the keyword `super()`. *At the start of every constructor, there is already an implicit call to its super class's constructor*.
+
+```java
+public VengefulSLList() {
+  deletedItems = new SLList<Item>();
+}
+```
+
+is equivalent to:
+
+```java
+public VengefulSLList() {
+  super();
+  deletedItems = new SLList<Item>();
+}
+```
+
+However, if you omit `super()`, the auto constructor call only invokes **the constructor with empty argument**. (i.e you have to use `super(args)` if you want to use the constructor who takes parameters)
+
+
+
+## Casting
+
+Casting allows us to force the static type of a variable, basically tricking the compiler into letting us force the static type of am expression.
+
+```java
+Poodle largerPoodle = (Poodle) maxDog(frank, frankJr);
+```
+
+
+
+## High Order Function
+
+
+
+
+
 ## Style Guide
 
 here is the <a href="https://sp19.datastructur.es/materials/guides/style-guide.html">style guide</a> for CS 61B.
