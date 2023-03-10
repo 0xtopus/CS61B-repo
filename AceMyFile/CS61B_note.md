@@ -55,7 +55,120 @@ int[] numbers = new int[]{4, 7, 10};
 System.out.println(numbers[1]);
 ```
 
-see more in: <a href="#Array Plus">here</a>
+
+
+## Array Plus
+
+3 ways of creating an array in *Java*：
+
+```java
+int[] x;
+int[] y;
+
+x = new int[3];			//all elements are with the default value 0
+y = new int[]{1,2,3,4};
+int[] z = {1,2,3,4};
+```
+
+
+
+- each element of an array should have the same type.
+
+
+
+- there is one way you can copy an array fast and easy:
+
+```java
+x = new int[]{2,3,4,5};
+int[] y = {6,7,8,9,10};
+System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
+/* so y[5] = {6,7,8,2,3} */
+```
+
+- this demonstrates one way to copy information from one array to another. `System.arraycopy` takes five parameters:
+
+  - The array to use as a source
+
+- Where to start in the source array
+
+  - The array to use as a destination
+
+- Where to start in the destination array
+
+  - How many items to copy
+
+  
+
+- **Array resizing**: 
+
+  When the array gets too full, we can resize the array. However, we have learned that **array size cannot change**. The solution is, instead, to create a new array of a larger size, then copy our old array values to the new array. Now, we have all of our old values, but we have more space to add items.
+
+  - **Resizing Speed** In the lecture video, we started off resizing the array by one more each time we hit our array size limit. This turns out to be extremely slow, because copying the array over to the new array means we have to perform the copy operation for each item. The worst part is, since we only resized by one extra box, if we choose to add another item, we have to do this again each time we add to the array.
+
+    **Improving Resize Performance** Instead of adding by an extra box, we can instead ==create a new array with `size * FACTOR` items==, where `FACTOR` could be any number, like 2 for example. We will discuss why this is fast later in the course.
+
+    **Downsizing Array Size** What happens if we have a 1 million length array, but we remove 990,000 elements of the array? Well, similarly, we can downsize our array by creating an array of half the size, if we reach 250,000 elements, for example. Again, we will discuss this more rigorously later in the course.
+
+  
+
+
+
+- you can specify the index of array at runtime while you can't do such thing with class.
+
+  ```java
+  int indexOfInterest = askUserForInteger();
+  int[] x = {100, 101, 102, 103};
+  int k = x[indexOfInterest];
+  System.out.println(k);
+  ```
+
+
+
+
+- 2D array:
+
+  ```java
+  int[][] x = new int[][]{{1,2}, {3,4}, {5,6}};
+  int[][] z = new int[3][3];
+  int[][] matrix;
+  matrix = new int[4][];
+  matrix = new int[4][4];
+  ```
+
+  kind like C:  `int x[3][2]`
+
+  - the default value of 2D array
+
+  ```java
+  int[][] x = new int[4][];	// x[n] = null
+  int[] y = x[0];	// y = null
+  x[0] = {1,2,3};
+  ```
+
+  - now x[0] stores an address points to a box stores the address of this array  `{1,2,3}`, meanwhile y still has the value "`null`" because "`null`" **points to no address**, so y's pointer won't change with x
+  - <img src=".\note_pics\2DArray.png" style="zoom:75%;" />
+
+  
+
+- Generic Array:
+
+  ```java
+  public class AList<Glorp> {
+      ...
+      private Glorp[] arr = (Glorp[]) new Object[8]; 
+      ...
+  }
+  ```
+
+  create a generic array is a little bit special... Take care about syntax !!!
+
+  <img src=".\note_pics\genericArray.png" alt="Generic Array" style="zoom:75%;" />
+
+​		
+
+**also to remember that once you want to delete the last item of your generic object array, ==set the last box to "null"== !!!**
+
+
 
 ## The Enhanced For Loop
 
@@ -78,27 +191,6 @@ public static void main(String[] args) {
 https://sp18.datastructur.es/materials/discussion/examprep02sol.pdf
 
 探究了*Static变量，Scope*，以及*作用域* 等重要概念，非常棒的练习！！
-
-## set debug config in vsCode
-
-- if you want to pass command line args in command when using vscode debug tool, go to debug section, open `lauch.json` and add `"args":["<arg1>", "<arg2>", ...]` within the same bracket where the `name` of  file you desired to run nested, like this  in which I add `"157788000.0"`, `25000.0"`,` "data/awesome.txt"` these three args for the file `NBody.java`.
-
-  ```json
-  {
-     "type": "java",
-     "name": "Launch NBody",
-     "args": [
-                "157788000.0",
-                "25000.0",
-                "data/awesome.txt"
-              ],
-     "request": "launch",
-     "mainClass": "NBody",
-     "projectName": "proj0_33252093"
-  }
-  ```
-
-  you can also refer to this link :https://stackoverflow.com/questions/59638889/passing-java-an-argument-while-debugging-in-vs-code
 
 
 
@@ -129,7 +221,7 @@ Create a generic class: <a href="#Generic List">here</a>
 
 ## A Generic Variable Constructor
 
-click <a href="#Generic List">here</a> to create a generic class constructor that takes any kinds of variable.
+click <a href="#Generic List">here</a> to see how to create a generic class constructor that takes any kinds of variable.
 
 - If you need to instantiate a generic over a primitive type, use `Integer`, `Double`, `Character`, `Boolean`, `Long`, `Short`, `Byte`, or `Float` instead of their primitive equivalents.
 
@@ -229,7 +321,7 @@ Two methods with the same name is allowed in Java, since they **have different p
 
 
 
-## Making code general
+## Interface -- Making code general
 
 Sometimes we might need to, say, if we want to execute a method (like `largestNumber()`) that applies to both two different classes, such as `AList` and `SLList`, then we can use **a new reference type** to make `AList` and `SLList` become *hyponyms* of the new reference type.
 
@@ -255,6 +347,26 @@ And we should declare who are its subclasses using key word `implement` like thi
 ```java
 public AList<Item> implements List<Item> { ... }
 ```
+
+
+
+**these are the qualities of interfaces**:
+
+- All methods must be public.
+- All variables must be public static final.
+- Cannot be instantiated
+- All methods are by default abstract unless specified to be `default`
+- Can implement more than one interface per class
+
+
+
+**abstract classes**:
+
+also, there are  **abstract classes** who are something in between of class and interface. Basically, abstract classes can do everything interfaces can do and more.
+
+**When in doubt, try to use interfaces** in order to reduce complexity.
+
+ <a her="https://joshhug.gitbooks.io/hug61b/content/chap4/chap44.html">You can check here to see more details. </a>
 
 
 
@@ -328,11 +440,11 @@ Poodle largerPoodle = (Poodle) maxDog(frank, frankJr);
 
 ## Understanding Static vs Dynamic Types in Java
 
-The static type of an object is its declared type, which determines the set of methods and fields that can be accessed at **compile-time**. The dynamic type of an object is its actual type at runtime, which may be a subtype of the static type, and determines the specific implementation of overridden methods. When a variable of a supertype is used to hold a subtype object, ==the static type limits the access to subtype-specific features, and may require explicit casting to access them.== This can lead to compile-time errors or runtime errors if the wrong type is assumed. **And casting won't help under this situation.**
+The static type of an object is its declared type, which determines the set of methods and fields that can be accessed at **compile-time**. The dynamic type of an object is its actual type at runtime, which may be a subtype of the static type, and determines the specific implementation of overridden methods. When a variable of a supertype is used to hold a subtype object, ==the static type limits the access to subtype-specific features, and may require explicit casting to access them.== This can lead to compile-time errors or runtime errors if the wrong type is assumed.
 
+you can cast the superclass to subclass to overcome it.
 
-
-### Inheritance Cheatsheet
+## Inheritance Cheatsheet
 
 `VengefulSLList extends SLList` means VengefulSLList "is-an" SLList, and inherits all of SLList's members:
 
@@ -344,6 +456,25 @@ Invocation of overridden methods follows two simple rules:
 - Compiler plays it safe and only allows us to do things according to the static type.
 - For overridden methods (*not overloaded methods*), the actual method invoked is based on the dynamic type of the invoking expression
 - Can use casting to overrule compiler type checking.
+
+**Typing Rules**
+
+- Compiler allows the memory box to hold any subtype.
+- Compiler allows calls based on static type.
+- Overriden non-static methods are selected at runtime based on dynamic type.
+- For overloaded methods, the method is selected at compile time.
+
+
+
+**And ChatGPT said:**
+
+> In Java, there are two types of inheritance: **interface inheritance** and **implementation inheritance.**
+>
+> Interface inheritance occurs when an interface extends another interface. This means that the sub-interface inherits all of the methods and constants of the parent interface. However, it does not inherit the implementation of those methods.
+>
+> Implementation inheritance occurs when a class extends another class. This means that the subclass inherits both the methods and the implementation of those methods from the parent class. In other words, the subclass can use the parent class's methods without having to redefine them.
+>
+> It is important to note that a class can only extend one class (single inheritance) but can implement multiple interfaces (multiple inheritance). This means that a class can inherit the implementation of methods from one parent class but can implement the methods of multiple interfaces.
 
 
 
@@ -389,6 +520,24 @@ System.out.println(do_twice(new TenX(), 2));
 
 
 
+## Package
+
+Sometimes there are just too many classes having the same name. To avoid conflict, we can use **Package name**. In industry, this differentiation happens by appending the class to a website address (backwards) like below:
+
+```java
+ug.joshh.animal.Dog d = new ug.joshh.animal.Dog()
+```
+
+And if you don't want to write such a long name every time you use it, you can do some `import` things to make your life easier:
+
+```java
+import ug.joshh.animal.animal
+```
+
+Now we can use dogs as we please.
+
+
+
 ## Style Guide
 
 here is the <a href="https://sp19.datastructur.es/materials/guides/style-guide.html">style guide</a> for CS 61B.
@@ -421,58 +570,29 @@ you can use **61B Style Checker** in IntelliJ CS61B plugin to help you check you
     2. java源程序代码在保存时把java文件转换成ANSI编码格式即可。
 -  check *IntelliJ* key board shortcut: `Ctrl` + `Alt` +`S` --> `Keymap`
    - ref: https://www.jetbrains.com/help/idea/configuring-keyboard-and-mouse-shortcuts.html
-
 -  <a href="https://www.cnblogs.com/huangguoming/p/15682942.html">warning: commented out code</a> 建议不要注释代码
+-  Permanently Set Up Libraries in IntelliJ:  <a ref="https://sp18.datastructur.es/materials/lab/lab4/lab4">link</a>
 
-​	
+- Set debug config in vsCode
 
-# Git things
+  - if you want to pass command line args in command when using vscode debug tool, go to debug section, open `lauch.json` and add `"args":["<arg1>", "<arg2>", ...]` within the same bracket where the `name` of  file you desired to run nested, like this  in which I add `"157788000.0"`, `25000.0"`,` "data/awesome.txt"` these three args for the file `NBody.java`.
 
-[Git Help Document](https://sp18.datastructur.es/materials/guides/using-git.html)
+    ```json
+    {
+       "type": "java",
+       "name": "Launch NBody",
+       "args": [
+                  "157788000.0",
+                  "25000.0",
+                  "data/awesome.txt"
+                ],
+       "request": "launch",
+       "mainClass": "NBody",
+       "projectName": "proj0_33252093"
+    }
+    ```
 
-[Git WTFs](https://sp18.datastructur.es/materials/guides/git-wtfs.html) （git weird technical failure scenarios）
-
-As a side note on development workflow, it is a good idea to commit your code as often as possible. Whenever you make significant (or even minor) changes to your code, make a commit. If you are trying something out that you might not stick with, commit it (perhaps to a different branch, which will be explained below).
-
-## Undoing Changes
-
-The Git reference has a great section on [undoing things](http://git-scm.com/book/en/Git-Basics-Undoing-Things). Please note that while Git revolves around the concept of history, it is possible to lose your work if you revert with some of these undo commands. Thus, be careful and read about the effects of your changes before undoing your work.
-
-- Unstage a file that you haven’t yet committed:
-
-  ```
-    $ git reset HEAD [file]
-  ```
-
-  This will take the file’s status back to modified, leaving changes intact. Don’t worry about this command undoing any work. This command is the equivalent of deleting one of the temporary images that you’re going to combine into a panorama.
-
-  Why might we need to use this command? Let’s say you accidentally started tracking a file that you didn’t want to track. (an embarrassing video of yourself, for instance.) Or you were made some changes to a file that you thought you would commit but no longer want to commit quite yet.
-
-- Amend latest commit (changing commit message or add forgotten files):
-
-  ```
-    $ git add [forgotten-file]
-    $ git commit --amend
-  ```
-
-  Please note that this new amended commit will replace the previous commit.
-
-- Revert a file to its state at the time of the most recent commit:
-
-  ```
-    $ git checkout -- [file]
-  ```
-
-  This next command is useful if you would like to actually undo your work. Let’s say that you have modified a certain `file` since committing previously, but you would like your file back to how it was before your modifications.
-
-  **Note**: This command is potentially quite dangerous because any changes you made to the file since your last commit will be removed. Use this with caution!
-
-## Remote
-
-```bash
-git push origin main  //push your latest commit to github
-```
-
+    you can also refer to this link :https://stackoverflow.com/questions/59638889/passing-java-an-argument-while-debugging-in-vs-code
 
 
 
@@ -559,112 +679,57 @@ public class DLList<T> { ... }
 - The front item (if it exists), is always at sentinel.next.item.
 - The size variable is always the total number of items that have been added.
 
-## Array Plus
 
-3 ways of creating an array in *Java*：
+
+## Abstract Data Type
+
+Abstract Data Types are defined to be some sort of Object that is defined by some set of operations rather than the implementation of these operations.
+
+There are some built-in Abstract data types in Java. The three most important ADTs come in the java.util library:
+
+- List
+
+  : an ordered collection of items
+
+  - A popular implementation is the [ArrayList](https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html)
+
+- Set
+
+  : an unordered collection of strictly unique items (no repeats)
+
+  - A popular implementation is the [HashSet](https://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html)
+
+- Map
+
+  : a collection of key/value pairs. You access the value via the key.
+
+  - A popular implementation is the [HashMap](https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html)
+
+You can use them like this:
 
 ```java
-int[] x;
-int[] y;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
-x = new int[3];			//all elements are with the default value 0
-y = new int[]{1,2,3,4};
-int[] z = {1,2,3,4};
-```
+public class Example {
+  public static void main(String[] args) {
+    // create a new ArrayList
+    List<Integer> numbers = new ArrayList<>();
 
+    // add some elements to the list
+    numbers.add(1);
+    numbers.add(2);
 
-
-- each element of an array should have the same type.
-
-
-
-- there is one way you can copy an array fast and easy:
-
-```java
-x = new int[]{2,3,4,5};
-int[] y = {6,7,8,9,10};
-System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
-/* so y[5] = {6,7,8,2,3} */
-```
-
-- this demonstrates one way to copy information from one array to another. `System.arraycopy` takes five parameters:
-
-  - The array to use as a source
-- Where to start in the source array
-  - The array to use as a destination
-- Where to start in the destination array
-  - How many items to copy
-
-  
-
-- **Array resizing**: 
-
-  When the array gets too full, we can resize the array. However, we have learned that **array size cannot change**. The solution is, instead, to create a new array of a larger size, then copy our old array values to the new array. Now, we have all of our old values, but we have more space to add items.
-
-  - **Resizing Speed** In the lecture video, we started off resizing the array by one more each time we hit our array size limit. This turns out to be extremely slow, because copying the array over to the new array means we have to perform the copy operation for each item. The worst part is, since we only resized by one extra box, if we choose to add another item, we have to do this again each time we add to the array.
-
-    **Improving Resize Performance** Instead of adding by an extra box, we can instead ==create a new array with `size * FACTOR` items==, where `FACTOR` could be any number, like 2 for example. We will discuss why this is fast later in the course.
-
-    **Downsizing Array Size** What happens if we have a 1 million length array, but we remove 990,000 elements of the array? Well, similarly, we can downsize our array by creating an array of half the size, if we reach 250,000 elements, for example. Again, we will discuss this more rigorously later in the course.
-
-  
-
-
-
-- you can specify the index of array at runtime while you can't do such thing with class.
-
-  ```java
-  int indexOfInterest = askUserForInteger();
-  int[] x = {100, 101, 102, 103};
-  int k = x[indexOfInterest];
-  System.out.println(k);
-  ```
-
-
-
-
-- 2D array:
-
-  ```java
-  int[][] x = new int[][]{{1,2}, {3,4}, {5,6}};
-  int[][] z = new int[3][3];
-  int[][] matrix;
-  matrix = new int[4][];
-  matrix = new int[4][4];
-  ```
-
-  kind like C:  `int x[3][2]`
-
-  - the default value of 2D array
-
-  ```java
-  int[][] x = new int[4][];	// x[n] = null
-  int[] y = x[0];	// y = null
-  x[0] = {1,2,3};
-  ```
-
-  - now x[0] stores an address points to a box stores the address of this array  `{1,2,3}`, meanwhile y still has the value "`null`" because "`null`" **points to no address**, so y's pointer won't change with x
-  - <img src=".\note_pics\2DArray.png" style="zoom:75%;" />
-
-  
-
-- Generic Array:
-
-  ```java
-  public class AList<Glorp> {
-      ...
-      private Glorp[] arr = (Glorp[]) new Object[8]; 
-      ...
+    // get the size of the list
+    int size = numbers.size();
+    System.out.println("The size of the list is: " + size);
   }
-  ```
-
-  create a generic array is a little bit special... Take care about syntax !!!
-
-  <img src=".\note_pics\genericArray.png" alt="Generic Array" style="zoom:75%;" />
-
-​		
-
-**also to remember that once you want to delete the last item of your generic object array, ==set the last box to "null"== !!!**
+}
+```
 
 
 
@@ -672,7 +737,7 @@ System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
 
 
 
-# Prjct 1
+# Project 1
 
 It is suggested that you should use **Sentinel node** in project 1.
 
@@ -690,7 +755,54 @@ latest code: https://github.com/Berkeley-CS61B/lectureCode-fa22
 
 # Supplementary Knowledge
 
-1. git issue : [LF will be replaced by CRLF in git - What is that and is it important?](https://stackoverflow.com/questions/5834014/lf-will-be-replaced-by-crlf-in-git-what-is-that-and-is-it-important)
+## Git things
+
+[Git Help Document](https://sp18.datastructur.es/materials/guides/using-git.html)
+
+[Git WTFs](https://sp18.datastructur.es/materials/guides/git-wtfs.html) （git weird technical failure scenarios）
+
+As a side note on development workflow, it is a good idea to commit your code as often as possible. Whenever you make significant (or even minor) changes to your code, make a commit. If you are trying something out that you might not stick with, commit it (perhaps to a different branch, which will be explained below).
+
+### Undoing Changes
+
+The Git reference has a great section on [undoing things](http://git-scm.com/book/en/Git-Basics-Undoing-Things). Please note that while Git revolves around the concept of history, it is possible to lose your work if you revert with some of these undo commands. Thus, be careful and read about the effects of your changes before undoing your work.
+
+- Unstage a file that you haven’t yet committed:
+
+  ```
+    $ git reset HEAD [file]
+  ```
+
+  This will take the file’s status back to modified, leaving changes intact. Don’t worry about this command undoing any work. This command is the equivalent of deleting one of the temporary images that you’re going to combine into a panorama.
+
+  Why might we need to use this command? Let’s say you accidentally started tracking a file that you didn’t want to track. (an embarrassing video of yourself, for instance.) Or you were made some changes to a file that you thought you would commit but no longer want to commit quite yet.
+
+- Amend latest commit (changing commit message or add forgotten files):
+
+  ```
+    $ git add [forgotten-file]
+    $ git commit --amend
+  ```
+
+  Please note that this new amended commit will replace the previous commit.
+
+- Revert a file to its state at the time of the most recent commit:
+
+  ```
+    $ git checkout -- [file]
+  ```
+
+  This next command is useful if you would like to actually undo your work. Let’s say that you have modified a certain `file` since committing previously, but you would like your file back to how it was before your modifications.
+
+  **Note**: This command is potentially quite dangerous because any changes you made to the file since your last commit will be removed. Use this with caution!
+
+### Remote
+
+```bash
+git push origin main  //push your latest commit to github
+```
 
 
+
+- git issue : [LF will be replaced by CRLF in git - What is that and is it important?](https://stackoverflow.com/questions/5834014/lf-will-be-replaced-by-crlf-in-git-what-is-that-and-is-it-important)
 
