@@ -478,6 +478,17 @@ Invocation of overridden methods follows two simple rules:
 
 
 
+## Compile Error vs. Runtime Error
+
+Made a lot of mistakes on <a href="https://www.youtube.com/watch?v=jZvAA4B3Ebk&list=PLnp31xXvnfRqAfvA4R9Oh09PstFymwCif&index=5&ab_channel=UCBerkeleyCS61B">this one</a>, so do a summary again.
+
+1. 编译器在编译的时候会检查静态类型，并根据静态类型决定使用的方法。
+
+2. Override只发生在父类型和子类型有**同名方法**且同名方法的**参数类型相同**的时候。
+3. Casting发生时，编译器会检查：“这个类型可不可以是xx类型呢？（既然是编译器检查那肯定看的是静态类型啦）”，一般来说，子类型**可以是**父类型；父类型也**可以是**子类型。
+   - 如果子类型被cast到父类型，那么选择运行时的方法就会考虑父类型里的方法；
+   - 如果父类型被cast到子类型，那么即使子类型里有某个方法，但如果父类型中没有相应的方法，在运行时就会产生runtime error。
+
 ## Higher Order Function
 
  A higher order function is a function that treats other functions as data. 
@@ -593,8 +604,16 @@ you can use **61B Style Checker** in IntelliJ CS61B plugin to help you check you
     ```
 
     you can also refer to this link :https://stackoverflow.com/questions/59638889/passing-java-an-argument-while-debugging-in-vs-code
+    
+    
 
+- Get rid of all numbers at the beginning of the lines when you copy some codes from exercise pdf files:
 
+  **chatGPT**:
+
+  Here's the updated *regular expression*: `^\d+\s*`.
+
+  This pattern will match a sequence of one or more digits at the beginning of a line, followed by zero or more whitespace characters. The `*` after the `\s` means "zero or more".
 
 
 # Data Structure
@@ -683,6 +702,8 @@ public class DLList<T> { ... }
 
 ## Abstract Data Type
 
+Abbreviation： ADT
+
 Abstract Data Types are defined to be some sort of Object that is defined by some set of operations rather than the implementation of these operations.
 
 There are some built-in Abstract data types in Java. The three most important ADTs come in the java.util library:
@@ -704,6 +725,16 @@ There are some built-in Abstract data types in Java. The three most important AD
   : a collection of key/value pairs. You access the value via the key.
 
   - A popular implementation is the [HashMap](https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html)
+  
+- Stacks 
+
+  - Stacks and queues are two similar types of linear collections with special behavior. A stack is a last-in, first-out ADT: elements are always added or removed from one end of the data structure. A queue is a first-in, first-out ADT.
+
+  
+
+**Some of the methods in their interfaces are introduced in <a href="https://sp18.datastructur.es/materials/discussion/disc05.pdf">disc05</a>**
+
+
 
 You can use them like this:
 
