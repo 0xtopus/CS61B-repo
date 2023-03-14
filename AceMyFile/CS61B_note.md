@@ -708,7 +708,7 @@ By using `try...catch...`, you separate the normal flow and exceptions, and it a
 
 ## Iteration
 
-<a href="https://joshhug.gitbooks.io/hug61b/content/chap6/chap63.html">6.3</a>
+To implement <a href="#The Enhanced For Loop">the enhanced loop</a> for your own class, check <a href="https://joshhug.gitbooks.io/hug61b/content/chap6/chap63.html">6.3</a> to see how to do it.
 
 <a href="https://joshhug.gitbooks.io/hug61b/content/chap6/chap67.html">build a class support iteration</a>
 

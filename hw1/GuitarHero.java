@@ -5,7 +5,7 @@ public class GuitarHero {
 
     public static void main(String[] args) {
         for (int i = 0; i < CONCERT.length; i++) {
-              CONCERT[i] = 440.0 * Math.pow(2, ((double) i -24) / 12);
+            CONCERT[i] = 440.0 * Math.pow(2, ((double) i - 24) / 12);
         }
 
         /* create all 37 strings */
