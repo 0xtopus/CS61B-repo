@@ -372,7 +372,7 @@ also, there are  **abstract classes** who are something in between of class and 
 
 ## Overriding
 
-For each method in `AList` that we also defined in `List`, we will add an **@Override** right above the method signature. As an example:
+若父类中有方法重写了，或实现了父类或接口里的抽象方法，就加上 @override
 
 ```java
 @Override
@@ -426,6 +426,10 @@ public VengefulSLList() {
 
 However, if you omit `super()`, the auto constructor call only invokes **the constructor with empty argument**. (i.e you have to use `super(args)` if you want to use the constructor who takes parameters)
 
+### Extends vs implements
+
+Just remember, in the context of inheritance, the `extends` keyword is active in giving the subclass the abilities of the superclass. You can think of it as a fairy Godmother: she sees your needs and helps you out with some of her fairy magic. On the other hand, in the context of generics, `extends` simply states a fact: You must be a subclass of whatever you're extending. **When used with generics (like in generic method headers), `extends` imposes a constraint rather than grants new abilities.** It's akin to a fortune teller, who just tells you something without doing much about it.
+
 
 
 ## Casting
@@ -438,7 +442,7 @@ Poodle largerPoodle = (Poodle) maxDog(frank, frankJr);
 
 
 
-## Understanding Static vs Dynamic Types in Java
+## Understanding Static vs Dynamic Types
 
 The static type of an object is its declared type, which determines the set of methods and fields that can be accessed at **compile-time**. The dynamic type of an object is its actual type at runtime, which may be a subtype of the static type, and determines the specific implementation of overridden methods. When a variable of a supertype is used to hold a subtype object, ==the static type limits the access to subtype-specific features, and may require explicit casting to access them.== This can lead to compile-time errors or runtime errors if the wrong type is assumed.
 
@@ -448,12 +452,12 @@ you can cast the superclass to subclass to overcome it.
 
 `VengefulSLList extends SLList` means VengefulSLList "is-an" SLList, and inherits all of SLList's members:
 
-- Variables, methods nested classes
+- Variables, methods nested classes(**A subclass does inherit the private members of its parent class but can't access them.**)
 - Not constructors Subclass constructors must invoke superclass constructor first. The `super` keyword can be used to invoke overridden superclass methods and constructors.
 
 Invocation of overridden methods follows two simple rules:
 
-- Compiler plays it safe and only allows us to do things according to the static type.
+- Compiler plays it safe and only allows us to do things according to the **static type**.
 - For overridden methods (*not overloaded methods*), the actual method invoked is based on the dynamic type of the invoking expression
 - Can use casting to overrule compiler type checking.
 
@@ -482,12 +486,14 @@ Invocation of overridden methods follows two simple rules:
 
 Made a lot of mistakes on <a href="https://www.youtube.com/watch?v=jZvAA4B3Ebk&list=PLnp31xXvnfRqAfvA4R9Oh09PstFymwCif&index=5&ab_channel=UCBerkeleyCS61B">this one</a>, so do a summary again.
 
-1. 编译器在编译的时候会检查静态类型，并根据静态类型决定使用的方法。
-
-2. Override只发生在父类型和子类型有**同名方法**且同名方法的**参数类型相同**的时候。
+1. 一般来说，编译器在编译的时候会检查静态类型，并根据静态类型决定使用的方法。
+2. 发生Overriden的时候：non-static methods are selected at runtime based on dynamic type.
+3. Override只发生在父类型和子类型有**同名方法**且同名方法的**参数类型相同**的时候。
 3. Casting发生时，编译器会检查：“这个类型可不可以是xx类型呢？（既然是编译器检查那肯定看的是静态类型啦）”，一般来说，子类型**可以是**父类型；父类型也**可以是**子类型。
    - 如果子类型被cast到父类型，那么选择运行时的方法就会考虑父类型里的方法；
    - 如果父类型被cast到子类型，那么即使子类型里有某个方法，但如果父类型中没有相应的方法，在运行时就会产生runtime error。
+
+
 
 ## Higher Order Function
 
@@ -547,7 +553,217 @@ import ug.joshh.animal.animal
 
 Now we can use dogs as we please.
 
+### Quick import
 
+> In IntelliJ, when you cursor is on the class name your wrote without package name, e.g. `Dog`, you can use the shortcut "Alt + Enter" to automatically add `import ...` at the top of your file.
+
+### Creating a Package
+
+Creating a package takes the following two steps:
+
+1.) Put the package name at the top of every file in this package
+
+```java
+package ug.joshh.animal;
+
+public class Dog {
+    private String name;
+    private String breed;
+    …
+}
+```
+
+2.) Store the file in a folder that has the appropriate folder name. The folder should have a name that matches your package:
+
+i.e. `ug.joshh.animal` package is in ug/joshh/animal folder
+
+**Creating a Package, in IntelliJ**
+
+1.) File → New Package
+
+1.) Choose package name (i.e. “ug.joshh.animal”)
+
+**Adding (new) Java Files to a Package, in IntelliJ**
+
+1.) Right-click package directory name
+
+2.) Select New → Java Class
+
+3.) Name your class, and IntelliJ will automatically put it in the correct folder + add the “package ug.joshh.animal” declaration for you.
+
+**Adding (old) Java Files to a Package, in IntelliJ**
+
+1.) Add “package [packagename]” to the top of the file.
+
+2.) Move the .java file into the corresponding folder.
+
+### Default packages
+
+- **Your Java files should generally start with an explicit package declaration!!!**
+
+Any Java class without an explicit package name at the top of the file is automatically considered to be part of the “default” package. However, when writing real programs, you should avoid leaving your files in the default package (unless it’s a very small example program). This is because code from the default package cannot be imported, and it is possible to accidentally create classes with the same name under the default package.
+
+### JAR File
+
+Oftentimes, programs will contain multiple .class files. If you wanted to share this program, rather than sharing all the .class files in special directories, you can “zip” all the files together by creating a JAR file. This single .jar file will contain all your .class files, along with some other additional information.
+
+see <a href="https://joshhug.gitbooks.io/hug61b/content/chap7/chap71.html">more about it</a>.
+
+
+
+## Access Control
+
+- private
+- protected
+- ​                  (*Package Private*)
+- public
+
+<img src=".\note_pics\accessControl.png" style="zoom:80%;" />
+
+
+
+> It is important to note that for **interfaces**, the default access for its methods is actually **public** (i.e. when there is no modifier), and not package-private. 
+
+
+
+A class without modifier is a *package-private* class, so it cannot be seen outside the package.
+
+
+
+## Throw Errors
+
+- When you know at some point your program should crash, then use `throw` to let it crash. 
+
+Example:
+
+```java
+public static void main(String[] args) {
+    System.out.println("ayyy lmao");
+    throw new RuntimeException("For no reason.");
+}
+```
+
+And then when you run it, you'll get:
+
+```bash
+$ java Alien
+ayyy lmao
+Exception in thread "main" java.lang.RuntimeException: For no reason.
+at Alien.main(Alien.java:4)
+```
+
+However, you can use `try...catch` to continue your flow when Exception is thrown:
+
+```java
+Dog d = new Dog("Lucy", "Retriever", 80);
+d.becomeAngry();
+
+// try something might trigger an exception
+try {
+    d.receivePat(); // this method will throw a Exception e
+} catch (Exception e) {
+    // catch exception and handle it in "catch"
+    System.out.println("Tried to pat: " + e); 
+}
+System.out.println(d);
+```
+
+Running it will be like:
+
+```bash
+$ java ExceptionDemo
+Tried to pat: java.lang.RuntimeException: grrr... snarl snarl
+Lucy is a displeased Retriever weighing 80.0 standard lb units.
+```
+
+- A good thing to use `try..catch` is that you can avoid many embedded `if..else`, think of a real life code example of reading a file below:
+
+```pseudocode
+func readFile: {
+    try {
+        open the file;
+        determine its size;
+        allocate that much memory;
+        read the file into memory;
+        close the file;
+    } catch (fileOpenFailed) {
+        doSomething;
+    } catch (sizeDeterminationFailed) {
+        doSomething;
+    } catch (memoryAllocationFailed) {
+        doSomething;
+    } catch (readFailed) {
+        doSomething;    
+    } catch (fileCloseFailed) {
+        doSomething;
+    }
+}
+```
+
+By using `try...catch...`, you separate the normal flow and exceptions, and it allows you to make up each exception solely.
+
+- <a href="https://joshhug.gitbooks.io/hug61b/content/chap6/chap66.html">Checked vs Unchecked Exceptions</a>
+
+
+
+## Iteration
+
+<a href="https://joshhug.gitbooks.io/hug61b/content/chap6/chap63.html">6.3</a>
+
+<a href="https://joshhug.gitbooks.io/hug61b/content/chap6/chap67.html">build a class support iteration</a>
+
+
+
+## Object methods
+
+All classes inherit from the overarching Object class. The methods that are inherited are as follows:
+
+- `String toString()`
+- `boolean equals(Object obj)`
+- `Class <?> getClass()`
+- `int hashCode()`
+- `protected Objectclone()`
+- `protected void finalize()`
+- `void notify()`
+- `void notifyAll()`
+- `void wait()`
+- `void wait(long timeout)`
+- `void wait(long timeout, int nanos)`
+
+## compareTo() method
+
+- more details: https://joshhug.gitbooks.io/hug61b/content/chap5/chap53.html
+
+
+
+The compareTo() method is a method that compares two objects of the same type and returns an integer value that indicates their relative order. The compareTo() method is defined by the Comparable interface, which is implemented by many classes in Java, such as String, Integer, Date, etc.
+
+The compareTo() method follows some general rules:
+
+- It returns 0 if the two objects are equal
+- It returns a positive value if the current object is greater than the parameter object
+- It returns a negative value if the current object is less than the parameter object
+
+The meaning of “greater than” or “less than” depends on how the objects are compared. [For example, for strings, the comparison is based on the lexicographical order of their characters](https://www.w3schools.com/java/ref_string_compareto.asp)[1](https://www.w3schools.com/java/ref_string_compareto.asp)[2](https://www.javatpoint.com/java-string-compareto). For numbers, it is based on their numerical value.
+
+The compareTo() method can be used to sort objects in collections or arrays that use natural ordering. [It can also be used to define custom comparators for other types of ordering](https://www.baeldung.com/java-compareto)[3](https://www.baeldung.com/java-compareto). For example:
+
+```java
+// Sorting an array of strings using natural ordering
+String[] names = {"Alice", "Bob", "Charlie"};
+Arrays.sort(names); // names = {"Alice", "Bob", "Charlie"}
+
+// Defining a custom comparator for reverse alphabetical order
+Comparator<String> reverseOrder = new Comparator<String>() {
+  @Override
+  public int compare(String s1, String s2) {
+    return -s1.compareTo(s2); // negate the result of compareTo()
+  }
+};
+
+// Sorting an array of strings using reverse alphabetical order
+Arrays.sort(names, reverseOrder); // names = {"Charlie", "Bob", "Alice"}
+```
 
 ## Style Guide
 
@@ -730,7 +946,9 @@ There are some built-in Abstract data types in Java. The three most important AD
 
   - Stacks and queues are two similar types of linear collections with special behavior. A stack is a last-in, first-out ADT: elements are always added or removed from one end of the data structure. A queue is a first-in, first-out ADT.
 
-  
+- priority queue
+
+- Priority queue is like a regular queue except each element has a priority associated with it which determines in what order elements are removed from the queue. In Java, PriorityQueue is a class, a heap data structure implementing the priority queue ADT. The priority is determined by either natural order (E implements Comparable) or a supplied Comparator.
 
 **Some of the methods in their interfaces are introduced in <a href="https://sp18.datastructur.es/materials/discussion/disc05.pdf">disc05</a>**
 
