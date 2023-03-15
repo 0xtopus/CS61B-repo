@@ -493,6 +493,86 @@ Made a lot of mistakes on <a href="https://www.youtube.com/watch?v=jZvAA4B3Ebk&l
    - 如果子类型被cast到父类型，那么选择运行时的方法就会考虑父类型里的方法；
    - 如果父类型被cast到子类型，那么即使子类型里有某个方法，但如果父类型中没有相应的方法，在运行时就会产生runtime error。
 
+## Delegation vs. Extension
+
+我的理解：
+
+- delegation 就是使用辅助ADT来实现你想要的目标ADT的功能。
+
+```java
+public class DelegationStack<Item> {
+    private LinkedList<Item> L = new LinkedList<Item>();
+    public void push(Item x) {
+        L.add(x);
+    }
+}
+```
+
+
+
+- extension 就是在已有的ADT实现的基础上，再添加进新的方法实现新的功能。(is-a)
+
+```java
+public class ExtensionStack<Item> extends LinkedList<Item> {
+    public void push(Item x) {
+        add(x);
+    }
+}
+```
+
+
+
+- view 就是新建一个指向原对象的实例变量，通过对这个变量进行特定的操作来修改原对象的某些属性。 
+
+```java
+public class StackAdapter<Item> {
+    private List L;
+    public StackAdapter(List<Item> worker) {
+        L = worker;
+    }
+
+    public void push(Item x) {
+        L.add(x);
+    }
+}
+```
+
+
+
+delegation is accomplished by passing in a class while extension is defined as inheriting
+
+see <a href="https://joshhug.gitbooks.io/hug61b/content/chap8/chap81.html">8.1</a>
+
+**Delegation vs Extension:** Right now it may seem that Delegation and Extension are pretty much interchangeable; however, there are some important differences that must be remembered when using them.
+
+Extension tends to be used when you know what is going on in the parent class. In other words, you know how the methods are implemented. Additionally, with extension, you are basically saying that the class you are extending from acts similarly to the one that is doing the extending. 
+
+On the other hand, Delegation is when you do not want to consider your current class to be a version of the class that you are pulling the method from.
+
+Views: Views are an alternative representation of an existed object. Views essentially limit the access that the user has to the underlying object. However, changes done through the views will affect the actual object.
+
+**Talks with new Bing**
+
+Me:
+
+> extract the core ideas about delegation, view and extension from the page i previously given, compare the difference between them with simple examples to specify when to use each of them, then write a conclusion of it.
+
+new Bing:
+
+> Here is a summary of the core ideas about delegation, view and extension from the page you provided:
+>
+> - Delegation is a way of implementing an ADT by using another existing data structure as a helper. For example, to implement a stack ADT, we can use an array or a list as a helper and delegate the operations to them. Delegation allows us to reuse existing code and avoid duplication.
+> - View is a way of creating a new ADT by changing how an existing one is accessed or displayed. For example, to create a circular list ADT, we can use a regular list as a helper and change how we access its elements by wrapping around the end. View allows us to create different perspectives on existing data without modifying it.
+> - Extension is a way of creating a new ADT by adding more functionality to an existing one. For example, to create a priority queue ADT, we can extend the queue ADT by adding a priority field to each element and sorting them accordingly. Extension allows us to customize and enhance existing code and create new abstractions.
+>
+> The difference between them can be illustrated with some simple examples:
+>
+> - Suppose we want to implement an animal shelter ADT that stores animals in order of arrival and allows adopting either the oldest animal or the oldest animal of a given species. We can use delegation by using two queues as helpers: one for storing all animals and one for storing each species separately. We can delegate the enqueue and dequeue operations to these queues accordingly.
+> - Suppose we want to implement an image filter ADT that applies different effects on images such as grayscale, sepia or blur. We can use view by using an image object as a helper and changing how we access its pixels according to the filter type. We can view the same image object with different filters without modifying it.
+> - Suppose we want to implement an email client ADT that sends and receives emails with attachments, encryption and spam filtering features. We can use extension by extending an email message ADT that only handles plain text messages. We can add new fields and methods for handling attachments, encryption and spam filtering.
+>
+> The conclusion is that delegation, view and extension are three different ways of creating new ADTs from existing ones based on their functionality, accessibility or customization needs. They help achieve efficient programming by reducing complexity, increasing modularity and hiding implementation details.
+
 
 
 ## Higher Order Function
@@ -982,9 +1062,51 @@ public class Example {
 
 
 
+## Asymptotics
 
+**Overview** In this part, the method to calculate the complexity of algorithm is introduced.
 
+**How to analysis**
 
+- Choose our cost model (representative operation we want to count).
+- Figure out the order of growth for the count of our representative operation by either:
+  - Making an exact count, and discarding unnecessary pieces
+  - Or, using intuition/inspection to determine orders of growth (comes with practice!)
+
+**Mathematic rigorous**
+
+- Given a piece of code, we can express its runtime as a function R(N)
+  - N is some **property** of the input of the function
+  - i.e. oftentimes, N represents the **size** of the input
+- Rather than finding R(N) exactly, we instead usually only care about the **order of growth** of R(N).
+- One approach (not universal): Big-theta
+- Another way to express this is to use Big O
+
+**Important sums you should remember**
+
+- 1 + 2 + 3 + ... + N = (N+1)*N/2
+- 1 + 2 + 4 + 8 + ... + N = 2*N - 1   (Note that N **is not** the number of the items)
+
+Note that: 
+
+- *N*^2^ vs. N log N is an enormous difference.
+- Going from N log N to N is nice, but not a radical change.
+
+## Tree Recursion
+
+- θ(2^N^)
+
+## Binary Search
+
+- θ(log N)
+
+## Selection Sort
+
+- θ(N^2^)
+
+## Merge Sort
+
+- θ(N log N)
 
 # Project 1
 
