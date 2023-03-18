@@ -1092,21 +1092,44 @@ Note that:
 - *N*^2^ vs. N log N is an enormous difference.
 - Going from N log N to N is nice, but not a radical change.
 
-## Tree Recursion
+**terminology**
+
+- **Order of Growth**
+
+- The terms *“constant”*,* “linear”*, and *“quadratic”* are often used for algorithms with order of growth 1, N, and N^2^
+
+### Tree Recursion
 
 - θ(2^N^)
 
-## Binary Search
+### Binary Search
 
 - θ(log N)
 
-## Selection Sort
+### Selection Sort
 
 - θ(N^2^)
 
-## Merge Sort
+### Merge Sort
 
 - θ(N log N)
+
+
+
+## Disjoint Sets
+
+Two sets are named *disjoint sets* if they have no elements in common. A Disjoint-Sets (or Union-Find) data structure keeps track of a fixed number of elements partitioned into a number of *disjoint sets*. The data structure has two operations:
+
+1. `connect(x, y)`: connect `x` and `y`. Also known as `union`
+2. `isConnected(x, y)`: returns true if `x` and `y` are connected (i.e. part of the same set).
+
+
+
+- By applying different meas, the results of cost varies:
+
+  <img src="F:\awsl\Java\cs61b\AceMyFile\note_pics\DisjointSet.png" style="zoom:67%;" />
+
+
 
 # Project 1
 
