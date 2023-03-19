@@ -792,6 +792,160 @@ To implement <a href="#The Enhanced For Loop">the enhanced loop</a> for your own
 
 <a href="https://joshhug.gitbooks.io/hug61b/content/chap6/chap67.html">build a class support iteration</a>
 
+类似这样的*Enhanced Loop*:
+
+```java
+Set<String> s = new HashSet<>();
+...
+for (String city : s) {
+    ...
+}
+```
+
+原理其实是这样的：
+
+```java
+Set<String> s = new HashSet<>();
+...
+Iterator<String> seer = s.iterator();
+while (seer.hasNext()) {
+    String city = seer.next();
+    ...
+}
+```
+
+让我们来看看如何使我们自己的类也支持*Enhanced Loop*：
+
+- 首先，要有一个`iterator()`方法，让它 return 一个 `iterator` 对象.
+
+```java
+public Iterator<E> iterator();
+```
+
+- 然后，我们就可以使用自己的iterator来进行类似`for-each`的循环了
+
+例：假设我在自己的`List<>`类里定义了`iterator()`，那么我就可以进行下列操作：
+
+```java
+List<Integer> friends = new ArrayList<Integer>();
+...
+// 声明一个变量"seer"为iterator    
+Iterator<Integer> seer = friends.iterator();
+
+// 当"seer.hasNext()"返回值不为"false"时：
+while (seer.hasNext()) {
+    // "seer.next()"做两件事：1.返回下一个元素的数值; 2.迭代到下一个元素;
+	System.out.println(seer.next());
+}
+```
+
+那么，如何搭建一个支持`iterator`的类呢？
+
+根据上述示例中的代码，我们可以发现，只有满足下列条件时，代码才能被正确编译：
+
+1. 我们使用了`iterator()`来给变量`seer`赋值，因此，我们的类里必须要有`iterator()`方法；
+2. `seer`里必须有`hasNext()` 和`next()`方法，所以在Iterator的interface里必须有这两个方法。
+
+所以，当我们要在自己的类里支持`iterator时`，要先extends `Iterable interface`
+
+```java
+// Iterable Interface
+public interface Iterable<T> {
+    Iterator<T> iterator();
+}
+```
+
+```java
+// extend Iterable Interface
+public interface List<T> extends Iterable<T>{
+    ...
+}
+```
+
+> ==注意区分`Iterator`和`Iterable`！==
+>
+> **The List interface extends the Iterable interface, inheriting the abstract iterator() method.** (Actually, List extends Collection which extends Iterable, but it's easier to codethink of this way to start.)
+
+在`Iterator Interface`里，定义了`hasNext()` 和 `next()`方法：
+
+```java
+public interface Iterator<T> {
+    boolean hasNext();
+    T next();
+}
+```
+
+
+
+于是，我们要做的就是在我们的类里嵌套一个新的子类来implements` Iterator Interface`，在这个子类中，你要实现`public boolean hasNext()`和`public T next()`里的代码；
+
+然后，再新建一个iterator()，这样就可以使用"Enhanced Loop"了
+
+例：
+
+```java
+import java.util.Iterator;
+
+// 你自己的类，extends Iterable<T>
+// 或者应该在这个类的interface里extends Iterable<T>
+public class ArraySet<T> extends Iterable<T> {	
+
+    ...
+        
+    // 嵌套一个新子类来implements Iterator
+    private class ArraySetIterator implements Iterator<T> {
+    	private int wizPos;
+
+    	public ArraySetIterator() {
+        	wizPos = 0;
+    	}
+
+    	public boolean hasNext() {
+        	return wizPos < size;
+    	}
+
+    	public T next() {
+        	T returnItem = items[wizPos];
+        	wizPos += 1;
+        	return returnItem;
+    	}
+    }
+    
+    // 再新建一个iterator()返回刚刚创建的新类ArraySetIterator()，
+    // 这样就可以使用"Enhanced Loop"了
+    public Iterator<T> iterator() {
+    	return new ArraySetIterator();
+	}
+}
+
+
+```
+
+好了，现在我们就可以愉快地使用`Enhanced Loop`了：
+
+```java
+ArraySet<Integer> aset = new ArraySet<>();
+...
+for (int i : aset) {
+    System.out.println(i);
+}
+```
+
+
+
+无关紧要的补充：`HashSet`自带`Enhanced Loop`:
+
+```java
+Set<String> s = new HashSet<>();
+s.add("Tokyo");
+s.add("Lagos");
+for (String city : s) {
+    System.out.println(city);
+}
+```
+
+
+
 
 
 ## Object methods
@@ -1060,7 +1214,9 @@ public class Example {
 }
 ```
 
+Below we show the relationships between the interfaces and classes. Interfaces are in white, classes are in blue.
 
+<img src=".\note_pics\ADTs.png" style="zoom:65%;" />
 
 ## Asymptotics
 
@@ -1125,9 +1281,86 @@ Two sets are named *disjoint sets* if they have no elements in common. A Disjoin
 
 
 
-- By applying different meas, the results of cost varies:
+- By applying different meas, the results of cost varies:<img src="F:\awsl\Java\cs61b\AceMyFile\note_pics\DisjointSet.png" style="zoom:67%;" />
 
-  <img src="F:\awsl\Java\cs61b\AceMyFile\note_pics\DisjointSet.png" style="zoom:67%;" />
+
+
+
+## Binary Tree
+
+- **Tree**: Trees are composed of:
+
+  - nodes
+
+  - edges that connect those nodes.
+    - **Constraint**: there is only one path between any two nodes.
+
+​	In some trees, we select a **root** node which is a node that has no parents.
+
+​	A tree also has **leaves**, which are nodes with no children.
+
+- **Binary Trees**: in addition to the above requirements, also hold the binary property constraint. That is, each node has either 0, 1, or 2 children.
+- **Binary Search Trees**: in addition to all of the above requirements, also hold the property that For every node X in the tree:
+  - Every key in the left subtree is less than X’s key.
+  - Every key in the right subtree is greater than X’s key. 
+
+
+
+### BST
+
+**Recursive is super useful in realizing these mothods!**
+
+- Find
+
+- Insert
+
+  - avoid temptation of bad recursive, trust your base condition!
+
+- Delete
+
+  - Let's break this problem down into three categories:
+
+    - the node we are trying to delete has no children
+    - has 1 child
+    - has 2 children
+
+    **No children**
+
+    If the node has no children, it is a leaf, and we can just delete its parent pointer and the node will eventually be swept away by the [garbage collector](https://stackoverflow.com/questions/3798424/what-is-the-garbage-collector-in-java).
+
+    **One child**
+
+    If the node only has one child, we know that the child maintains the BST property with the parent of the node because the property is recursive to the right and left subtrees. Therefore, we can just reassign the parent's child pointer to the node's child and the node will eventually be garbage collected.
+
+    **Two children**
+
+    If the node has two children, we can't just assign one of the children to be the new root. This might break the BST property.
+
+    Instead, we choose a new node to replace the deleted one.
+
+    We know that the new node must be the either one of below:
+
+    - **Predecessor**: be > than everything in left subtree.
+    - **Successor**: be < than everything right subtree.
+
+### Summary
+
+Abstract data types (ADTs) are defined in terms of operations, not implementation.
+
+Several useful ADTs:
+
+- Disjoint Sets, Map, Set, List.
+- Java provides Map, Set, List interfaces, along with several implementations.
+
+We’ve seen two ways to implement a Set (or Map):
+
+- ArraySet: Θ(*N*) operations in the worst case.
+- BST: Θ(log*N*) operations if tree is balanced.
+
+BST Implementations:
+
+- Search and insert are straightforward (but insert is a little tricky).
+- Deletion is more challenging. Typical approach is “Hibbard deletion”.
 
 
 
