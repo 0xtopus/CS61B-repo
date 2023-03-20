@@ -1,4 +1,65 @@
-# Talks with ChatGPT
+## Useful prompts
+
+### take notes of a long text
+
+1. Start by telling AI like this:
+
+> i will feed you a text and you should help me to generate a summary on the text. the text is long, so i will send you a small piece of it each time. you should only say: ok until i told you : i am done ,then you can generate the summary, if you understand, say: i understand
+
+2. and feed text slices to AI;
+3. once you have done, say:
+
+> i am done
+
+4. AI will generate a summary for you and then you can ask AI to help you distill something important:
+
+   - example:
+
+   - 
+   
+     <span style="float:right">i am done</span>
+     
+     
+   
+   > Here is a summary of the text you provided:
+   >
+   > The problem with Binary Search Trees (BSTs) is that inserting nodes can break the balanced structure and increase the height. One solution is to never add a leaf node and instead add to a current leaf node. However, this can lead to a runtime of N again. A better solution is to set a limit on the number of elements in a single node and split the node in half when it reaches that limit. This maintains perfect balance and these trees are called B-trees or 2-3-4/2-3 Trees. The insertion process involves inserting into a leaf node and popping up the middle left node if necessary until the parent node can accommodate or you reach the root.
+   
+   
+   
+   ​	         																					give me a note to best summarize what is B-trees
+
+
+
+> Sure! Here’s a brief summary of what B-trees are:
+>
+> B-trees are balanced search trees that maintain perfect balance by setting a limit on the number of elements in a single node and splitting nodes in half when they reach that limit. They are also known as 2-3-4 or 2-3 Trees, which refers to the number of children each node can have. The insertion process involves inserting into a leaf node and popping up the middle left node if necessary until the parent node can accommodate or you reach the root.
+>
+> I hope this helps! Let me know if you have any questions or if you’d like more information on B-trees.
+
+
+
+<span style="float:right">can you do it only using a sentence?</span>
+
+
+
+> Sure! Here’s a one-sentence summary of B-trees:
+>
+> B-trees are balanced search trees that maintain perfect balance by limiting the number of elements in a node and splitting nodes when necessary.
+>
+> I hope this helps! Let me know if you have any questions or if you’d like more information on B-trees.
+
+
+
+<div style="text-align:right"> can you make every words in this sentence starts with "B"? </div>
+
+
+
+> Sure! Here’s a sentence where every word starts with the letter “B”:
+>
+> B-trees balance by bounding branch breadth and bisecting bulky branches.
+
+
 
 ## Understanding Static vs Dynamic Types in Java
 
@@ -94,3 +155,6 @@ In general, the decision to use a subtype or supertype depends on the specific c
 No, using casting alone will not make `sl.printLostItems()` work. The reason for this is that casting only changes the static type of an object, not the dynamic type. In this case, although `sl` has a dynamic type of `VengefulSLList`, its static type is still `SLList`, which does not have a method called `printLostItems()`. Therefore, casting `sl` to `VengefulSLList` would only change its static type, but not its dynamic type, and thus it would not make the `printLostItems()` method accessible.
 
 To make `sl.printLostItems()` work, you would need to declare `sl` as `VengefulSLList` instead of `SLList` from the beginning, like this: `VengefulSLList<Integer> sl = new VengefulSLList<>(...);`. This way, both the static type and dynamic type of `sl` would be `VengefulSLList`, and the `printLostItems()` method would be accessible.
+
+
+

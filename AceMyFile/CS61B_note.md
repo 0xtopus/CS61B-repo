@@ -1,3 +1,5 @@
+
+
 # Java
 
 ## Intro
@@ -372,7 +374,7 @@ also, there are  **abstract classes** who are something in between of class and 
 
 ## Overriding
 
-若父类中有方法重写了，或实现了父类或接口里的抽象方法，就加上 @override
+若父类中有方法重写了或实现了父类或接口里的抽象方法，就加上 @override
 
 ```java
 @Override
@@ -1281,7 +1283,7 @@ Two sets are named *disjoint sets* if they have no elements in common. A Disjoin
 
 
 
-- By applying different meas, the results of cost varies:<img src="F:\awsl\Java\cs61b\AceMyFile\note_pics\DisjointSet.png" style="zoom:67%;" />
+- By applying different means, the results of cost varies:<img src="..\AceMyFile\note_pics\DisjointSet.png" style="zoom:67%;" />
 
 
 
@@ -1363,6 +1365,133 @@ BST Implementations:
 - Deletion is more challenging. Typical approach is “Hibbard deletion”.
 
 
+
+### Binary Tree Height
+
+- **depth**: the number of links between a node and the root.
+- **height**: the lowest depth of a tree.
+- **average depth**: average of the total depths in the tree. 
+
+The **height** of the tree determines the worst-case runtime, because in the worst case the node we are looking for is at the bottom of the tree.
+
+The **average depth** determines the average-case runtime.
+
+
+
+The order you insert nodes into a BST determines its height.
+
+You don't have to know the proof of this, but when we insert randomly into a BST the **average depth** and **height** are expected to be Θ(*log N*).
+
+However, we won't always be able to insert into a BST in random order.
+
+
+
+### Rotating Trees
+
+The formal definition of rotation is:
+
+```
+rotateLeft(G): Let x be the right child of G. Make G the new left child of x.
+rotateRight(G): Let x be the left child of G. Make G the new right child of x.
+```
+
+## B-Trees
+
+> B-trees balance by bounding branch breadth and bisecting bulky branches. -- new Bing
+
+**B-Trees are hard to implement!**
+
+B-trees are balanced search trees that maintain perfect balance by setting a limit on the number of elements in a single node and splitting nodes in half when they reach that limit. They are also known as 2-3-4 or 2-3 Trees, which refers to the number of children each node can have. The insertion process involves inserting into a leaf node and popping up the middle left node if necessary until the parent node can accommodate or you reach the root.
+
+**Insertion Process**
+
+Here’s a brief and intuitive summary of the insertion process for B-trees:
+
+1. Traverse down the tree with the node to be inserted, going left and right according to whether or not the node is greater than or smaller than the items in each node.
+2. Add the node to a leaf node.
+3. If the new node has more than the maximum number of elements allowed (e.g., 4 for a 2-3-4 tree), pop up the middle left node and re-arrange the children accordingly.
+4. If this results in a parent node having more than the maximum number of elements allowed, repeat step 3 until you reach a parent that can accommodate or you get to the root.
+
+**B-Tree Invariants**
+
+A B-tree has the following helpful invariants:
+
+- All leaves must be the same distance from the source.
+- A non-leaf node with *k* items must have exactly k+1 children.
+
+In tandem, these invariants cause the tree to always be bushy.
+
+**Runtime of B-trees**
+
+The worst-case runtime situation for search in a B-tree would be if each node had the maximum number of elements in it and we had to traverse all the way to the bottom. We will use *L* to denote the number of elements in each node. This means would would need to explore log*N* nodes (since the max height is log*N* due to the bushiness invariant) and at each node we would need to explore *L* elements. In total, we would need to run *L* log *N* operations. However, we know *L* is a constant, so our total runtime is *O*(log*N*).
+
+
+
+**Summary**
+
+BSTs have best case height Θ(log*N*), and worst case height Θ(*N*).
+
+- Big O is not the same thing as worst case!
+
+B-Trees are a modification of the binary search tree that avoids Θ(*N*) worst case.
+
+- Nodes may contain between 1 and *L* items.
+- contains works almost exactly like a normal BST.
+- add works by adding items to existing leaf nodes.
+  - If nodes are too full, they split.
+- Resulting tree has perfect balance. Runtime for operations is*O*(log*N*).
+- Have not discussed deletion. See extra slides if you’re curious.
+- Have not discussed how splitting works if *L* > 3 (see some other class).
+- B-trees are more complex, but they can efficiently handle ANY insertion order.
+
+
+
+## Red-Black Trees
+
+Red-Black Trees are binary search trees that are structurally identical to 2-3 trees and thus stay balanced. 😊
+
+### LLRB
+
+Left-Leaning Red-Black trees have a 1-1 correspondence with 2-3 trees. Every 2-3 tree has a unique LLRB red-black tree associated with it. As for 2-3-4 trees, they maintain correspondence with standard Red-Black trees.
+
+### Properties of LLRB's
+
+Here are the properties of LLRB's:
+
+- 1-1 correspondence with 2-3 trees.
+- No node has 2 red links.
+- There are no red right-links.
+- Every path from root to leaf has same number of black links (because 2-3 trees have same number of links to every leaf).
+- Height is no more than 2x height of corresponding 2-3 tree.
+
+**Insertion**
+
+Here is a summary of all the operations:
+
+- When inserting: Use a red link.
+- If there is aright leaning “3-node”, we have a Left Leaning Violation
+  - Rotate left the appropriate node to fix.
+- If there are two consecutive left links, we have an incorrect 4 Node Violation!
+  - Rotate right the appropriate node to fix.
+- If there are any nodes with two red children, we have a temporary 4 Node.
+  - Color flip the node to emulate the split operation.
+
+**Runtime**
+
+Because a left-leaning red-black tree has a 1-1 correspondence with a 2-3 tree and will always remain within 2x the height of its 2-3 tree, the runtimes of the operations will take log*N* time.
+
+
+
+## Summary on Trees
+
+- Binary search trees are simple, but they are subject to imbalance which leads to crappy runtime.
+- 2-3 Trees (B Trees) are balanced, but painful to implement and relatively slow.
+- LLRBs insertion is simple to implement (but deletion is hard).
+  - Works by maintaining mathematical bijection with a 2-3 trees.
+- Java’s [TreeMap](https://github.com/AdoptOpenJDK/openjdk-jdk11/blob/999dbd4192d0f819cb5224f26e9e7fa75ca6f289/src/java.base/share/classes/java/util/TreeMap.java) is a red-black tree (but not left leaning).
+- LLRBs maintain correspondence with 2-3 tree, Standard Red-Black trees maintain correspondence with 2-3-4 trees.
+- Allows glue links on either side (see [Red-Black Tree](http://en.wikipedia.org/wiki/Red–black_tree)).
+- More complex implementation, but significantly faster.
 
 # Project 1
 
