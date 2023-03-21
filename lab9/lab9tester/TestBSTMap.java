@@ -142,8 +142,6 @@ public class TestBSTMap {
         assertEquals((Integer) 1, b.remove("dog"));
         assertEquals(5, b.size());
         assertEquals((Integer) 5, b.get("cat"));
-
-        assertEquals(5, b.size());
     }
 
     @Test
@@ -180,8 +178,6 @@ public class TestBSTMap {
         assertEquals((Integer) 1, b.remove("dog", 1));
         assertEquals(5, b.size());
         assertEquals((Integer) 5, b.get("cat"));
-
-        assertEquals(5, b.size());
     }
 
     @Test
@@ -199,6 +195,20 @@ public class TestBSTMap {
         for (String k : b) {
             System.out.println(k);
         }
+    }
+
+    @Test
+    public void ExtraRemoveKeyTest() {
+        BSTMap<String, Integer> b = new BSTMap<String, Integer>();
+        b.put("dog", 1);
+        assertEquals((Integer) 1, b.remove("dog", 1));
+        assertNull(b.remove("dog", 1));
+
+        b = new BSTMap<String, Integer>();
+        b.put("dog", 1);
+        assertEquals((Integer) 1, b.remove("dog"));
+        assertNull(b.remove("dog"));
+
     }
 
     public static void main(String[] args) {

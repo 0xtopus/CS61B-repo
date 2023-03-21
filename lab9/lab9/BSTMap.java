@@ -134,6 +134,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         if (keyValue == null) {
             return null;
         }
+        if (size == 1) {
+            root = null;
+        }
         removeHelper(key, root);
         return keyValue;
     }
@@ -148,6 +151,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         V keyValue = get(key);
         if (keyValue != value) {
             return null;
+        }
+        if (size == 1) {
+            root = null;
         }
         removeHelper(key, root);
         return keyValue;

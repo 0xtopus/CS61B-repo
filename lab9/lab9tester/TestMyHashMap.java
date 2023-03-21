@@ -183,8 +183,6 @@ public class TestMyHashMap {
         assertEquals((Integer) 1, b.remove("dog"));
         assertEquals(5, b.size());
         assertEquals((Integer) 5, b.get("cat"));
-
-        assertEquals(5, b.size());
     }
 
     @Test
@@ -221,8 +219,6 @@ public class TestMyHashMap {
         assertEquals((Integer) 1, b.remove("dog", 1));
         assertEquals(5, b.size());
         assertEquals((Integer) 5, b.get("cat"));
-
-        assertEquals(5, b.size());
     }
 
     @Test
