@@ -2,6 +2,8 @@ package lab9tester;
 
 import static org.junit.Assert.*;
 
+import java.util.Set;
+
 import org.junit.Test;
 import lab9.MyHashMap;
 
@@ -22,13 +24,13 @@ public class TestMyHashMap {
         }
     }
 
-    //assumes put/size/containsKey/get work
+    // assumes put/size/containsKey/get work
     @Test
     public void sanityClearTest() {
         MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
         for (int i = 0; i < 455; i++) {
             b.put("hi" + i, 1);
-            //make sure put is working via containsKey and get
+            // make sure put is working via containsKey and get
             assertTrue(null != b.get("hi" + i)
                     && b.containsKey("hi" + i));
         }
@@ -73,7 +75,7 @@ public class TestMyHashMap {
         assertEquals(456, b.size());
     }
 
-    //assumes get/containskey work
+    // assumes get/containskey work
     @Test
     public void sanityPutTest() {
         MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
@@ -125,6 +127,119 @@ public class TestMyHashMap {
         studentIDs.put("evil alan", 345);
         assertEquals(345, studentIDs.get("evil alan").intValue());
         assertEquals(studentIDs.get("evil alan"), studentIDs.get("alan"));
+    }
+
+    @Test
+    public void keySetTest() {
+        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+        for (int i = 0; i < 455; i++) {
+            b.put("hi" + i, 1 + i);
+            // make sure put is working via containsKey and get
+            assertTrue(null != b.get("hi" + i));
+            assertTrue(b.get("hi" + i).equals(1 + i));
+            assertTrue(b.containsKey("hi" + i));
+        }
+        Set<String> bKeySet = b.keySet();
+        for (int i = 0; i < 455; i++) {
+            assertTrue(bKeySet.contains("hi" + i));
+        }
+        assertFalse(bKeySet.contains("ingenting")); // "ingenting" means "nothing" in Norwegian
+    }
+
+    /*
+     * This test simulates the example
+     * showed in video in the Delete part of official text book
+     * 
+     * @Source https://joshhug.gitbooks.io/hug61b/content/chap10/chap102.html
+     */
+    @Test
+    public void removeKeyTest() {
+        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+        b.put("dog", 1);
+        b.put("bag", 2);
+        b.put("flat", 3);
+        b.put("alf", 4);
+        b.put("cat", 5);
+        b.put("glut", 6);
+        b.put("elf", 7);
+        b.put("eyes", 8);
+        assertEquals(8, b.size());
+        assertEquals((Integer) 6, b.get("glut"));
+
+        // remove doesn't-exist
+        assertNull(b.remove("ingenting"));
+
+        // remove a leaf "glut" - 6
+        assertEquals((Integer) 6, b.remove("glut"));
+        assertEquals(7, b.size());
+        assertNull(b.get("glut"));
+
+        // remove a node with a sub-node "flat" - 3
+        assertEquals((Integer) 3, b.remove("flat"));
+        assertEquals(6, b.size());
+        assertEquals((Integer) 7, b.get("elf"));
+
+        // remove a node with 2 sub-node "dog" - 1
+        assertEquals((Integer) 1, b.remove("dog"));
+        assertEquals(5, b.size());
+        assertEquals((Integer) 5, b.get("cat"));
+
+        assertEquals(5, b.size());
+    }
+
+    @Test
+    public void removeKeyValueTest() {
+        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+        b.put("dog", 1);
+        b.put("bag", 2);
+        b.put("flat", 3);
+        b.put("alf", 4);
+        b.put("cat", 5);
+        b.put("glut", 6);
+        b.put("elf", 7);
+        b.put("eyes", 8);
+        assertEquals(8, b.size());
+        assertEquals((Integer) 6, b.get("glut"));
+
+        // remove doesn't-exist
+        assertNull(b.remove("ingenting", 123));
+
+        // remove a key with a incompatible value
+        assertNull(b.remove("glut", 384298));
+
+        // remove a leaf "glut" - 6
+        assertEquals((Integer) 6, b.remove("glut", 6));
+        assertEquals(7, b.size());
+        assertNull(b.get("glut"));
+
+        // remove a node with a sub-node "flat" - 3
+        assertEquals((Integer) 3, b.remove("flat", 3));
+        assertEquals(6, b.size());
+        assertEquals((Integer) 7, b.get("elf"));
+
+        // remove a node with 2 sub-node "dog" - 1
+        assertEquals((Integer) 1, b.remove("dog", 1));
+        assertEquals(5, b.size());
+        assertEquals((Integer) 5, b.get("cat"));
+
+        assertEquals(5, b.size());
+    }
+
+    @Test
+    public void iteratorTest() {
+        MyHashMap<String, Integer> b = new MyHashMap<String, Integer>();
+        b.put("dog", 1);
+        b.put("bag", 2);
+        b.put("flat", 3);
+        b.put("alf", 4);
+        b.put("cat", 5);
+        b.put("glut", 6);
+        b.put("elf", 7);
+        b.put("eyes", 8);
+        // check output print to verify it works
+        for (String k : b) {
+            System.out.println(k);
+        }
     }
 
     public static void main(String[] args) {
