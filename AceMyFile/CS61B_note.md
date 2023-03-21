@@ -277,6 +277,28 @@ Private variables and methods can only be accessed by code inside the same `.jav
 
 
 
+## Immutable Data Type
+
+An immutable data type is one for which an instance cannot change in any observable way after instantiation.
+
+Examples:
+
+- Mutable: ArrayDeque, Percolation.
+- Immutable: Integer, String, Date.
+
+The `final` keyword will help the compiler ensure immutability.
+
+- `final` variable means you may assign a value once (either in the constructor of the class or in the initializer), but after it can never change.
+- `final` is neither sufficient nor necessary for a class to be immutable.
+
+**Advantage:** Less to think about; avoids bugs and makes debugging easier.
+
+- Analogy: Immutable classes have some buttons you can press / windows you can look inside. Results are ALWAYS the same, no matter what.
+
+**Disadvantage:** Must create a new object anytime anything changes.
+
+- Example: String concatenation is slow!
+
 ## Writing Tests
 
 ```java
@@ -355,7 +377,7 @@ public AList<Item> implements List<Item> { ... }
 **these are the qualities of interfaces**:
 
 - All methods must be public.
-- All variables must be public static final.
+- All variables must be public static final.(<a href="#Immutable Data Type">immutable data type</a>)
 - Cannot be instantiated
 - All methods are by default abstract unless specified to be `default`
 - Can implement more than one interface per class
@@ -1492,6 +1514,130 @@ Because a left-leaning red-black tree has a 1-1 correspondence with a 2-3 tree a
 - LLRBs maintain correspondence with 2-3 tree, Standard Red-Black trees maintain correspondence with 2-3-4 trees.
 - Allows glue links on either side (see [Red-Black Tree](http://en.wikipedia.org/wiki/Red–black_tree)).
 - More complex implementation, but significantly faster.
+
+
+
+## Hashing
+
+hashing is a powerful technique for turning a more complex object like a `String` into a numerically representable value like an `int`. 
+
+- **Hash Table**
+
+The *hash table* is a data structure that combines the *hash function* with the fact that arrays can be indexed in constant time. Using the hash table and the map abstract data type, we can build a `HashMap` which allows for amortized constant time access to any key-value pair so long as we know which bucket the key falls into.
+
+<img src=".\note_pics\hashTable.png" style="zoom:67%;" />
+
+We face the problem that not every object in Java can easily be converted to a number. However, the key idea behind hashing is the transformation of any object into a numeric representation. The key is to have a hashing function transform our keys into different values, and convert that number into an index to then access the array. 
+
+We achieve this through our own implementation of a `hashCode()` function, with a return value of an `int` type. This `int` type is our *hash value*. 
+
+All Objects have `hashCode()` method;
+
+The built-in String class in Java, for example, might have the following code block:
+
+```java
+public class String {
+    public int hashCode() {
+        //implementation here
+    }
+}
+
+```
+
+Based on this example, we can call `key.hashCode()` to generate an integer hash code for a `String` instance called `key`. 
+
+<img src=".\note_pics\hashCodesMethod.png" style="zoom:67%;" />
+
+### Valid Hashcodes!
+
+You may see this term in discussions and potentially on exams. What exactly makes a hash code "valid"? There are two properties:
+
+1. **Deterministic:** The `hashCode()` function of two objects A and B who are equal to each other (`A.equals(B) == true`) have the same hashcode. *This also means the hash function cannot rely on attributes of the object that are not reflected in the* `.equals()` *method.*
+2. **Consistent:** The `hashCode()` function returns the same integer every time it is called on the same instance of an object. This means the `hashCode()` function must be independent of time/stopwatches, random number generators, or any methods that would not give us a consistent `hashCode()` across multiple `hashCode()` function calls on the same object instance.
+
+Note that there are no requirements that state that unequal objects should have different hash function values.
+
+
+
+==Key Takeaway: `equals()` and `hashCode()`==
+
+Bottom line: If your class override equals, you should also override hashCode in a consistent manner.
+
+- If two objects are equal, they must always have the same hash code.
+
+If you don’t, everything breaks:
+
+- `Contains` can’t find objects (unless it gets lucky).
+- `Add` results in duplicates.
+
+### Good Hashcodes!
+
+You'll probably see this term a lot as well. But what makes a hashcode "good"? There are a few properties that can make a good `hashCode()`:
+
+1. The `hashCode()` function must be valid.
+2. The `hashCode()` function values should be spread as uniformly as possible over the set of all integers.
+3. The `hashCode()` function should be relatively quick to compute [ideally O(1) constant time mathematical operations].
+
+### Avoiding Collision
+
+There are two common methods to deal with collisions in hash tables:
+
+1. **Linear Probing:** Store the colliding keys elsewhere in the array, potentially in the next open array space. This method can be seen with distributed hash tables, which you will see in later computer science courses that you may take.(AKA: Open Addressing)
+2. **External Chaining:** A simpler solution is to store all the keys with the same hash value together in a collection of their own, such as a `LinkedList`. This collection of entries sharing a single index is called a **bucket**.
+
+### Resizing
+
+No matter how good our `hashCode()` method is, if the underlying array of our hash table is small and we add a lot of keys to it, then we will start getting more and more collisions. Because of this, a hash table should expand its underlying array once it starts to fill up (much like how an `ArrayList` expands once it fills up).
+
+For our hash table, we will define the maximum load factor that we will allow. **If adding another key-value pair would cause the load factor to exceed the specified maximum load factor, then the hash table should resize.** This is usually done by doubling the underlying array length. Java’s default maximum load factor is 0.75 which provides a good balance between a reasonably-sized array and reducing collisions.
+
+As an example, let’s consider what happens if our hash table has an array length of 10 and currently contains 7 elements. Each of these 7 elements are hashed modulo 10 because we want to get an index within the range of 0 through 9. The current load factor is 7/10, or 0.7, just under the threshold.
+
+If we try to insert one more element, we would have a total of 8 elements in our hash table and a load factor of 0.8. Because this would cause the load factor to exceed the maximum load factor, we must resize the underlying array to length 20 before we insert the element. Remember that since our procedure for locating an entry in the hash table is to take the `hashCode() % array.length` and our array’s length has changed from 10 to 20, all the elements in the hash table need to be relocated. Once all the elements have been relocated and our new element has been added, we will have a load factor of 8/20, or 0.4, which is below the maximum load factor.
+
+* Comparing Data Structure Run Times!
+
+| Text                                          | contains(x) | add(x)   |
+| --------------------------------------------- | ----------- | -------- |
+| Bushy BSTs                                    | Θ(log N)    | Θ(log N) |
+| Seperate Chaining Hash Table with NO resizing | Θ(N)        | Θ(N)     |
+| Seperate Chaining Hash Table with resizing    | Θ(1)        | Θ(1)     |
+
+### Mutable HashSet Keys
+
+In principle, we can create a `HashSet<List>`.
+
+Weird stuff happens if:
+
+- We insert a List into a HashSet.
+- We later mutate that List.
+
+All because a `List` is a <a href="#Immutable Data Type">mutable data type</a>, so when it gets changed, its Hash Code (i.e. key) changes but the contents remains in the original bucket. And then when you try to execute something like `contain()`, it will go to the new bucket to find the target and find nothing, whereas the target is still in the old bucket.
+
+**Key Point**: Never mutate (modify) an object being used as a key. Incorrect results arise, and the item gets lost. [The slides for the Hashing II Lecture ](https://docs.google.com/presentation/d/1U_-RQCJB3j9B-k-kY8I4nS-FuxIvO8EgVIrOthx2InU/edit#slide=id.g2165b69ef3f_0_291)provide a very thorough visual example of this point.
+
+<img src=".\note_pics\neverHashMutable.png" style="zoom:67%;" />
+
+### Hash Bounus
+
+Give a simple procedure that can be carried out by hand that takes a Java string X and finds another Java string Y with the same hashCode().
+
+- Why do this?
+
+  There are several reasons why someone might want to find another string with the same `hashCode()` as a given string:
+
+  1. **Testing**: When testing hash-based data structures such as `HashSet` or `HashMap`, it can be useful to have multiple strings with the same hash code to test how the data structure handles collisions.
+  2. **Security**: In some cases, an attacker might try to find multiple strings with the same hash code to exploit weaknesses in a hash-based data structure and cause a denial-of-service attack. By finding another string with the same hash code, one can better understand and prevent such attacks.
+  3. **Curiosity**: Finding another string with the same hash code can be an interesting exercise in understanding how the `hashCode()` method works and how it distributes objects across buckets in a hash-based data structure.
+
+- Here is a simple procedure that can be carried out by hand to find another Java string `Y` with the same `hashCode()` as a given Java string `X`:
+
+  1. Let `X` be the given Java string and `n` be its length.
+  2. Compute the `hashCode()` of `X` using the formula: `hash = s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]`, where `s[i]` is the ASCII value of the character at index `i` in string `X`.
+  3. To find another string `Y` with the same hash code, we can simply swap two characters in string `X`. For example, if we swap the first and last characters of string `X`, we get a new string `Y`.
+  4. Verify that strings `X` and `Y` have the same hash code by computing their hash codes using the formula above.
+
+
 
 # Project 1
 
