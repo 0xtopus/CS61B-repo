@@ -1637,7 +1637,70 @@ Give a simple procedure that can be carried out by hand that takes a Java string
   3. To find another string `Y` with the same hash code, we can simply swap two characters in string `X`. For example, if we swap the first and last characters of string `X`, we get a new string `Y`.
   4. Verify that strings `X` and `Y` have the same hash code by computing their hash codes using the formula above.
 
+## Heaps and Priority Queue
 
+**Priority Queue.** A Max Priority Queue (or PQ for short) is an ADT that supports at least the insert and delete-max operations. A MinPQ supposert insert and delete-min.
+
+**Heaps.** A max (min) heap is an array representation of a binary tree such that every node is larger (smaller) than all of its children. This definition naturally applies recursively, i.e. a heap of height 5 is composed of two heaps of height 4 plus a parent.
+
+We will define our binary min-heap as being **complete** and obeying **min-heap** property:
+
+- Min-heap: Every node is less than or equal to both of its children
+- Complete: Missing items only at the bottom level (if any), all nodes are as far left as possible.
+
+**Implementation**
+
+We can use an array to represent a min-Heap. By setting a descending order of items, we can yield an array as our desirable heap:
+
+<img src="\note_pics\heapApproach.png" style="zoom:67%;" />
+
+- **Swim**
+
+Given this implementation, we define the following code for the "swim" described in the Heap Operations section.
+
+```java
+public void swim(int k) {
+    if (keys[parent(k)] ≻ keys[k]) {
+		swap(k, parent(k));
+		swim(parent(k));              
+    }
+}
+```
+
+This "swim" maintains the order of the array. And finding its parent is only a simple math thing:
+
+```java
+private int parent(int k) {
+    int index = getIndex(k);
+    return (index - 1) / 2;
+}
+```
+
+And if you want a even simpler return equation, try this:
+
+<img src=".\note_pics\heapApproach2.png" style="zoom:67%;" />
+
+and you will find:
+
+- `leftChild(k) `= *k∗ 2*
+
+- `rightChild(k)` = *k ∗ 2 + 1*
+
+- `parent(k) ` = *k / 2*
+
+### Comparing to alternative implementations
+
+| Methods          | Ordered Array | Bushy BST | Hash Table | Heap    |
+| ---------------- | ------------- | --------- | ---------- | ------- |
+| `add`            | Θ(N)          | Θ(logN)   | Θ(1)       | Θ(logN) |
+| `getSmallest`    | Θ(1)          | Θ(logN)   | Θ(N)       | Θ(1)    |
+| `removeSmallest` | Θ(N)          | Θ(logN)   | Θ(N)       | Θ(logN) |
+
+- Heap operations are **amortized** analysis, since the array will have to resize (not a big deal)
+
+- BST's can have constant time `getSmallest` if pointer is stored to smallest element
+
+- Array-based heaps take around 1/3rd the memory it takes to represent a heap using approach 1A (direct pointers to children)
 
 # Project 1
 
