@@ -30,7 +30,7 @@ public class Percolation {
         }
         // using disjoint set to track connection between each site
         // the last two sites represent the all upmost sites and all lowest sites
-        sitesTracker = new WeightedQuickUnionUF(N * N + 2); 
+        sitesTracker = new WeightedQuickUnionUF(N * N + 1);  
         // int j = xyTo1D(N - 1, 0);
         for (int i = 0; i < N; i++) {
             sitesTracker.union(N * N, i);
@@ -40,7 +40,7 @@ public class Percolation {
     }
 
     /**
-     * project an (x,y) position to a disjoint set site bearing
+     * convert an (x,y) position to a disjoint set site bearing
      * @param row the row coordinate from 0 ~ N-1
      * @param col the col coordinate from 0 ~ N-1
      * @return the index of the corresponding site in the disjoint set
@@ -84,7 +84,12 @@ public class Percolation {
             // if it percolated
             if (!isPercolation) {
                 for (int i = 0; i < openBottomSize; i++) {
-                    if (sitesTracker.connected(xyTo1D(size - 1, openBottomColumn[i]), size * size)) {
+                    if (
+                        sitesTracker.connected(
+                            xyTo1D(size - 1, openBottomColumn[i]), 
+                            size * size
+                        )
+                    ) {
                         isPercolation = true;
                     }
                 }
