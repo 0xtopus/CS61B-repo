@@ -40,6 +40,8 @@
 
 ​		`git log`：查看历次提交的记录
 
+​		bouns: `git log --pretty=oneline`
+
 可以在vscode里使用图形化界面git
 
 # 常用命令
@@ -160,7 +162,7 @@ git branch -D <branch name> #合并之后可以删除不需要的分支
 
 当开发分支较多时，merge会把分支树变得很乱。此时可以使用变基来合并分支。
 
-注意：变基操作一般只在自己的本地仓库使用，远程服务器的仓库不可以使用变基。
+==注意：==变基操作一般只在自己的本地仓库使用，远程服务器的仓库不可以使用变基。
 
 1. 发起变基时，git会先找到两条最近分支的最近祖先	
 2. 把当前分支和合并分支的共同祖先进行比对，把所有的变化提取出来存到一个临时文件里
@@ -172,7 +174,92 @@ git switch <filename>
 git rebase <target filename>
 ```
 
+### 利用变基合并commits
 
+参考：
+
+1. https://stackoverflow.com/questions/2563632/how-can-i-merge-two-commits-into-one-if-i-already-started-rebase
+
+2. https://stackoverflow.com/questions/12522565/how-can-i-combine-two-commits-into-one-commit
+
+**注意事项**：如果你正在使用远程仓库，且这个仓库的贡献者不止你一个人，那么在主分支上进行下列操作可能会使他人的文件丢失。您最好==在自己的分支上进行变基==，或者在操作前与他人充分沟通。
+
+**步骤**：
+
+1. 使用`git log --pretty=oneline`查看你需要合并的commits:
+
+```bash
+$ git log --pretty=oneline
+a931ac7c808e2471b22b5bd20f0cad046b1c5d0d c
+b76d157d507e819d7511132bdb5a80dd421d854f b
+df239176e1a2ffac927d8b496ea00d5488481db5 a
+```
+
+假设提交的先后顺序是 a --> b --> c，你需要合并 c 和 b
+
+2. 使用`git rebase -i HEAD~2` （<a href="#chatGPT expaination on the command">chatGPT expaination on the command</a>）,这个命令会打开一个文本文件，让你查看最近的两条提交记录，注意和`git log`输出不同，**较新的提交记录在下面，比较旧的在上面。**
+
+```bash
+pick b76d157 b
+pick a931ac7 c
+
+# Rebase df23917..a931ac7 onto df23917
+#
+# Commands:
+#  p, pick = use commit
+#  r, reword = use commit, but edit the commit message
+#  e, edit = use commit, but stop for amending
+#  s, squash = use commit, but meld into previous commit
+#  f, fixup = like "squash", but discard this commit's log message
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+# However, if you remove everything, the rebase will be aborted.
+#
+```
+
+3. 把**较新的commit**前面的`pick`改成`squash`，然后保存并退出 :
+
+```bash
+pick   b76d157 b
+squash a931ac7 c
+```
+
+4. 之后你会得到提示：
+
+```bash
+# This is a combination of 2 commits.
+# The first commit's message is:
+
+b
+
+# This is the 2nd commit message:
+
+c
+```
+
+5. 再次用`git log --pretty=oneline`查看，就会看到：
+
+```bash
+$ git log --pretty=oneline
+18fd73d3ce748f2a58d1b566c03dd9dafe0b6b4f b and c
+df239176e1a2ffac927d8b496ea00d5488481db5 a
+```
+
+大功告成！
+
+6. 如果你在推送到远程仓库时失败了，尝试使用`git push -f` 来进行推送。**请确保你的这步操作不会影响到正在使用同一仓库的其他人！！！**
+
+
+
+### chatGPT expaination on the command
+
+> The command `git rebase -i HEAD~6` starts an interactive rebase process that allows you to interactively edit the last six commits on the current branch.
+>
+> More specifically, the `-i` flag tells Git to start an interactive rebase, while `HEAD~6` specifies the parent of the current commit. In this case, the parent of the current commit is six commits ago.
+>
+> By running this command, Git will open an interactive file in your default text editor, showing you the last six commits on the branch. You can then edit the file to choose which commits to keep, squash, or edit, among other options. Once you've made your changes and saved the file, Git will apply your changes and rewrite the Git history of the branch with your new commit history.
+>
+> Note that the `git rebase` command should be used with caution, especially when rewriting Git history. If you're working with a shared repository or collaborating with others, you should communicate with them before rewriting the Git history of a branch.
 
 # tag标签
 
