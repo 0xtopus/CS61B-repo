@@ -1515,6 +1515,59 @@ Because a left-leaning red-black tree has a 1-1 correspondence with a 2-3 tree a
 - Allows glue links on either side (see [Red-Black Tree](http://en.wikipedia.org/wiki/Red–black_tree)).
 - More complex implementation, but significantly faster.
 
+## Tree ~~Iteration~~ Traversal
+
+<img src="\note_pics\treeTraversal.png" style="zoom:50%;" />
+
+### Pre-order Traversal
+
+Here's the idea behind pre-order traversal. Start at the root. **Visit the root** (aka, do the **action** you want to do.) The action here is "print".
+
+it is useful to present hierarchic structure of directories. 
+
+(clockwise and print when passing node left)
+
+```java
+preOrder(BSTNode x) {
+    if (x == null) return;
+    print(x.key)
+    preOrder(x.left)
+    preOrder(x.right)
+}
+```
+
+### In-order Traversal
+
+Slightly different, but same big-picture idea. Here, instead of **visiting** (aka **printing**) first, we'll first visit the left branch. Then we'll print. Then we'll visit the right branch.
+
+(clockwise and when passing the node bottom)
+
+```java
+inOrder(BSTNode x) {
+    if (x == null) return;    
+    inOrder(x.left)
+    print(x.key)
+    inOrder(x.right)
+}
+```
+
+### Post-order Traversal
+
+Again, same big-picture idea, but now we'll print left branch, then right branch, then ourselves.
+
+it is useful to calculate directory sizes.
+
+(clockwise and when passing the node right)
+
+```java
+postOrder(BSTNode x) {
+    if (x == null) return;    
+    postOrder(x.left)
+    postOrder(x.right)
+    print(x.key)   
+}
+```
+
 
 
 ## Hashing
@@ -1559,9 +1612,9 @@ Note that there are no requirements that state that unequal objects should have 
 
 
 
-==Key Takeaway: `equals()` and `hashCode()`==
+### `equals()` and `hashCode()`
 
-Bottom line: If your class override equals, you should also override hashCode in a consistent manner.
+==Bottom line: If your class override equals, you should also override hashCode in a consistent manner.==
 
 - If two objects are equal, they must always have the same hash code.
 
@@ -1637,6 +1690,12 @@ Give a simple procedure that can be carried out by hand that takes a Java string
   3. To find another string `Y` with the same hash code, we can simply swap two characters in string `X`. For example, if we swap the first and last characters of string `X`, we get a new string `Y`.
   4. Verify that strings `X` and `Y` have the same hash code by computing their hash codes using the formula above.
 
+**Suggestion from hw3**
+
+<a href="https://sp18.datastructur.es/materials/hw/hw3/hw3">source</a>
+
+If you’d like to make your hashCodes work well for any number of buckets, you should ensure that it is not always a multiple of any number.
+
 ## Heaps and Priority Queue
 
 **Priority Queue.** A Max Priority Queue (or PQ for short) is an ADT that supports at least the insert and delete-max operations. A MinPQ supposert insert and delete-min.
@@ -1697,10 +1756,63 @@ and you will find:
 | `removeSmallest` | Θ(N)          | Θ(logN)   | Θ(N)       | Θ(logN) |
 
 - Heap operations are **amortized** analysis, since the array will have to resize (not a big deal)
-
 - BST's can have constant time `getSmallest` if pointer is stored to smallest element
-
 - Array-based heaps take around 1/3rd the memory it takes to represent a heap using approach 1A (direct pointers to children)
+
+## Graph
+
+A graph consists of:
+
+- A set of nodes (or vertices)
+- A set of zero of more edges, each of which connects two nodes.
+
+**all trees are also graphs, but not all graphs are trees.**
+
+
+
+### Simple Graphs only
+
+> Graphs can be divided into two categories: *simple* graphs and *multigraphs* (or complicated graphs, a term I invented, because that's how I like to think of them.) Fortunately, in this course (and almost all applications and research) focuses only on simple graphs. So when we say "graph" in this course, you should always think of a "simple graph" (unless we say otherwise.)
+
+
+
+### Catagory
+
+<img src="\note_pics\graphTypes.png" style="zoom:50%;" />
+
+### terminology
+
+**vertices**: node.
+
+**edges**: same to tree edges.
+
+### graph problems
+
+**s-t Path**: Is there a path between vertices s and t?
+
+**Connectivity**: Is the graph connected, i.e. is there a path between all vertices?
+
+**Biconnectivity**: Is there a vertex whose removal disconnects the graph?
+
+**Shortest s-t Path**: What is the shortest path between vertices s and t?
+
+**Cycle Detection**: Does the graph contain any cycles?
+
+**Euler Tour**: Is there a cycle that uses every edge exactly once?
+
+**Hamilton Tour**: Is there a cycle that uses every vertex exactly once?
+
+**Planarity**: Can you draw the graph on paper with no crossing edges?
+
+**Isomorphism**: Are two graphs isomorphic (the same graph in disguise)?
+
+
+
+### Traversal
+
+depth-first traversal
+
+
 
 # Project 1
 
