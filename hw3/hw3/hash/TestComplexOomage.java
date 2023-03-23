@@ -50,8 +50,9 @@ public class TestComplexOomage {
             deadlyList.add(deadOomage);
         }
         for (int i = 0; i < 9; i++) {
-            for (int j = i; j < 10; j++) {
-                assertFalse(deadlyList.get(i).equals(deadlyList.get(j)));
+            for (int j = i + 1; j < 10; j++) {
+                // System.out.println(deadlyList.get(i).hashCode());
+                assertFalse(deadlyList.get(i).hashCode() == deadlyList.get(j).hashCode());
             }
         }
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));

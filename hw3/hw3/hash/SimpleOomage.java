@@ -1,8 +1,8 @@
 package hw3.hash;
+
 import java.awt.Color;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdDraw;
-
 
 public class SimpleOomage implements Oomage {
     protected int red;
@@ -14,7 +14,7 @@ public class SimpleOomage implements Oomage {
 
     @Override
     public boolean equals(Object o) {
-        if(o == this) {
+        if (o == this) {
             return true;
         }
         if (o == null) {
@@ -27,9 +27,11 @@ public class SimpleOomage implements Oomage {
         return otherO.red == this.red && otherO.green == this.green && otherO.blue == this.blue;
     }
 
-    /* Uncomment this method after you've written
-       equals and failed the testHashCodeAndEqualsConsistency
-       test.*/
+    /*
+     * Uncomment this method after you've written
+     * equals and failed the testHashCodeAndEqualsConsistency
+     * test.
+     */
     @Override
     public int hashCode() {
         if (!USE_PERFECT_HASH) {
@@ -75,4 +77,4 @@ public class SimpleOomage implements Oomage {
     public String toString() {
         return "R: " + red + ", G: " + green + ", B: " + blue;
     }
-} 
+}
