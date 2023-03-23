@@ -134,10 +134,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         if (keyValue == null) {
             return null;
         }
-        if (size == 1) {
-            root = null;
-        }
-        removeHelper(key, root);
+        root = removeHelper(key, root);
         return keyValue;
     }
 
@@ -155,7 +152,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         if (size == 1) {
             root = null;
         }
-        removeHelper(key, root);
+        root = removeHelper(key, root);
         return keyValue;
     }
 
@@ -176,20 +173,57 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             } else if (p.left != null && p.right != null) {
                 // p has two sub-nodes
                 Node predecessor = findPredecessor(p);
-                p.value = predecessor.value;
-                p.key = predecessor.key;
+                if (predecessor == null) {
+                    Node pRight = p.right;
+                    p = p.left;
+                    p.right = pRight;
+                } else {
+                    p.value = predecessor.value;
+                    p.key = predecessor.key;
+                }
+/*                 if (predecessor.right == null) {
+                    p.left = p.left.left;
+                } */
                 return p;
             } else if (p.left != null) {
                 // p has one left sub-node
-                return p.left;
+ /*                if (p.left.left != null) {
+                    Node pLL = p.left.left;
+                    p.left = pLL;
+                } 
+                if (p.left.right != null){
+                    Node pLR = p.left.right;
+                    p.right = pLR;
+                } */
+                p.value = p.left.value;
+                p.key = p.left.key;
+                p.left = null;
+/*                 if (p.right.right == null || p.right.left != null) {
+                    p.right = null;
+                } */
+                return p;
             } else if (p.right != null) {
                 // p has one right sub-node
-                return p.right;
+/*                 if (p.right.left != null) {
+                    Node pRL = p.right.left;
+                    p.left = pRL;
+                } 
+                if (p.right.right != null){
+                    Node pRR = p.right.right;
+                    p.right = pRR;
+                } */
+                p.value = p.right.value;
+                p.key = p.right.key;
+                p.right = null;
+/*                 if (p.right.right == null || p.right.left != null) {
+                    p.right = null;
+                } */
+                return p;
             }
         }
         if (p.key.compareTo(key) < 0) {
             p.right = removeHelper(key, p.right);
-        } else {
+        } else if (p.key.compareTo(key) > 0) {
             p.left = removeHelper(key, p.left);
         }
         return p;
@@ -205,6 +239,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         while (p.right != null) {
             prev = p;
             p = p.right;
+        }
+        if (p == prev) {
+            return null;
         }
         prev.right = null;
         return p;
