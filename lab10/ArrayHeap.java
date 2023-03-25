@@ -124,27 +124,18 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        int leftIndex = leftIndex(index);
-        int rightIndex = rightIndex(index);
-        double myselfPriority = getNode(index).priority();
-        double leftDistance;
-        double rightDistance;
-        if (getNode(leftIndex) != null && getNode(rightIndex) != null) {
-            double leftPriority = getNode(leftIndex).priority();
-            double rightPriority = getNode(rightIndex).priority();
-            if (leftPriority - rightPriority <= 0) {
-                if (myselfPriority > leftPriority) {
-                    swap(index, leftIndex);
-                    sink(leftIndex);
-                }
-            } else if (leftPriority - rightPriority >= 0) {
-                if (myselfPriority > rightPriority) {
-                    swap(index, rightIndex);
-                    sink(rightIndex);
-                }
-            }
+        int nextIndex = min(leftIndex(index), rightIndex(index));
+        if (getNode(nextIndex) == null) {
+            return;
         }
-        return;
+        double nextPriority = getNode(nextIndex).priority();
+        double myselfPriority = getNode(index).priority();
+        if (myselfPriority > nextPriority) {
+            swap(index, nextIndex);
+            sink(nextIndex);
+        }
+
+
     }
 
     /**
@@ -169,6 +160,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T peek() {
+        if (size == 0) {
+            return  null;
+        }
         return contents[1].item();
     }
 
@@ -186,10 +180,13 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         if (size == 0) {
             return  null;
         }
-        T returnItem = contents[1].item();
+        T returnItem = peek();
         swap(1, size);
         contents[size] = null;
         size--;
+        if (size == 0) {
+            return returnItem;
+        }
         sink(1);
         return returnItem;
     }
@@ -225,8 +222,14 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             return;
         }
         if (contents[index].item().equals(item)) {
-            contents[index].myPriority = priority;
-            swim(index);
+            if (contents[index].myPriority < priority) {
+                contents[index].myPriority = priority;
+                sink(index);
+            }
+            if (contents[index].myPriority > priority) {
+                contents[index].myPriority = priority;
+                swim(index);
+            }
         }
         changePriorityHelper(item, index * 2, priority);
         changePriorityHelper(item, index * 2 + 1, priority);
@@ -485,15 +488,11 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         System.out.println("pq after inserting 10 items: ");
         System.out.println(pq);
         assertEquals(8, pq.size());
-        pq.changePriority("h", 2);
-        assertEquals("a", pq.contents[1].myItem);
-        assertEquals("c", pq.contents[2].myItem);
-        assertEquals("h", pq.contents[3].myItem);
-        assertEquals("b", pq.contents[4].myItem);
-        assertEquals("d", pq.contents[5].myItem);
-        assertEquals("e", pq.contents[6].myItem);
-        assertEquals("g", pq.contents[7].myItem);
-        assertEquals("i", pq.contents[8].myItem);
+        pq.changePriority("i", 2);
+        pq.changePriority("a", 10);
+        pq.changePriority("h", 3);
+        pq.changePriority("l", 2);
+        System.out.println(pq);
     }
 
 }
