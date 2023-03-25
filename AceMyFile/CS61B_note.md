@@ -1296,6 +1296,12 @@ Note that:
 
 
 
+## Data Structure Visulization
+
+- This <a href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html">website</a> can be of great help in studying following data structures!!!
+
+
+
 ## Disjoint Sets
 
 Two sets are named *disjoint sets* if they have no elements in common. A Disjoint-Sets (or Union-Find) data structure keeps track of a fixed number of elements partitioned into a number of *disjoint sets*. The data structure has two operations:
@@ -1303,11 +1309,55 @@ Two sets are named *disjoint sets* if they have no elements in common. A Disjoin
 1. `connect(x, y)`: connect `x` and `y`. Also known as `union`
 2. `isConnected(x, y)`: returns true if `x` and `y` are connected (i.e. part of the same set).
 
+Note that we represent the sets using **only an array**. We visualize it ourselves as trees.
 
+
+
+### Quick Find
+
+Let's consider an approach using a *single array of integers*.
+
+- The **indices of the array** represent the elements of our set.
+- The **value at an index** is the set number it belongs to.
+
+For example, we represent `{0, 1, 2, 4}, {3, 5}, {6}` as:
+
+<img src="\note_pics\quickFindDisjointSet.png" style="zoom:100%;" />
+
+### Quick Union
+
+An alternate approach is to change the meaning of our `id` array. In this strategy, `id[i]` is the parent object of object `i`. An object can be its own parent. The `find()` method climbs the ladder of parents until it reaches the root (an object whose parent is itself). To connect `p` and `q`, we set the root of `p` to point to the root of `q`.
+
+### Weighted quick union
+
+ Rather than `connect(p, q)` making the root of `p` point to the root of `q`, we instead make the root of the smaller tree point to the root of the larger one. The tree’s *size* is the *number* of nodes, not the height of the tree. Results in tree heights of *lg ⁡N*.
+
+- `connect`: Requires only one change to `id`, but also requires root finding (worst case *lg ⁡N* time).
+- `isConnected` (and `find`): Requires root finding (worst case *lg N* time).
+
+Warning: if the two trees have the same size, the book code has the opposite convention as quick union and sets the root of the second tree to point to the root of the first tree. This isn’t terribly important (you won’t be tested on trivial details like these).
+
+<img src="note_pics\WQU.png" style="zoom:80%;" />
+
+### WQU with path compression.
+
+When `find` is called, every node along the way is made to point at the root. Results in nearly flat trees. 
+
+### Runtime
 
 - By applying different means, the results of cost varies:<img src="..\AceMyFile\note_pics\DisjointSet.png" style="zoom:67%;" />
 
+### Example Implementations
 
+You are not responsible for knowing the details of these implementations for exams, but these may help in your understanding of the concepts.
+
+[QuickFind](http://algs4.cs.princeton.edu/15uf/QuickFindUF.java.html)
+
+[QuickUnion](http://algs4.cs.princeton.edu/15uf/QuickUnionUF.java.html)
+
+[WeightedQuickUnion](http://algs4.cs.princeton.edu/15uf/WeightedQuickUnionUF.java.html)
+
+[Weighted Quick Union with Path Compression](http://algs4.cs.princeton.edu/15uf/QuickUnionPathCompressionUF.java.html)
 
 
 ## Binary Tree
@@ -1423,7 +1473,7 @@ rotateRight(G): Let x be the left child of G. Make G the new right child of x.
 
 **B-Trees are hard to implement!**
 
-B-trees are balanced search trees that maintain perfect balance by setting a limit on the number of elements in a single node and splitting nodes in half when they reach that limit. They are also known as 2-3-4 or 2-3 Trees, which refers to the number of children each node can have. The insertion process involves inserting into a leaf node and popping up the middle left node if necessary until the parent node can accommodate or you reach the root.
+B-trees are balanced search trees that maintain perfect balance by setting a limit on the number of elements in a single node and splitting nodes in half when they reach that limit. They are also known as 2-3-4 or 2-3 Trees, which refers to the number of children each node can have. The insertion process involves **inserting into a leaf node** and **popping up the middle left node if necessary** until the parent node can accommodate or you reach the root.
 
 **Insertion Process**
 
@@ -1439,7 +1489,7 @@ Here’s a brief and intuitive summary of the insertion process for B-trees:
 A B-tree has the following helpful invariants:
 
 - All leaves must be the same distance from the source.
-- A non-leaf node with *k* items must have exactly k+1 children.
+- A non-leaf node with *k* items must have exactly k+1 children.(Bug: in <a href="https://sp18.datastructur.es/materials/discussion/disc09sol.pdf">dicu09</a>/3 *Trees and LLRB's*, you can find there has two nodes violating this rule)
 
 In tandem, these invariants cause the tree to always be bushy.
 
@@ -1517,7 +1567,7 @@ Because a left-leaning red-black tree has a 1-1 correspondence with a 2-3 tree a
 
 ## Tree ~~Iteration~~ Traversal
 
-<img src="\note_pics\treeTraversal.png" style="zoom:50%;" />
+<img src=".\note_pics\treeTraversal.png" style="zoom:50%;" />
 
 ### Pre-order Traversal
 
@@ -1711,7 +1761,7 @@ We will define our binary min-heap as being **complete** and obeying **min-heap*
 
 We can use an array to represent a min-Heap. By setting a descending order of items, we can yield an array as our desirable heap:
 
-<img src="\note_pics\heapApproach.png" style="zoom:67%;" />
+<img src=".\note_pics\heapApproach.png" style="zoom:67%;" />
 
 - **Swim**
 
@@ -1778,7 +1828,7 @@ A graph consists of:
 
 ### Catagory
 
-<img src="\note_pics\graphTypes.png" style="zoom:50%;" />
+<img src=".\note_pics\graphTypes.png" style="zoom:50%;" />
 
 ### terminology
 
