@@ -16,7 +16,6 @@ public class MazeCycles extends MazeExplorer {
 
     @Override
     public void solve() {
-        // TODO: Your code here!
         int s = maze.xyTo1D(1, 1);
         findCycleByDFS(s, 0);
     }
@@ -30,7 +29,7 @@ public class MazeCycles extends MazeExplorer {
                 announce();        
                 findCycleByDFS(neighbor, v);
                 break;
-            } else if(neighbor != parent) {
+            } else if (neighbor != parent) {
                 edgeTo[neighbor] = v;
                 edgeTo[v] = neighbor;
                 announce();        
@@ -44,7 +43,7 @@ public class MazeCycles extends MazeExplorer {
         if (v == end) {
             return;
         }        
-        for(int n : maze.adj(v)) {
+        for (int n : maze.adj(v)) {
             if (marked[n] && edgeTo[n] != v) {
                 edgeTo[n] = v;
                 announce();

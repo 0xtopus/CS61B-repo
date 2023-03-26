@@ -43,7 +43,7 @@ public class MazeBreadthFirstPaths extends MazeExplorer {
 
         fringe.remove(0);
         for (int neighbor : maze.adj(v)) {
-            if (marked[neighbor] == false) {
+            if (!marked[neighbor]) {
                 fringe.add(neighbor);
                 marked[neighbor] = true;
                 edgeTo[neighbor] = v;
