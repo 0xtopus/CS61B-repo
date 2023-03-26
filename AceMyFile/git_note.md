@@ -71,7 +71,7 @@ git restore --stage <filename> #取消暂存状态，不会取消删除的文件
 
    
 
-3. 修改最近的提交注释信息：
+3. <span id="change-commit-messages">修改最近的提交注释信息</span>：
 
    ```bash
    git commit --amend
@@ -246,6 +246,8 @@ df239176e1a2ffac927d8b496ea00d5488481db5 a
 ```
 
 大功告成！
+
+如果你对commit信息不满意，那么可以自行<a href="#change-commit-messages">修改commit信息</a>。
 
 6. 如果你在推送到远程仓库时失败了，尝试使用`git push -f` 来进行推送。**请确保你的这步操作不会影响到正在使用同一仓库的其他人！！！**
 

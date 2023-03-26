@@ -1826,13 +1826,13 @@ A graph consists of:
 
 
 
-### Catagory
+### Category
 
 <img src=".\note_pics\graphTypes.png" style="zoom:50%;" />
 
 ### terminology
 
-**vertices**: node.
+**vertices**: i.e. nodes.
 
 **edges**: same to tree edges.
 
@@ -1860,9 +1860,110 @@ A graph consists of:
 
 ### Traversal
 
-depth-first traversal
+#### **Depth-First Traversal(DFT)**:
+
+<img src="\note_pics\depthFirstTraversal.png" style="zoom:67%;" />
+
+- DFS: Find a path by using DFT(depth-first Traversal):
+
+<img src="\note_pics\depthFirstTraversalDemo.png" style="zoom:67%;" />
+
+DFS Preorder: 012345678(Order of dfs calls)
+
+DFS Postorder: 347685210(dfs returns)
 
 
+
+#### **Level Order Traversal(LOT)**
+
+- **Breadth-First Search(BFS)** using LOT
+
+  - ```pseudocode
+    Initialize the fringe, an empty queue  /* a queue is a first-in-last-in DS */
+        add the starting vertex to the fringe
+        mark the starting vertex
+        while fringe is not empty:
+            remove vertex v from the fringe
+            for each neighbor n of vertex v:
+                if n is not marked:
+                    add n to fringe
+                    mark n
+                    set edgeTo[n] = v
+                    set distTo[n] = distTo[v] + 1
+    ```
+
+  <img src="\note_pics\BFPDemo.png" style="zoom:67%;" />
+
+  BFS Order: Act in order of distance from source.
+
+  - 0 1 24 53 68 7
+
+<img src="\note_pics\DFSvsBFS.png" style="zoom:67%;" />
+
+
+
+### Graph API
+
+To implement our graph algorithms like BFP and DFP, we need:
+
+- An API
+- An underlying data structure to represent our graph
+
+Our choice can have profound implications on:
+
+- Runtime
+- Memory usage
+- Difficulty of implementing various graph algorithms
+
+We can then define our API to look something like this perhaps:
+
+```java
+public class Graph {
+  public Graph(int V):               // Create empty graph with v vertices
+  public void addEdge(int v, int w): // add an edge v-w
+  Iterable<Integer> adj(int v):      // vertices adjacent to v
+  int V():                           // number of vertices
+  int E():                           // number of edges
+...
+}
+```
+
+
+
+Clients (people who wish to use our Graph data structure), can then use any of the functions we provide to implement their own algorithms. The methods we provide can have a significant impact on how easy/difficult it may be for our clients to implement particular algorithms.
+
+we can now consider how a graph should be represented inside of a computer. We want to be able to get quick answers for the following questions about a graph:
+
+- Are given vertices `u` and `v` adjacent?
+- Is vertex `v` incident to a particular edge `e`?
+- What vertices are adjacent to `v`?
+- What edges are incident to `v`?
+
+### Data structures implementing a graph
+
+1. The Adjacency List
+
+In an adjacency list, an array is created that has the same size as the number of vertices in the graph. Each position in the array represents one of the vertices in the graph. Each of these positions point to a list. These lists are called adjacency lists, as each element in the list represents a neighbor of the vertex.
+
+<img src="\note_pics\adjecencyList.png" style="zoom:80%;" />
+
+2. The Adjacency Matrix
+
+In this data structure, we have a two dimensional array of size N×N (where N is the number of vertices) which contains boolean values. The (*i*, *j*)th entry of this matrix is true when there is an edge from *i* to *j* and false when no edge exists. Thus, each vertex has a row and a column in the matrix, and the value in that table says true or false whether or not that edge exists.
+
+<img src="\note_pics\adjacencyMatrix.png" style="zoom:80%;" />
+
+### Efficiency
+
+Your choice of underlying data structure can impact the runtime and memory usage of your graph. This table from the [slides](https://docs.google.com/presentation/d/11iacyiFt3QUrzo1yAU_xoXAjGTH4UzV7o6CR04HYRrI/edit#slide=id.g54593997ea_0_422) summarizes the efficiencies of each representation for various operations. It is strongly not recommended to directly just copy this on to your cheatsheet for the exams without taking the time to first understand where and how these bounds fundamentally came to be. The lecture contains walkthroughs explaining the rationale in detail behind several of these cells.
+
+Further, DFS/BFS on a graph backed by adjacency lists runs in O(V+E), while on a graph backed by an adjacency matrix runs in O(V^2). See the [slides](https://docs.google.com/presentation/d/11iacyiFt3QUrzo1yAU_xoXAjGTH4UzV7o6CR04HYRrI/) for help in understanding why.
+
+<img src="\note_pics\graphRuntimes.png" style="zoom:67%;" />
+
+### Summary
+
+<img src="\note_pics\graphSummary.png" style="zoom:67%;" />
 
 # Project 1
 
