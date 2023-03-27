@@ -1879,7 +1879,7 @@ DFS Postorder: 347685210(dfs returns)
 - **Breadth-First Search(BFS)** using LOT
 
   - ```pseudocode
-    Initialize the fringe, an empty queue  /* a queue is a first-in-last-in DS */
+    Initialize the fringe, an empty queue  /* a queue is a first-in-first-out DS */
         add the starting vertex to the fringe
         mark the starting vertex
         while fringe is not empty:
@@ -1900,7 +1900,16 @@ DFS Postorder: 347685210(dfs returns)
 
 <img src="\note_pics\DFSvsBFS.png" style="zoom:67%;" />
 
+#### Summary
 
+BFS finds you the **shortest** paths whereas DFS does not.
+
+Is one more efficient than the other, **runtime-wise**?  - No. 
+
+Is one more efficient than the other, **space-wise**?
+
+- DFS is worse for spindly graphs. Imagine a graph with 10000 nodes all spindly. We'll end up making 10000 recursive calls, which is bad for space.
+- BFS is worse for "bushy" graphs, because our queue gets used a lot.
 
 ### Graph API
 
@@ -1964,6 +1973,101 @@ Further, DFS/BFS on a graph backed by adjacency lists runs in O(V+E), while on a
 ### Summary
 
 <img src="\note_pics\graphSummary.png" style="zoom:67%;" />
+
+
+
+## Shortest Paths
+
+- BFS and DFS are not good enough at finding shortest paths, especially when edges have **weights**.  
+- Big notions:
+  - What we care to minimize is the sum of the weights of the edges on the selected path.
+  - the "Shortest Path Tree" will **always be a tree**.
+  - the shortest paths tree from a source `s` can be created in the following way:
+    - For every vertex `v` (which is not `s`) in the graph, find the shortest path from `s` to `v`.
+    - "Combine"/"Union" all the edges that you found above.
+
+### Visualization
+
+<a ref="https://qiao.github.io/PathFinding.js/visual/">this website</a> allows you to visualize the implementations of Dijkstra's algorithm and A* algorithm. 
+
+
+
+### Dijkstra's Algorithm
+
+Dijkstra's algorithm takes in an input vertex *s*, and outputs the shortest path tree from *s*. How does it work?
+
+1. Create a **priority queue**.
+2. Add `s` to the priority queue with priority 0. Add all other vertices to the priority queue with priority ∞.
+3. While the priority queue is not empty: pop a vertex out of the priority queue, and **relax** all of the edges going out from the vertex.
+
+#### Relaxation
+
+Suppose the vertex we just popped from the priority queue was `v`. We'll look at all of `v`'s edges. Say, we're looking at edge (`v`,`w`) (the edge that goes from `v` to `w`). We're going to try and relax this edge.
+
+What that means is: Look at your current best distance to `w` from the source, call it `curBestDistToW`. Now, look at your `curBestDistToV + weight(v,w)` (let's call it `potentialDistToWUsing`).
+
+Is `potentialDistToWUsing` better, i.e., smaller than `curBestDistToW`? In that case, set `curBestDistToW = potentialDistToWUsingV`, and update the `edgeTo[w]` to be `v`.
+
+**Important note**: we **never relax edges that point to already visited vertices** and **no edge weight is smaller than 0. **
+
+This whole process of calculating the potential distance, checking if it's better, and potentially updating is called relaxing.
+
+#### Pseudocode
+
+```pseudocode
+def dijkstras(source):
+    PQ.add(source, 0)
+    For all other vertices, v, PQ.add(v, infinity)
+    while PQ is not empty:
+        p = PQ.removeSmallest()
+        relax(all edges from p)
+```
+
+```pseudocode
+def relax(edge p,q):
+   if q is visited (i.e., q is not in PQ):
+       return
+
+   if distTo[p] + weight(edge) < distTo[q]:
+       distTo[q] = distTo[p] + w
+       edgeTo[q] = p
+       PQ.changePriority(q, distTo[q])
+```
+
+<img src="\note_pics\DijkstrasAlgorithm.png" style="zoom:67%;" />
+
+
+
+#### Runtime
+
+Because it is based on **Priority Queue**, so we can take it as:
+
+<img src="\note_pics\DijkstrasRuntime.png" style="zoom:67%;" />
+
+### A* Algorithm
+
+If you run Dijkstra's in<a ref="https://qiao.github.io/PathFinding.js/visual/"> the visualizer</a>, you will notice that the outcome is not ideal: the Dijkstra's just search every vertices in all directions.  Instead, we can find our destination more effective by using the A* Algorithm. You can check it in the visualizer.
+
+
+
+<img src="\note_pics\AStar.png" style="zoom:50%;" />
+
+**the better your original estimate from the node to the target, the better your estimate from the source to the target, the better your A* algorithm runs.**
+
+The takeaway here is that heuristics need to be good. There are two definitions required for goodness.
+
+1. Admissibility. heuristic(v, target) ≤ trueDistance(v, target). (Think about the problem above. The true distance from the neighbor of C to C wasn't infinity, it was much, much smaller. But our heuristic said it was ∞, so we broke this rule.)
+2. Consistency. For each neighbor v of w:
+   - heuristic(v, target) ≤ dist(v, w) + heuristic(w, target)
+   - where dist(v, w) is the weight of the edge from v to w.
+
+### Summary
+
+https://cs61b-2.gitbook.io/cs61b-textbook/24.-shortest-paths/24.4-summary
+
+<img src="\note_pics\ShortestPathsSummary.png" style="zoom:67%;" />
+
+- <a ref="https://cs61b-2.gitbook.io/cs61b-textbook/24.-shortest-paths/24.5-exercises">This exercise</a> helps understand better.
 
 # Project 1
 
