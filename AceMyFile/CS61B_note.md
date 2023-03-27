@@ -2067,7 +2067,123 @@ https://cs61b-2.gitbook.io/cs61b-textbook/24.-shortest-paths/24.4-summary
 
 <img src="\note_pics\ShortestPathsSummary.png" style="zoom:67%;" />
 
-- <a ref="https://cs61b-2.gitbook.io/cs61b-textbook/24.-shortest-paths/24.5-exercises">This exercise</a> helps understand better.
+- <a ref="https://cs61b-2.gitbook.io/cs61b-textbook/24.-shortest-paths/24.5-exercises">This exercise</a> helps you understand better.
+
+## Minimum Spanning Trees
+
+A minimum spanning tree (MST) is the lightest set of edges in a graph possible such that all the vertices are connected. Because it is a tree, it must be connected and acyclic. And it is called "spanning" since all vertices are included.
+
+### Cut property 
+
+We can define a **cut** as an assignment of a graph’s nodes to two non-empty sets (i.e. we assign every node to either set number one or set number two).
+
+We can define a **crossing edge** as an edge which connects a node from one set to a node from the other set.
+
+With these two definitions, we can understand the **Cut Property**; 
+
+**given any cut, the minimum weight crossing edge is in the MST.**
+
+###  Prim's Algorithm
+
+One way to find the MST of a graph is the Prim's Algorithm.
+
+Prim's Algorithm is one way to find a MST from a graph. It is as follows:
+
+1. Start from some arbitrary node.
+2. Repeatedly add the shortest edge that has **one node inside the MST in construction.**
+3. Repeat until there are V - 1 edges.
+
+- **Why does it work?**
+
+Prim's algorithm works because at all stages of the algorithm, we can reason as follows: 
+
+- Consider dividing all the nodes in the graph into two sets:
+  - Set 1: nodes that are part of the existing MST that's under construction
+  - Set 2: all other nodes
+- According to the algorithm, we always add the **lightest, or minimally weighted, edge** that crosses this cut.
+- By **the Cut Property**, the added edge is necessarily part of the final MST.
+
+
+
+- **Implementation**
+
+Essentially, this algorithm ==runs via the same mechanism as [Dijkstra's algorithm]().==
+
+==The only difference is that while Dijkstra's considers candidate nodes by their distance from the source node, Prim's looks at each candidate node's **distance from the MST under construction.**==
+
+**Runtime**: 
+
+- Because this algorithm runs through the same mechanism as Dijkstra's algorithm, its runtime is also identical to Dijkstra's:  O(*(V + E) \* log V*)
+
+  - Remember, this is because we need to add to a priority queue fringe once for every edge we have, and we need to dequeue from it once for every vertex we have.
+
+  
+
+### Kruskal's Algorithm
+
+The algorithm is as follows:
+
+1. Sort all the edges from lightest to heaviest.
+2. Taking one edge at a time (in sorted order), add it to the MST under construction if doing so **does not introduce a cycle.**
+3. Repeat until there are V - 1 edges.
+
+**Why does it work?**
+
+Kruskal's algorithm works because of the following reasons:
+
+- Recall the two "sets" introduced in last section. Any edge we add to the MST will be connecting one node from "set one" (nodes that are in the MST under construction), and another node from "set two" (all other nodes).
+- The added edge is not part of cycle because we are only adding an edge if it does not introduce a cycle.
+- By looking at edge candidates in order from lightest to heaviest, the added edge must be the lightest edge across this cut. (if there was a lighter edge that would be across this cut, it would have been added before this, and adding this one would cause a cycle to appear). 
+
+**Comparing two algorithms**
+
+It's important to note that the MST returned by Kruskal's might not be the same one returned by Prim's, but both algorithms will always return a MST.  
+
+Since both are minimal (optimal), they will both give valid optimal answers (they are tied as equally minimal / same total weight, and this is as low as it can be).
+
+**Runtime with Unsorted Edges**
+
+Since the underlying data structures of implementing Kruskal's Algorithm are a Priority Queue (to sort the edges), and a Disjoined Set (to connect the edges), the runtime of Kruskal's Algorithm is in tandem with the runtime analysis of [Heaps]() and [WQU](). 
+
+Specifically, we are using  [Weighted Quick Union with Path Compression]() to check whether or not an added edge will introduce a cycle. 
+
+The operations that this algorithm utilizes and their corresponding runtime are:
+
+- Insert: O(∣E∣log∣E∣)
+- Delete minimum: O(∣E∣log∣E∣)
+- Union: O(∣V∣log∗∣V∣)
+- isConnected: O(∣E∣log∗∣V∣)
+
+The bottleneck of the algorithm is sorting all of the edges to start (insert and delete minimum. Hence, the runtime of Kruskal's Algorithm is: O(*E log E*), And if **all edges are sorted** in advance by provided API, then the runtime is: O(*E log \* E*), Where *log∗* is the Ackermann function.
+
+### Summary
+
+In this chapter, we learned about Minimum Spanning Trees and the Cut Property:
+
+- **MST:**  the lightest set of edges in a graph possible such that all the vertices are connected and acyclic. 
+- **The Cut Property**: given any cut, the minimum weight crossing edge is in the MST.
+  - *Cut*:  an assignment of a graph’s nodes to two non-empty sets 
+  - *Crossing Edge:* an edge which connects a node from one set to a node from the other set.
+
+We also learned about how to find MSTs of a graph with two algorithms: 
+
+- **Prim's Algorithm**: Construct MST through a mechanism similar to Dijkstra's Algorithm, with the only difference of inserting vertices into the fringe not based on distance to goal vertex but distance to the MST under construction. 
+
+- **Kruskal's Algorithm**: Construct MST by first sorting edges from lightest to heaviest, then add edges sequentially if no cycles are formed until there are V - 1 edges.
+
+  
+
+**And all algorithm are just fine to use since their runtimes are all at log level.**
+
+<img src="\note_pics\MSTruntimes.png" style="zoom:50%;" />
+
+<a href="https://cs61b-2.gitbook.io/cs61b-textbook/25.-minimum-spanning-trees/25.5-mst-exercises">Exercises here</a>.
+
+intriguing problem: 
+
+Design an algorithm to find the min-product spanning tree; i.e. the spanning tree with the minimum product of its edges. You may assume all edge weights are > 1.
+
+hint: consider log a + log b = log ab.
 
 # Project 1
 
