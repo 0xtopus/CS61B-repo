@@ -78,6 +78,8 @@ int[] z = {1,2,3,4};
 
 
 
+**arraycopy()**
+
 - there is one way you can copy an array fast and easy:
 
 ```java
@@ -98,6 +100,8 @@ System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
 - Where to start in the destination array
 
   - How many items to copy
+
+- **Shallow copy**: However, `arraycopy()`only creates a ==shallow copy== of an array, i.e. it only makes a **primative data type 1D array** <a href="#Immutable Data Type">immutable</a>. If you want to make a deep copies of **2D arrays** or **reference type 1D arrays**, please <a href="#array-deep-copy">check here</a>.
 
   
 
@@ -1050,15 +1054,19 @@ you can use **61B Style Checker** in IntelliJ CS61B plugin to help you check you
 ## Troubleshooting
 
 -  **错误： 编码 GBK 的不可映射字符**
+  
   - 解决方案：
     1. 使用 `javac -encoding UTF-8 <filename>`编译;
     2. java源程序代码在保存时把java文件转换成ANSI编码格式即可。
+  
 -  check *IntelliJ* key board shortcut: `Ctrl` + `Alt` +`S` --> `Keymap`
    - ref: https://www.jetbrains.com/help/idea/configuring-keyboard-and-mouse-shortcuts.html
--  <a href="https://www.cnblogs.com/huangguoming/p/15682942.html">warning: commented out code</a> 建议不要注释代码
+   
+- <a href="https://www.cnblogs.com/huangguoming/p/15682942.html">warning: commented out code</a> 建议不要注释代码
+
 -  Permanently Set Up Libraries in IntelliJ:  <a ref="https://sp18.datastructur.es/materials/lab/lab4/lab4">link</a>
 
-- Set debug config in vsCode
+- Set debug config in VSCode
 
   - if you want to pass command line args in command when using vscode debug tool, go to debug section, open `lauch.json` and add `"args":["<arg1>", "<arg2>", ...]` within the same bracket where the `name` of  file you desired to run nested, like this  in which I add `"157788000.0"`, `25000.0"`,` "data/awesome.txt"` these three args for the file `NBody.java`.
 
@@ -1079,7 +1087,7 @@ you can use **61B Style Checker** in IntelliJ CS61B plugin to help you check you
 
     you can also refer to this link :https://stackoverflow.com/questions/59638889/passing-java-an-argument-while-debugging-in-vs-code
     
-    
+  - if you are currently using IntelliJ, in HW4 they will tell you to <a ref="https://www.google.com/search?q=command+line+arguments+intelliJ&oq=command+line+arguments+intelliJ&aqs=chrome..69i57.2608j0j1&sourceid=chrome&ie=UTF-8">Google this</a>.
 
 - Get rid of all numbers at the beginning of the lines when you copy some codes from exercise pdf files:
 
@@ -1088,6 +1096,44 @@ you can use **61B Style Checker** in IntelliJ CS61B plugin to help you check you
   Here's the updated *regular expression*: `^\d+\s*`.
 
   This pattern will match a sequence of one or more digits at the beginning of a line, followed by zero or more whitespace characters. The `*` after the `\s` means "zero or more".
+
+
+
+- **<span id="array-deep-copy">Array Deep Copy</span>**
+
+  summarized by new Bing and slightly modified by me:
+
+  **Problem:** In <a href="https://sp18.datastructur.es/materials/hw/hw4/hw4#faq">HW4</a>, I have a Java class `Board` that contains a 2D array `tiles` of primitive type  `int` and I want to make the elements of the `tiles` array immutable. However, the code I wrote using `System.arraycopy(tiles, 0, this.tiles, 0, size)` in the constructor doesn’t achieve this.
+
+  **Reason:** Using `System.arraycopy` in this way only performs a shallow copy of the source array to the destination array. Since `tiles` is a 2D array (an array of arrays), this means that it only copies the references to the inner arrays from the input `tiles` array to the `this.tiles` array. As a result, any changes made to the inner arrays of the input `tiles` array after creating a `Board` object will be reflected in the `this.tiles` array as well.
+
+  **Solution:** To make the elements of the `tiles` array immutable, you need to perform a deep copy of the input `tiles` array to the `this.tiles` array. This can be achieved by copying each inner array individually using a loop and `System.arraycopy` because **the inner 1D arrays are all primitive type**. (Additionally, instead of returning the `tiles` array directly in any getter methods, you can return a copy of the `tiles` array.)
+
+  **Conclusion:** To make a 2D array immutable in Java, you need to perform a deep copy of the input array (and return a copy of the array in any getter methods). This can be achieved by copying each inner array individually using a loop and `System.arraycopy`. 
+
+  ```java
+  // if the inner arrays of your 2D array are all primitive type
+  public Board(int[][] tiles) {
+      size = tiles.length;
+      this.tiles = new int[size][size];
+      for (int i = 0; i < size; i++) {
+          System.arraycopy(tiles[i], 0, this.tiles[i], 0, size);
+      }
+  }
+  ```
+
+  For 1D arrays of primitive data types or immutable objects, you can use `System.arraycopy` to make a deep copy. However, for 1D arrays of mutable objects, you need to create a new array and copy each element individually(**And the same to the inner arrays of your 2D array if its elements are mutable objects**) .
+
+  ```java
+  // create a deep copy of a 1D array of mutable objects
+  MyObject[] originalArray = {new MyObject(1), new MyObject(2), new MyObject(3)};
+  MyObject[] copyArray = new MyObject[originalArray.length];
+  for (int i = 0; i < originalArray.length; i++) {
+      copyArray[i] = new MyObject(originalArray[i]);
+  }
+  ```
+
+  
 
 
 # Data Structure
