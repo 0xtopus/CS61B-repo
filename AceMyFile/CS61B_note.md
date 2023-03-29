@@ -1664,7 +1664,97 @@ postOrder(BSTNode x) {
 }
 ```
 
+## Quad Trees
 
+When it comes to multi-dimensional problems, we can use **quad trees** or **k-d trees** to solve them.
+
+Imagine a plot with many dots on it, and each dot has a coordinate (x, y). Now let's consider the following two questions:
+
+- How can we determine which dots are within a given range?
+- Given a random position, what is the nearest dot to that position?
+
+**quad trees**
+
+<img src="\note_pics\QuadTree.png" style="zoom:40%;" />
+
+For a 2D plot, we can partition the space into four parts (NW, NE, SW, and SE as shown above) around a dot. When adding the next dot, we connect it to the corresponding sub-node in the tree based on its location. The more nodes we add, the more segments we get.
+
+Note that just like in a BST, the order in which we insert nodes determines the topology of the QuadTree. Also note that QuadTrees are a form of spatial partitioning in disguise. Similar to how uniform partitioning created a perfect grid before, QuadTrees hierarchically partition by having each node "own" 4 subspaces.
+
+Effectively, spaces where there are many points are broken down into more finely divided regions, and in many cases this gives better performances.
+
+**Quad Tree Search**
+
+If we are looking for points inside a green rectangle as shown below, from any node we can decide whether the green rectangle lies within one or more quadrants, and only explore the branches/subtrees corresponding to those quadrants. All other quadrants can be safely ignored and pruned away. Below, we see that the green rectangle lies only in the northeast quadrant, and so the NW, SE, and SW quadrants can all be pruned away and left unexplored. We can proceed recursively and end up with a final node (i.e. D) of candidates, among which only B meets our requirements.
+
+<img src="\note_pics\QuadTreeSearch.png" style="zoom:67%;" />
+
+**Higher dimensions**
+
+For example, if we want to represent a 3D space and dots inside the space, we have to use eight sub-nodes to represent the parts of space in corresponding directions(see the diagram below) around a dot and the tree we use is called Oct-tree.
+
+![](\note_pics\OctTrees.png)
+
+Or... we can use **K-D Trees** instead.
+
+**K-D tree**
+
+"K-D" simply means "k dimensions" if you are curious.
+
+<img src="\note_pics\KDTree.png" style="zoom:40%;" />
+
+Here is a demo of 2D K-D tree implementation.
+
+For a demo on K-D tree insertion, you can also check out these [slides](https://docs.google.com/presentation/d/1WW56RnFa3g6UJEquuIBymMcu9k2nqLrOE1ZlnTYFebg/edit#slide=id.g54b6045b73_0_38)
+
+**Nearest neighbor**
+
+To find the point that is the nearest neighbor to a query point, we follow this procedure in our K-D Tree:
+
+- Start at the root and store that point as the "best so far". Compute its distance to the query point, and save that as the "score to beat". In the image above, we start at A whose distance to the flagged point is 4.5.
+- This node partitions the space around it into two subspaces. For each subspace, ask: "Can a better point be possibly found inside of this space?" This question can be answered by computing the shortest distance between the query point and the edge of our subspace.
+
+- Continue recursively for each subspace identified as containing a possibly better point.
+- In the end, our "best so far" is the best point; the point closest to the query point.
+
+<img src="\note_pics\KDTreeNearestDemo.png" style="zoom:45%;" />
+
+And pseudocode of finding nearest neighbor is like:
+
+```pseudocode
+nearest(Node n, Point goal, Node best):
+	if n is null:
+		return best
+	if n.distance(goal) < best.distance(goal):
+		best = n
+	if goal < n (according to n's comparator):
+		goodSide = n."left"Child
+		badSide = n."right"Child
+	else:
+		badSide = n."left"Child
+		goodSide = n."right"Child
+	best = nearest(goodSide, goal, best)
+	if badSide could still have something useful:
+		best = nearest(badSide, goal, best)	// Don't forget do this!
+	return best
+```
+
+For a step by step walkthrough, see these [slides](https://docs.google.com/presentation/d/1DNunK22t-4OU_9c-OBgKkMAdly9aZQkWuv_tBkDg1G4/edit)
+
+**Summary**
+
+Multidimensional data has interesting operations:
+
+- **Ranging Finding**: What are all the objects inside the subspace?
+- **Nearest**: What is the closest object to a specific point? (can be generized to k-nearest)
+
+The most common approach is **spatial partitioning**:
+
+- Uniform Partitioning: Analogous to hashing.
+- Quadtree
+- K-D Tree
+
+Spatial partitioning allows for pruning of the search space.
 
 ## Hashing
 
@@ -1743,6 +1833,8 @@ For our hash table, we will define the maximum load factor that we will allow. *
 As an example, let’s consider what happens if our hash table has an array length of 10 and currently contains 7 elements. Each of these 7 elements are hashed modulo 10 because we want to get an index within the range of 0 through 9. The current load factor is 7/10, or 0.7, just under the threshold.
 
 If we try to insert one more element, we would have a total of 8 elements in our hash table and a load factor of 0.8. Because this would cause the load factor to exceed the maximum load factor, we must resize the underlying array to length 20 before we insert the element. Remember that since our procedure for locating an entry in the hash table is to take the `hashCode() % array.length` and our array’s length has changed from 10 to 20, all the elements in the hash table need to be relocated. Once all the elements have been relocated and our new element has been added, we will have a load factor of 8/20, or 0.4, which is below the maximum load factor.
+
+### Runtime
 
 * Comparing Data Structure Run Times!
 
@@ -2230,6 +2322,65 @@ intriguing problem:
 Design an algorithm to find the min-product spanning tree; i.e. the spanning tree with the minimum product of its edges. You may assume all edge weights are > 1.
 
 hint: consider log a + log b = log ab.
+
+## Recap all Data Structures
+
+| Name           | Storage Operations               | Primary Retrieval Operation | Retrieve By                     |
+| -------------- | -------------------------------- | --------------------------- | ------------------------------- |
+| List           | `add(key)`, `insert(key, index)` | `get(index)`                | index                           |
+| Map            | `put(key, value)`                | `get(key)`                  | key identity                    |
+| Set            | `add(key)`                       | `containsKey(key)`          | key identity                    |
+| Priority Queue | `add(key)`                       | `getSmallest()`             | key order (smallest to largest) |
+| Disjoint Sets  | `connect(int_a, int_b`           | `isConnected(int_a, int_b)` | two integer values              |
+
+One important thing to note is that these are **abstract** data types (ADTs), which means that we define the behavior of the data structure, not the implementation. There are multiple possible implementations for each of the data structures, and we can even use one data structure in the implementation of another! We often use these ADTs to create even more complex data structures. 
+
+<img src="\note_pics\allDataStructures.png" style="zoom:50%;" />
+
+<img src="\note_pics\allDatastructures2.png" style="zoom:50%;" />
+
+<img src="\note_pics\moreDataStructures.png" style="zoom:50%;" />
+
+**Data Structure**:  A particular way of organizing data.
+
+- We've covered many of the most fundamental abstract data types, their common implementations, and their tradeoffs thereof.
+- We'll do one more:
+  - The quadtree
+
+## Tries
+
+Knowing the types of data that you are storing can give you great power in creating efficient data structures. Specifically for implementing Maps and Sets, if we know that all keys will be Strings, we can use a Trie:
+
+- Tries theoretically have better performances for searching and insertion than hash tables or balanced search trees
+
+<img src="\note_pics\trie.png" style="zoom:50%;" />
+
+- There are more implementations for how to store the children of every node of the trie, specifically three. These three are all fine, but hash table is the most natural
+  - *DataIndexedCharMap* (Con: excessive use of space, Pro: speed efficient)
+  - *Bushy BST* (Con: slower child search, Pro: space efficient)
+  - *Hash Table* (Con: higher cost per link, Pro: space efficient)
+- Tries may not actually be faster in practice, but they support special string operations that other implementations don't
+  - `longestPrefixOf` and `keysWithPrefix` are easily implemented since the trie is stored character by character
+  - `keysWithPrefix` allows for algorithms like autocomplete to exist, which can be optimized through use of a priority queue.
+
+| Name                  | key type   | get(x)  | Text    |
+| --------------------- | ---------- | ------- | ------- |
+| Balanced BST          | comparable | Θ(logN) | Θ(logN) |
+| RSC Hash Table        | hashable   | Θ(1)†   | Θ(1)∗†  |
+| Data Indexed Array    | chars      | Θ(1)    | Θ(1)    |
+| Tries (BST, HT, DICM) | strings    | Θ(1)    | Θ(1)    |
+
+*: on average, †\dag†: items are evenly spread
+
+**Advantages of Tries.** Tries have very fast lookup times, as we only ever look at as many characters as they are in the data we’re trying to retrieve. However, their chief advantage is the ability to efficiently support various operations not supported by other map/set implementations including:
+
+- longestPrefixOf
+- prefixMatches
+- spell checking
+
+**<a href="https://cs61b-2.gitbook.io/cs61b-textbook/26.-prefix-operations-and-tries/26.5-exercises">Trie Exercises</a>**
+
+
 
 # Project 1
 
