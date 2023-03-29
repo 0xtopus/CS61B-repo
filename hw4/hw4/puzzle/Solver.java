@@ -1,17 +1,18 @@
 package hw4.puzzle;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.princeton.cs.algs4.MinPQ;
 
 public class Solver {
     private final int moves;
-    private final List<WorldState> sol = new ArrayList<>();
-    private final Map<Node, Integer> totalMoves = new HashMap<>();
+    private final Deque<WorldState> sol = new ArrayDeque<>();
+    private final Map<WorldState, Integer> movesToGaol = new HashMap<>();
+    // private int times = 0; // test times for CommonBugDetactor.java
 
     private class Node {
         WorldState worldState;
@@ -26,18 +27,21 @@ public class Solver {
     }
 
     // Defining a custom comparator for searchNodes order
-    Comparator<Node> distanceComparator = new Comparator<Node>() {
+    private Comparator<Node> distanceComparator = new Comparator<Node>() {
         @Override
         public int compare(Node n1, Node n2) {
-            if (totalMoves.get(n1) == null) {
-                totalMoves.put(n1, n1.moves + n1.worldState.estimatedDistanceToGoal());
-            }
-            if (totalMoves.get(n2) == null) {
-                totalMoves.put(n2, n2.moves + n2.worldState.estimatedDistanceToGoal());
-            }
-            return totalMoves.get(n1) - totalMoves.get(n2);
+            int distance1 = getDistanceToGoal(n1);
+            int distance2 = getDistanceToGoal(n2);
+            return n1.moves + distance1 - n2.moves - distance2;
         }
     };
+
+    private int getDistanceToGoal(Node n) {
+        if (!movesToGaol.containsKey(n.worldState)) {
+            movesToGaol.put(n.worldState, n.worldState.estimatedDistanceToGoal());
+        }
+        return movesToGaol.get(n.worldState);
+    }
 
     public Solver(WorldState initial) {
         /* create a priority queue of search nodes */
@@ -58,7 +62,7 @@ public class Solver {
             Node pathNode = delNode;
             /* Add solution path of worldStates */
             while (pathNode != null) {
-                sol.add(pathNode.worldState);
+                sol.addFirst(pathNode.worldState);
                 pathNode = pathNode.parentNode;
             }
             return delNode.moves;
@@ -68,6 +72,9 @@ public class Solver {
             if (delNode.parentNode == null || !delNode.parentNode.worldState.equals(neighbor)) {
                 Node n = new Node(neighbor, delNode, delNode.moves + 1);
                 searchNodes.insert(n);
+                /* output test for CommonBugDetector.java */
+                // System.out.println(n.worldState + " times: " + times);
+                // times++;
             }
         }
         return solverHelper(searchNodes);

@@ -115,6 +115,9 @@ public class Board implements WorldState {
             return false;
         }
         Board that = (Board) y;
+        if (this.size() != that.size()) {
+            return false;
+        }
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles.length; j++) {
                 if (this.tiles[i][j] != that.tiles[i][j]) {
@@ -123,6 +126,11 @@ public class Board implements WorldState {
             }
         }
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     /**
