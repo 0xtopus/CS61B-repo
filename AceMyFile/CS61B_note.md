@@ -2006,9 +2006,13 @@ A graph consists of:
 
 <img src="\note_pics\depthFirstTraversalDemo.png" style="zoom:67%;" />
 
-DFS Preorder: 012345678(Order of dfs calls)
+##### DFS Preorder:
 
-DFS Postorder: 347685210(dfs returns)
+012345678(Order of dfs calls)
+
+##### DFS Postorder:
+
+347685210(dfs returns)
 
 
 
@@ -2391,6 +2395,30 @@ style guide: https://sp19.datastructur.es/materials/guides/style-guide.html
 
 
 guide: https://docs.google.com/presentation/d/1XBJOht0xWz1tEvLuvOL4lOIaY0NSfArXAvqgkrx0zpc/edit#slide=id.g15cbbcb770b_47_40
+
+
+
+# Project 3
+
+- if you find the data you need for this project in your `library-sp18` folder is missing,  you can update it by running `git pull origin master` inside the `library-sp18` directory, and if everything works as it should, you should see a collection of thousands of png files appear in the `library-sp18/data` folder.
+
+- The latest version of intellij has removed `Import Project window` and thus you can't find `Import Maven projects automatically` . You can solve this problem by referring to: <a href="https://stackoverflow.com/questions/60759611/import-maven-projects-automatically-checkbox-dissapear-in-intellij-eap">this post</a>:
+
+> By following ways you can Import `Maven` projects automatically:
+>
+> For `InteliJ IDEA 14` upwards:
+>
+> ```rust
+> Click Settings -> Build, Execution, Deployment -> Build Tools -> Maven -> Importing -> TICK "Import Maven projects automatically".
+> ```
+>
+> For `InteliJ IDEA 2020` upwards:
+>
+> ```rust
+> Click Settings -> Build, Execution, Deployment -> Build Tools -> TICK "Reload projects after changes in the build scripts" and "Any changes"
+> ```
+
+
 
 ## Resource
 
