@@ -1049,7 +1049,13 @@ here is the <a href="https://sp19.datastructur.es/materials/guides/style-guide.h
 
     
 
+### 61B Style Checker
+
 you can use **61B Style Checker** in IntelliJ CS61B plugin to help you check your style.
+
+you should have installed the CS 61B plugin, which allows you to locally check style in IntelliJ. If you have this plugin installed, you can check the style of your code files by right clicking on a file in IntelliJ and clicking the "Check Style" option.
+
+
 
 ## Troubleshooting
 

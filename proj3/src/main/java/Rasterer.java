@@ -1,4 +1,3 @@
-import java.awt.image.Raster;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +13,7 @@ public class Rasterer {
     private static final boolean RIGHT_SIDE = false;
     private static final boolean UPPER_SIDE = true;
     private static final boolean LOWER_SIDE = false;
+    private static final int MAX_DEPTH = 7;
 
     public Rasterer() {
         // YOUR CODE HERE
@@ -64,33 +64,33 @@ public class Rasterer {
         double tileLength = (MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / Math.pow(2, depth);
 
         int ullonOffsetValue = rasterLongitudeCalculator(params.get("ullon"), tileLength, LEFT_SIDE);
-        double raster_ul_lon = MapServer.ROOT_ULLON + ullonOffsetValue * tileLength;
-        results.put("raster_ul_lon", raster_ul_lon);
+        double rasterUllon = MapServer.ROOT_ULLON + ullonOffsetValue * tileLength;
+        results.put("raster_ul_lon", rasterUllon);
 
-        int lrlonOffsetValue = rasterLongitudeCalculator(params.get("lrlon"), tileLength, RIGHT_SIDE);;
-        double raster_lr_lon = MapServer.ROOT_ULLON + lrlonOffsetValue * tileLength;
-        results.put("raster_lr_lon", raster_lr_lon);
+        int lrlonOffsetValue = rasterLongitudeCalculator(params.get("lrlon"), tileLength, RIGHT_SIDE);
+        double rasterLrlon = MapServer.ROOT_ULLON + lrlonOffsetValue * tileLength;
+        results.put("raster_lr_lon", rasterLrlon);
 
         // calculate the raster_ul_lat and the raster_lr_lat
         double tileWidth = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / Math.pow(2, depth);
 
         int ullatOffsetValue = rasterLatitudeCalculator(params.get("ullat"), tileWidth, UPPER_SIDE);
-        double raster_ul_lat = MapServer.ROOT_ULLAT - ullatOffsetValue * tileWidth;
-        results.put("raster_ul_lat", raster_ul_lat);
+        double rasterUllat = MapServer.ROOT_ULLAT - ullatOffsetValue * tileWidth;
+        results.put("raster_ul_lat", rasterUllat);
 
         int lrlatOffsetValue = rasterLatitudeCalculator(params.get("lrlat"), tileWidth, LOWER_SIDE);
-        double raster_lr_lat = MapServer.ROOT_ULLAT - lrlatOffsetValue * tileWidth;
-        results.put("raster_lr_lat", raster_lr_lat);
+        double rasterLrlat = MapServer.ROOT_ULLAT - lrlatOffsetValue * tileWidth;
+        results.put("raster_lr_lat", rasterLrlat);
 
         // find all tiles needed to render
-        String[][] render_grid = new String[lrlatOffsetValue - ullatOffsetValue][];
+        String[][] renderGrid = new String[lrlatOffsetValue - ullatOffsetValue][];
         for (int i = ullatOffsetValue; i < lrlatOffsetValue; i++) {
-            render_grid[i - ullatOffsetValue] = new String[lrlonOffsetValue - ullonOffsetValue];
+            renderGrid[i - ullatOffsetValue] = new String[lrlonOffsetValue - ullonOffsetValue];
             for (int j = ullonOffsetValue; j < lrlonOffsetValue; j++) {
-                render_grid[i - ullatOffsetValue][j - ullonOffsetValue] = "d" + depth +"_x" + j + "_y" + i +".png";
+                renderGrid[i - ullatOffsetValue][j - ullonOffsetValue] = "d" + depth + "_x" + j + "_y" + i + ".png";
             }
         }
-        results.put("render_grid", render_grid);
+        results.put("render_grid", renderGrid);
         return results;
     }
 
@@ -102,7 +102,7 @@ public class Rasterer {
         double leftLon = MapServer.ROOT_ULLON;
         int depth = 0;
         double tileLonDPP = (MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / MapServer.TILE_SIZE;
-        while(queryBoxLonDPP < tileLonDPP && depth < 7) {
+        while (queryBoxLonDPP < tileLonDPP && depth < MAX_DEPTH) {
             depth++;
             leftLon = (MapServer.ROOT_LRLON + leftLon) / 2;
             tileLonDPP = (MapServer.ROOT_LRLON - leftLon) / MapServer.TILE_SIZE;
@@ -113,7 +113,7 @@ public class Rasterer {
     /**
     * Calculate the closest raster longitude
     */
-    private static int rasterLongitudeCalculator(double queryLon, double tileLength, boolean SIDE) {
+    private static int rasterLongitudeCalculator(double queryLon, double tileLength, boolean S) {
         // if outbound
         /*if (queryLon < MapServer.ROOT_ULLON) {
             return MapServer.ROOT_ULLON;
@@ -129,7 +129,8 @@ public class Rasterer {
             closestLonBeforeQueryLon += tileLength;  // move side length of 1 tile from left to right
             offsetValue++;
         }
-        if (SIDE) {
+        // "S" means "side"
+        if (S) {
             // System.out.println("return: " + (MapServer.ROOT_ULLON + (offsetValue - 1) * tileLength));
             // return closestLonBeforeQueryLon - tileLength;
             return offsetValue - 1;     // left bounding longitude
@@ -143,22 +144,23 @@ public class Rasterer {
     /**
      * Calculate the closest raster latitude
      */
-    private static int rasterLatitudeCalculator(double queryLat, double tileWidth, boolean SIDE) {
+    private static int rasterLatitudeCalculator(double queryLat, double tileWidth, boolean S) {
         // if outbound
-/*        if (queryLat > MapServer.ROOT_ULLAT) {
+        /* if (queryLat > MapServer.ROOT_ULLAT) {
             return MapServer.ROOT_ULLAT;
         }
         if (queryLat < MapServer.ROOT_LRLAT) {
             return MapServer.ROOT_LRLAT;
         }*/
-//        double tileWidth = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / Math.pow(2, depth);
+        // double tileWidth = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / Math.pow(2, depth);
         double closestLatBeforeQueryLat = MapServer.ROOT_ULLAT;
         int offsetValue = 0;
         while (closestLatBeforeQueryLat > queryLat) {
             closestLatBeforeQueryLat -= tileWidth;
             offsetValue++;
         }
-        if (SIDE) {
+        // "S" means "side"
+        if (S) {
             // System.out.println(offsetValue);
             // System.out.println("return: "+ (MapServer.ROOT_ULLAT - (offsetValue - 1) * tileWidth));
             // return closestLatBeforeQueryLat + tileWidth;
@@ -171,65 +173,6 @@ public class Rasterer {
         }
     }
 
-
-    public static void main(String[] args) {
-        double lrlon = -122.24053369025242;
-        double ullon = -122.24163047377972;
-        double ullat = 37.87655856892288;
-        double lrlat = 37.87548268822065;
-        double width = 892.0;
-
-//        ullat=37.88708748276975;
-//        lrlat=37.848731523430196;
-//        lrlon=-122.20908713544797;
-//        ullon=-122.3027284165759;
-//        width = 305.0;
-
-//        lrlon = -122.2104604264636;
-//        ullon = -122.30410170759153;
-//        width = 1091.0;
-//        ullat = 37.870213571328854;
-//        lrlat = 37.8318576119893;
-
-        lrlat=37.858292608;
-        lrlon=-122.222751327;
-        ullat=37.877266154;
-        ullon=-122.239956628;
-        width=613.0;
-
-        // Test depth(set depthCalculator to static before test)
-        int d = depthCalculator(lrlon, ullon, width);   // d = 7
-        System.out.println(d);
-
-        // Note that tileLength is positive(tileLength > 0)
-        double tileLength = (MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / Math.pow(2, d);
-
-        int ullonOffsetValue = rasterLongitudeCalculator(ullon, tileLength, LEFT_SIDE);
-        System.out.println("ullonOffsetValue: " + ullonOffsetValue);
-        System.out.println(MapServer.ROOT_ULLON + ullonOffsetValue * tileLength);     // raster_ul_lon=-122.24212646484375
-
-        int lrlonOffsetValue = rasterLongitudeCalculator(lrlon, tileLength, RIGHT_SIDE);
-        System.out.println("lrlonOffsetValue: " + lrlonOffsetValue);
-        System.out.println(MapServer.ROOT_ULLON + lrlonOffsetValue * tileLength);     // raster_lr_lon=-122.24006652832031
-
-        double tileWidth = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / Math.pow(2, d);
-        int ullatOffsetValue = rasterLatitudeCalculator(ullat, tileWidth, UPPER_SIDE);
-        System.out.println("ullatOffsetValue: " + ullatOffsetValue);
-        System.out.println(MapServer.ROOT_ULLAT - ullatOffsetValue * tileWidth);     // 37.87701580361881
-
-        int lrlatOffsetValue = rasterLatitudeCalculator(lrlat, tileWidth, LOWER_SIDE);
-        System.out.println("lrlatOffsetValue: " + lrlatOffsetValue);
-        System.out.println(MapServer.ROOT_ULLAT - lrlatOffsetValue * tileWidth);     // 37.87538940251607
-
-        String[][] render_grid = new String[lrlatOffsetValue - ullatOffsetValue][];
-        for (int i = ullatOffsetValue; i < lrlatOffsetValue; i++) {
-            render_grid[i - ullatOffsetValue] = new String[lrlonOffsetValue - ullonOffsetValue];
-            for (int j = ullonOffsetValue; j < lrlonOffsetValue; j++) {
-                render_grid[i - ullatOffsetValue][j - ullonOffsetValue] = "d" + d +"_x" + j + "_y" + i +".png";
-            }
-        }
-    }
-
     /*
     * Validate the input params are inbound
     */
@@ -238,16 +181,70 @@ public class Rasterer {
         double ullon = params.get("ullon");
         double ullat = params.get("ullat");
         double lrlat = params.get("lrlat");
-        if (
-                lrlon > ullon
-                && lrlat < ullat
-                && lrlon <= MapServer.ROOT_LRLON
-                && ullon >= MapServer.ROOT_ULLON
-                && lrlat >= MapServer.ROOT_LRLAT
-                && ullat <= MapServer.ROOT_ULLAT
-        ) {
-            return true;
-        }
-        return false;
+
+        return !(lrlon < ullon || lrlat > ullat
+                || lrlon < MapServer.ROOT_ULLON || ullon > MapServer.ROOT_LRLON
+                || ullat < MapServer.ROOT_LRLAT || lrlat > MapServer.ROOT_ULLAT);
+    }
+
+    // Make sure all helper methods are set "static before using main() to test!
+    public static void main(String[] args) {
+        // double lrlon = -122.24053369025242;
+        // double ullon = -122.24163047377972;
+        // double ullat = 37.87655856892288;
+        // double lrlat = 37.87548268822065;
+        // double width = 892.0;
+
+        // ullat=37.88708748276975;
+        // lrlat=37.848731523430196;
+        // lrlon=-122.20908713544797;
+        // ullon=-122.3027284165759;
+        // width = 305.0;
+
+        // lrlon = -122.2104604264636;
+        // ullon = -122.30410170759153;
+        // width = 1091.0;
+        // ullat = 37.870213571328854;
+        // lrlat = 37.8318576119893;
+
+        // lrlat=37.858292608;
+        // lrlon=-122.222751327;
+        // ullat=37.877266154;
+        // ullon=-122.239956628;
+        // width=613.0;
+
+        // Test depth(set depthCalculator to static before test)
+        // int d = depthCalculator(lrlon, ullon, width);   // d = 7
+        // System.out.println(d);
+
+        // Note that tileLength is positive(tileLength > 0)
+        // double tileLength = (MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / Math.pow(2, d);
+
+        // int ullonOffsetValue = rasterLongitudeCalculator(ullon, tileLength, LEFT_SIDE);
+        // System.out.println("ullonOffsetValue: " + ullonOffsetValue);
+        // System.out.println(MapServer.ROOT_ULLON + ullonOffsetValue * tileLength);
+                                                    // raster_ul_lon=-122.24212646484375
+
+        // int lrlonOffsetValue = rasterLongitudeCalculator(lrlon, tileLength, RIGHT_SIDE);
+        // System.out.println("lrlonOffsetValue: " + lrlonOffsetValue);
+        // System.out.println(MapServer.ROOT_ULLON + lrlonOffsetValue * tileLength);
+                                                    // raster_lr_lon=-122.24006652832031
+
+        // double tileWidth = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / Math.pow(2, d);
+        // int ullatOffsetValue = rasterLatitudeCalculator(ullat, tileWidth, UPPER_SIDE);
+        // System.out.println("ullatOffsetValue: " + ullatOffsetValue);
+        // System.out.println(MapServer.ROOT_ULLAT - ullatOffsetValue * tileWidth);     // 37.87701580361881
+
+        // int lrlatOffsetValue = rasterLatitudeCalculator(lrlat, tileWidth, LOWER_SIDE);
+        // System.out.println("lrlatOffsetValue: " + lrlatOffsetValue);
+        // System.out.println(MapServer.ROOT_ULLAT - lrlatOffsetValue * tileWidth);     // 37.87538940251607
+
+        // String[][] render_grid = new String[lrlatOffsetValue - ullatOffsetValue][];
+        // for (int i = ullatOffsetValue; i < lrlatOffsetValue; i++) {
+        //    render_grid[i - ullatOffsetValue] = new String[lrlonOffsetValue - ullonOffsetValue];
+        //    for (int j = ullonOffsetValue; j < lrlonOffsetValue; j++) {
+        //        render_grid[i - ullatOffsetValue][j - ullonOffsetValue] = "d" + d +"_x" + j + "_y" + i +".png";
+        //    }
+        //}
     }
 }
