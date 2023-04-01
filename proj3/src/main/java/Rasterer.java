@@ -50,20 +50,47 @@ public class Rasterer {
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         System.out.println(params);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
-                           + "your browser.");
+        // System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
+        //                   + "your browser.");
 
-        // validate params are valid
+        // validate params
         results.put("query_success", paramsValidator(params));
-        // calculate the depth to use
+
+        // calculate the depth
         int depth = depthCalculator(params.get("lrlon"), params.get("ullon"), params.get("w"));
         results.put("depth", depth);
+
         // calculate the raster_ul_lon and the raster_lr_lon
-        double raster_ul_lon = rasterLongitudeCalculator(params.get("ullon"), depth, LEFT_SIDE);
-        double raster_lr_lon = rasterLongitudeCalculator(params.get("lrlon"), depth, RIGHT_SIDE);
-        results.put("raster_lr_lon", raster_lr_lon);
+        double tileLength = (MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / Math.pow(2, depth);
+
+        int ullonOffsetValue = rasterLongitudeCalculator(params.get("ullon"), tileLength, LEFT_SIDE);
+        double raster_ul_lon = MapServer.ROOT_ULLON + ullonOffsetValue * tileLength;
         results.put("raster_ul_lon", raster_ul_lon);
 
+        int lrlonOffsetValue = rasterLongitudeCalculator(params.get("lrlon"), tileLength, RIGHT_SIDE);;
+        double raster_lr_lon = MapServer.ROOT_ULLON + lrlonOffsetValue * tileLength;
+        results.put("raster_lr_lon", raster_lr_lon);
+
+        // calculate the raster_ul_lat and the raster_lr_lat
+        double tileWidth = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / Math.pow(2, depth);
+
+        int ullatOffsetValue = rasterLatitudeCalculator(params.get("ullat"), tileWidth, UPPER_SIDE);
+        double raster_ul_lat = MapServer.ROOT_ULLAT - ullatOffsetValue * tileWidth;
+        results.put("raster_ul_lat", raster_ul_lat);
+
+        int lrlatOffsetValue = rasterLatitudeCalculator(params.get("lrlat"), tileWidth, LOWER_SIDE);
+        double raster_lr_lat = MapServer.ROOT_ULLAT - lrlatOffsetValue * tileWidth;
+        results.put("raster_lr_lat", raster_lr_lat);
+
+        // find all tiles needed to render
+        String[][] render_grid = new String[lrlatOffsetValue - ullatOffsetValue][];
+        for (int i = ullatOffsetValue; i < lrlatOffsetValue; i++) {
+            render_grid[i - ullatOffsetValue] = new String[lrlonOffsetValue - ullonOffsetValue];
+            for (int j = ullonOffsetValue; j < lrlonOffsetValue; j++) {
+                render_grid[i - ullatOffsetValue][j - ullonOffsetValue] = "d" + depth +"_x" + j + "_y" + i +".png";
+            }
+        }
+        results.put("render_grid", render_grid);
         return results;
     }
 
@@ -86,49 +113,61 @@ public class Rasterer {
     /**
     * Calculate the closest raster longitude
     */
-    private static double rasterLongitudeCalculator(double queryLon, double depth, boolean SIDE) {
+    private static int rasterLongitudeCalculator(double queryLon, double tileLength, boolean SIDE) {
         // if outbound
-        if (queryLon < MapServer.ROOT_ULLON) {
+        /*if (queryLon < MapServer.ROOT_ULLON) {
             return MapServer.ROOT_ULLON;
         }
         if (queryLon > MapServer.ROOT_LRLON) {
             return MapServer.ROOT_LRLON;
-        }
-        double lonBeforeQueryLon = MapServer.ROOT_ULLON;
-        // Note that sideLengthPerTile is positive(sideLengthPerTile > 0)
-        double sideLengthPerTile = (MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / Math.pow(2, depth);
-        while (lonBeforeQueryLon < queryLon) {
+        }*/
+        double closestLonBeforeQueryLon = MapServer.ROOT_ULLON;
+        int offsetValue = 0;
+        while (closestLonBeforeQueryLon < queryLon) {
             // Note that the longitudes we use here are negative numbers,
             // from MapServer.ROOT_ULLON to MapServer.ROOT_LRLON
-            lonBeforeQueryLon += sideLengthPerTile;  // move side length of 1 tile from left to right
+            closestLonBeforeQueryLon += tileLength;  // move side length of 1 tile from left to right
+            offsetValue++;
         }
         if (SIDE) {
-            return lonBeforeQueryLon - sideLengthPerTile; // left bounding longitude
+            // System.out.println("return: " + (MapServer.ROOT_ULLON + (offsetValue - 1) * tileLength));
+            // return closestLonBeforeQueryLon - tileLength;
+            return offsetValue - 1;     // left bounding longitude
         } else {
-            return lonBeforeQueryLon;   // right bounding longitude
+            // System.out.println("return: " + (MapServer.ROOT_ULLON + (offsetValue) * tileLength));
+            // return closestLonBeforeQueryLon;
+            return offsetValue;     // right bounding longitude
         }
     }
 
     /**
      * Calculate the closest raster latitude
      */
-    private static double rasterLatitudeCalculator(double queryLat, double depth, boolean SIDE) {
+    private static int rasterLatitudeCalculator(double queryLat, double tileWidth, boolean SIDE) {
         // if outbound
-        if (queryLat > MapServer.ROOT_ULLAT) {
+/*        if (queryLat > MapServer.ROOT_ULLAT) {
             return MapServer.ROOT_ULLAT;
         }
         if (queryLat < MapServer.ROOT_LRLAT) {
             return MapServer.ROOT_LRLAT;
-        }
-        double sideLengthPerTile = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / Math.pow(2, depth);
-        double latBeforeQueryLat = MapServer.ROOT_ULLAT;
-        while (latBeforeQueryLat > queryLat) {
-            latBeforeQueryLat -= sideLengthPerTile;
+        }*/
+//        double tileWidth = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / Math.pow(2, depth);
+        double closestLatBeforeQueryLat = MapServer.ROOT_ULLAT;
+        int offsetValue = 0;
+        while (closestLatBeforeQueryLat > queryLat) {
+            closestLatBeforeQueryLat -= tileWidth;
+            offsetValue++;
         }
         if (SIDE) {
-            return latBeforeQueryLat + sideLengthPerTile; // upper bounding latitude
+            // System.out.println(offsetValue);
+            // System.out.println("return: "+ (MapServer.ROOT_ULLAT - (offsetValue - 1) * tileWidth));
+            // return closestLatBeforeQueryLat + tileWidth;
+            return offsetValue - 1;     // upper bounding latitude
         } else {
-            return latBeforeQueryLat;   // lower bounding latitude
+            // System.out.println(offsetValue);
+            // System.out.println("return: "+ (MapServer.ROOT_ULLAT - offsetValue * tileWidth));
+            // return closestLatBeforeQueryLat;
+            return offsetValue;     // lower bounding latitude
         }
     }
 
@@ -152,24 +191,63 @@ public class Rasterer {
 //        ullat = 37.870213571328854;
 //        lrlat = 37.8318576119893;
 
+        lrlat=37.858292608;
+        lrlon=-122.222751327;
+        ullat=37.877266154;
+        ullon=-122.239956628;
+        width=613.0;
+
         // Test depth(set depthCalculator to static before test)
-        int d = depthCalculator(lrlon, ullon, width);
+        int d = depthCalculator(lrlon, ullon, width);   // d = 7
         System.out.println(d);
-        System.out.println(rasterLongitudeCalculator(lrlon, d, RIGHT_SIDE));
-        System.out.println(rasterLongitudeCalculator(ullon, d, LEFT_SIDE));
-        System.out.println(rasterLatitudeCalculator(ullat, d, UPPER_SIDE));     // 37.87701580361881
-        System.out.println(rasterLatitudeCalculator(lrlat, d, LOWER_SIDE));     // 37.87538940251607
+
+        // Note that tileLength is positive(tileLength > 0)
+        double tileLength = (MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / Math.pow(2, d);
+
+        int ullonOffsetValue = rasterLongitudeCalculator(ullon, tileLength, LEFT_SIDE);
+        System.out.println("ullonOffsetValue: " + ullonOffsetValue);
+        System.out.println(MapServer.ROOT_ULLON + ullonOffsetValue * tileLength);     // raster_ul_lon=-122.24212646484375
+
+        int lrlonOffsetValue = rasterLongitudeCalculator(lrlon, tileLength, RIGHT_SIDE);
+        System.out.println("lrlonOffsetValue: " + lrlonOffsetValue);
+        System.out.println(MapServer.ROOT_ULLON + lrlonOffsetValue * tileLength);     // raster_lr_lon=-122.24006652832031
+
+        double tileWidth = (MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / Math.pow(2, d);
+        int ullatOffsetValue = rasterLatitudeCalculator(ullat, tileWidth, UPPER_SIDE);
+        System.out.println("ullatOffsetValue: " + ullatOffsetValue);
+        System.out.println(MapServer.ROOT_ULLAT - ullatOffsetValue * tileWidth);     // 37.87701580361881
+
+        int lrlatOffsetValue = rasterLatitudeCalculator(lrlat, tileWidth, LOWER_SIDE);
+        System.out.println("lrlatOffsetValue: " + lrlatOffsetValue);
+        System.out.println(MapServer.ROOT_ULLAT - lrlatOffsetValue * tileWidth);     // 37.87538940251607
+
+        String[][] render_grid = new String[lrlatOffsetValue - ullatOffsetValue][];
+        for (int i = ullatOffsetValue; i < lrlatOffsetValue; i++) {
+            render_grid[i - ullatOffsetValue] = new String[lrlonOffsetValue - ullonOffsetValue];
+            for (int j = ullonOffsetValue; j < lrlonOffsetValue; j++) {
+                render_grid[i - ullatOffsetValue][j - ullonOffsetValue] = "d" + d +"_x" + j + "_y" + i +".png";
+            }
+        }
     }
 
-    // TODO: validate/*
-    //  You can also imagine that the user might drag the query box to a location
-    //  that is completely outside of the root longitude/latitudes.
-    //  In this case, there is nothing to raster, raster_ul_lon, raster_ul_lat, etc. are arbitrary,
-    //  and you should set query_success: false. If the server receives a query box that doesn’t make any sense,
-    //  eg. ullon, ullat is located to the right of lrlon, lrlat,
-    //  you should also ensure query_success is set to false.
-    //  */
+    /*
+    * Validate the input params are inbound
+    */
     private boolean paramsValidator(Map<String, Double> params) {
+        double lrlon = params.get("lrlon");
+        double ullon = params.get("ullon");
+        double ullat = params.get("ullat");
+        double lrlat = params.get("lrlat");
+        if (
+                lrlon > ullon
+                && lrlat < ullat
+                && lrlon <= MapServer.ROOT_LRLON
+                && ullon >= MapServer.ROOT_ULLON
+                && lrlat >= MapServer.ROOT_LRLAT
+                && ullat <= MapServer.ROOT_ULLAT
+        ) {
+            return true;
+        }
         return false;
     }
 }
