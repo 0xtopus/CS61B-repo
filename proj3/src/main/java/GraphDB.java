@@ -6,7 +6,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -18,6 +18,9 @@ import java.util.ArrayList;
  * @author Alan Yao, Josh Hug
  */
 public class GraphDB {
+    /* mapGraph to contain the Nodes and Ways */
+    private final Map<Long, Vertex> mapGraph = new HashMap<>();
+
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
 
@@ -42,6 +45,80 @@ public class GraphDB {
         clean();
     }
 
+    static class Vertex {
+        private final long id;
+        private final double lat;
+        private final double lon;
+        private final List<Long> neighborNodes;
+
+        public Vertex(long id, double longitude, double latitude) {
+            this.id = id;
+            this.lat = latitude;
+            this.lon = longitude;
+            neighborNodes = new ArrayList<>();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+            Vertex that = (Vertex) obj;
+            return Objects.equals(this.id, that.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(this.id);
+        }
+    }
+
+    /**
+     * Add vertex with no neighbor to the mapGraph
+     *
+     * @param id Input Vertex id
+     * @param lon Input Vertex longitude
+     * @param lat Input Vertex latitude
+     */
+    void addVertex(long id, double lon, double lat) {
+        this.mapGraph.put(id, new Vertex(id, lon, lat));
+    }
+
+    /**
+     * Add edge to a node.
+     *
+     * @param id id of the node
+     * @param neighborId id of the neighbor to be connected
+     */
+    void addEdge(Long id, Long neighborId) {
+        Vertex node = this.mapGraph.get(id);
+        Vertex neighborNode = this.mapGraph.get(neighborId);
+        if (node != null && neighborNode != null) {
+            node.neighborNodes.add(neighborId);
+            neighborNode.neighborNodes.add(id);
+            // System.out.println(id + " connected to " + neighborId);
+        }
+    }
+
+    /**
+     * Connect nodes in the nodeStack
+     *
+     * @param nodeStack nodes to connect with each other
+     */
+    void addWays(Stack<Long> nodeStack) {
+        if (nodeStack.empty()) {
+            return;
+        }
+        long id = nodeStack.pop();
+        while (!nodeStack.empty()) {
+            addEdge(id, nodeStack.peek());
+            id = nodeStack.pop();
+        }
+    }
+
     /**
      * Helper to process strings into their "cleaned" form, ignoring punctuation and capitalization.
      * @param s Input string.
@@ -57,7 +134,16 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        // TODO: Your code here.
+        Set<Long> lonelyVertices = new HashSet<>();
+        for (Long id : this.mapGraph.keySet()) {
+            Vertex vertex = this.mapGraph.get(id);
+            if (vertex.neighborNodes.isEmpty()) {
+                lonelyVertices.add(id);
+            }
+        }
+        for (long id : lonelyVertices) {
+            mapGraph.remove(id);
+        }
     }
 
     /**
@@ -66,7 +152,7 @@ public class GraphDB {
      */
     Iterable<Long> vertices() {
         //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
+        return new ArrayList<Long>(mapGraph.keySet());
     }
 
     /**
@@ -75,7 +161,7 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        return null;
+        return mapGraph.get(v).neighborNodes;
     }
 
     /**
@@ -136,7 +222,18 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        return 0;
+        long closestVertexId = -1;
+        double minDistance = Double.MAX_VALUE;
+        for (long id : mapGraph.keySet()) {
+            Vertex vertex = this.mapGraph.get(id);
+            double currentDistance = distance(vertex.lon, vertex.lat, lon, lat);
+            if (currentDistance <= minDistance) {
+                minDistance = currentDistance;
+                closestVertexId = id;
+            }
+        }
+        /* if return -1, then there is no vertex in the Graph */
+        return closestVertexId;
     }
 
     /**
@@ -145,7 +242,7 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        return 0;
+        return mapGraph.get(v).lon;
     }
 
     /**
@@ -154,6 +251,6 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        return 0;
+        return mapGraph.get(v).lat;
     }
 }

@@ -97,7 +97,7 @@ public class Rasterer {
     /**
      * Calculate the depth
      */
-    private static int depthCalculator(double lrlon, double ullon, double width) {
+    private int depthCalculator(double lrlon, double ullon, double width) {
         double queryBoxLonDPP = (lrlon - ullon) / width;
         double leftLon = MapServer.ROOT_ULLON;
         int depth = 0;
@@ -113,7 +113,7 @@ public class Rasterer {
     /**
     * Calculate the closest raster longitude
     */
-    private static int rasterLongitudeCalculator(double queryLon, double tileLength, boolean S) {
+    private int rasterLongitudeCalculator(double queryLon, double tileLength, boolean S) {
         // if outbound
         /*if (queryLon < MapServer.ROOT_ULLON) {
             return MapServer.ROOT_ULLON;
@@ -144,7 +144,7 @@ public class Rasterer {
     /**
      * Calculate the closest raster latitude
      */
-    private static int rasterLatitudeCalculator(double queryLat, double tileWidth, boolean S) {
+    private int rasterLatitudeCalculator(double queryLat, double tileWidth, boolean S) {
         // if outbound
         /* if (queryLat > MapServer.ROOT_ULLAT) {
             return MapServer.ROOT_ULLAT;

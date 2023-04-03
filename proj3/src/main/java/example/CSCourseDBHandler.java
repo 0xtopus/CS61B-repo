@@ -49,7 +49,7 @@ public class CSCourseDBHandler extends DefaultHandler {
             lastCourse = c;
         } else if (qName.equals("req")) {
             activeState = "req";
-            lastCourse = null;
+               lastCourse = null;
         } else if (activeState.equals("req") && qName.equals("from")) {
             from = attributes.getValue("ref");
         } else if (activeState.equals("req") && qName.equals("to")) {
