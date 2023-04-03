@@ -2390,6 +2390,154 @@ Knowing the types of data that you are storing can give you great power in creat
 
 **<a href="https://cs61b-2.gitbook.io/cs61b-textbook/26.-prefix-operations-and-tries/26.5-exercises">Trie Exercises</a>**
 
+## Basic Sorts
+
+### Selection Sort
+
+Selection sort uses the following algorithm:
+
+1. Find the smallest item.
+2. Swap that item to the front.
+3. Repeat until all items are fixed (there are no inversions).
+
+You can see a demo of the sorting algorithm [here](https://docs.google.com/presentation/u/1/d/1p6g3r9BpwTARjUylA0V0yspP2temzHNJEJjCG41I4r0/edit?usp=sharing).
+
+Selection sort runs in Θ(N^2^) time using an array or similar data structure.  It is inefficient!
+
+### Heapsort
+
+#### Naive Heapsort Analysis
+
+The overall runtime of this algorithm is Θ(Nlog⁡N). There are three main components to this runtime:
+
+- Inserting N items into the heap: O(Nlog⁡N)
+- Selecting the largest item: Θ(1)
+- Removing the largest item: O(log⁡N)
+
+In terms of memory usage, the output array takes an extra Θ(N) space. This is worse than selection sort, which uses no extra space, but the improvement in runtime far outweighs this downside.
+
+Even more, we can use a trick with heapsort to get rid of the extra output array.
+
+#### In-place Heapsort
+
+As an alternate approach, we can use the input array itself to form the heap and output array.
+
+In this approach, we can use a process known as *bottom-up heapification* to convert the input array into a heap. Bottom-up heapification involves moving in reverse level order up the heap, sinking nodes to their appropriate location as you move up.
+
+By using this approach, we avoid the need for an extra copy of the data. Once heapified, we use the naive heapsort approach of popping off the maximum and placing it at the end of our array. In doing so, we maintain an "unsorted" front portion of the array (representing the heap) and a "sorted" back portion of the the array (representing the sorted items so far).
+
+<img src="\note_pics\inPlaceHeapSorting.png" style="zoom:67%;" />
+
+You can see a demo of this algorithm [here](https://docs.google.com/presentation/d/1SzcQC48OB9agStD0dFRgccU-tyjD6m3esrSC-GLxmNc/edit?usp=sharing).
+
+This process overall is still O(N log ⁡N), since bottom-up heapification requires at most N sink-down operations that take at most log⁡ N time each. Using in-place heapsort, we reduce the memory usage of heapsort to Θ(1).
+
+### Mergesort
+
+1. Split the items into half.
+2. Mergesort each half.
+3. Merge the two sorted halves to form the final result.
+
+You can see a demo of the algorithm [here](https://docs.google.com/presentation/d/1h-gS13kKWSKd_5gt2FPXLYigFY4jf5rBkNFl3qZzRRw/edit#slide=id.g463de7561_042). 
+
+Mergesort has a runtime of Θ(N log ⁡N). 
+
+The auxiliary array used during the merge step requires Θ(N)\Theta(N)Θ(N) extra space. Note that in-place mergesort is possible; however it is very complex and the runtime suffers by a significant constant factor, so we will not cover it here.
+
+### Insertion Sort
+
+#### Naive Insertion Sort
+
+In insertion sort, we start with an empty output sequence. Then, we select an item from the input, inserting into the output array at the correct location.
+
+Naively, we can do this by creating a completely seperate output array and simply putting items from the input there. You can see a demo of this algorithm [here](http://goo.gl/bVyVCS).
+
+For the naive approach, if the output sequence contains k items so far, then an insertion takes O(k) time (shifting every item over in the output array).
+
+#### In-place Insertion Sort
+
+We can improve the time and space complexity of insertion sort by using in-place swaps instead of building a seperate output array. 
+
+You can see a demo of this algorithm [here](https://docs.google.com/presentation/d/10b9aRqpGJu8pUk8OpfqUIEEm8ou-zmmC7b_BE5wgNg0/edit#slide=id.g463de7561_042).
+
+Essentially, we move from left to right in the array, selecting an item to be swapped each time. Then, we swap that item as far to the front as it can go. The front of our array gradually becomes sorted until the entire array is sorted.
+
+The best-case runtime of insertion sort is Θ(N)--when there are no swaps, we simply do a linear scan through the array. The worst-case runtime of insertion sort is Θ(N^2^)--in a reverse-sorted array, we have to swap every item all the way to the front.
+
+on arrays with a small number of inversions, insertion sort is probably the fastest sorting algorithm. The runtime is Θ(N+K), where K is the number of inversions in the array. If we define an almost-sorted array as one where the number of inversions K < cN for some constant c, then insertion sort runs in linear time.
+
+A less obvious empirical fact is that insertion sort is extremely fast on small arrays, usually of size 15 or less. The analysis of this is beyond the scope of the course, but the general idea is that divide-and-conquer algorithms (like heapsort and mergesort) spend too much time on the "dividing" phase, whereas insertion sort starts sorting immediately. In fact, the Java [implementation](http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/6-b14/java/util/Arrays.java#Arrays.mergeSort(java.lang.Object[]%2Cjava.lang.Object[]%2Cint%2Cint%2Cint)) of mergesort uses insertion sort when the split becomes less than 15 items. 
+
+### Insertion Sort vs Selection Sort
+
+Asymptotically, both selection and insertion sort run in Θ(N^2^) on a reverse-sorted array. However, note that selection sort only does N total swaps (finding the maximum, then swapping to the front), while insertion sort does on the order of N^2^ swaps (swapping each item to the front), so insertion sort will actually be slower by a constant factor.
+
+### Runtime
+
+ <img src="\note_pics\sortRuntime.png" style="zoom:50%;" />
+
+## Quick Sort
+
+The core idea behind Quicksort involves **partitioning.** 
+
+**pivot**: Partitioning on that pivot element (x) involves rearrange a[] such that: 
+
+1. x moves to some position j (can be the original position of i)
+2. All array elements to the left of x are less than or equal to x (<= x) 
+3. All array elements to the right of x are greater than or equal to x (>= x)
+
+### Tony Hoare’s Quicksort algorithm
+
+To quicksort N items: 
+
+1. Partition on the leftmost item as the pivot. 
+2. Recursively quicksort the left half. 
+3. Recursively quicksort the right half. 
+
+<img src="\note_pics\quickSort.png" style="zoom:50%;" />
+
+<a href="https://docs.google.com/presentation/d/1QjAs-zx1i0_XWlLqsKtexb-iueao9jNLkN-gW9QxAD0/edit">Quicksort Demo</a>
+
+### Performance Caveats
+
+#### Best Case
+
+For instance, the best case runtime is when the pivot chosen always lands in the middle (in other words, the partition always picks the median element of the array). 
+
+<img src="\note_pics\quickSortBestCase.png" style="zoom:50%;" />
+
+In the best case, the total work done at each level is approximately O(N). To see this, the first partition pivots on one element and requires checking all N elements to determine whether they go on the right or the left of the pivot element. The second layer repeats this, but for N/2 elements on two separate pivots (since we are recursively partitioning on the two halves). Thus, each level is O(N) work. 
+
+The overall runtime becomes Θ(NH)\Theta(NH)Θ(NH), where H = # of layers = Θ(logN). Thus, the total runtime for Quicksort in the best case is Θ(N log N).
+
+#### Worst Case
+
+The worst case for runtime occurs when the pivot chosen at each partition lands at the beginning of the array. In this scenario, each layer still has to do O(N) work, but now there are H = # of layers = N layers, since every single element has to be pivoted on. Thus, the worst case runtime is Θ(N^2^).
+
+<img src="\note_pics\quickSortWorstCase.png" style="zoom:50%;" />
+
+#### Quicksort vs Mergesort
+
+![](\note_pics\quicksortvsMergeSort.png)
+
+In comparison, Mergesort seems to be a lot better, since Quicksort suffers from a theoretical worst case runtime of Θ(N^2^). So how can Quicksort be the fastest sort empirically? Quicksort's advantage empirically comes from the fact that on average, Quicksort is Θ(N log N).
+
+#### Avoiding the Worst Case of Quicksort
+
+As you can see from above, the performance of Quicksort (both in terms of order of growth and in constant factors) depends critically upon **how you select the pivot, how you partition around the pivot, and other optimizations that you can add to speed things up.** 
+
+Given certain conditions, Quicksort can result in Θ(N^2^), which is much worse than Θ(N log N). Some of these conditions include **bad ordering,** where the array is already in sorted order (or almost sorted order), and **bad elements,** where the array has all duplicates. 
+
+### Summary
+
+In summary, Quicksort utilizes partitioning on pivot elements to recursively sort an array. 
+
+In the best case, Quicksort achieves Θ(N log N) time, which is the same as the best case of Mergesort.
+
+Empirically, Quicksort is the fastest sort in the average case, with Θ(N log N) expected runtime for a randomly chosen array case.
+
+However, Quicksort has a bad worst case runtime of Θ(N^2^), which occurs in specific cases where the pivot is consistently chosen near the edge of the array. In comparison, Mergesort has a worst case runtime of Θ(N log N).
+
 
 
 # Project 1
