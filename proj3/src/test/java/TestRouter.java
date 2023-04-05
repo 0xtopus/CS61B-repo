@@ -40,6 +40,26 @@ public class TestRouter {
                     params.get("start_lon"), params.get("start_lat"),
                     params.get("end_lon"), params.get("end_lat"));
             List<Long> expected = expectedResults.get(i);
+            long prevId = expected.get(0);
+            double disActual = 0.0;
+            for (long id : actual) {
+                if (id == expected.get(89)) {
+                    System.out.println(id);
+                }
+                disActual += graph.distance(prevId, id);
+                prevId = id;
+            }
+            System.out.println("actual dis: " + disActual);
+            prevId = expected.get(0);
+            double disEx = 0.0;
+            for (long id : expected) {
+                // if (id == prevId) {
+                //     System.out.println(id);
+                // }
+                disEx += graph.distance(prevId, id);
+                prevId = id;
+            }
+            System.out.println("expected dis: " + disEx);
             assertEquals("Your results did not match the expected results", expected, actual);
         }
     }

@@ -18,7 +18,7 @@ import java.util.*;
  * @author Alan Yao, Josh Hug
  */
 public class GraphDB {
-    /* mapGraph to contain the Nodes and Ways */
+    /* mapGraph to contain the Nodes */
     private final Map<Long, Vertex> mapGraph = new HashMap<>();
 
     /** Your instance variables for storing the graph. You should consider
@@ -253,4 +253,14 @@ public class GraphDB {
     double lat(long v) {
         return mapGraph.get(v).lat;
     }
+
+    /**
+     * Get vertex by the given id.
+     *
+     * @param id the id of vertex
+     */
+    Vertex vertexGetter(long id) {
+        return this.mapGraph.get(id);
+    }
+
 }

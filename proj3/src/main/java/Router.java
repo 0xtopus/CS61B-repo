@@ -1,5 +1,4 @@
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +11,45 @@ import java.util.regex.Pattern;
  * down to the priority you use to order your vertices.
  */
 public class Router {
+    private static PriorityQueue<Long> verticesRouter;
+    // private static Set<Long> markedId;
+
+    /* the value of best is the shortest distances from the start vertex to the key vertices */
+    private static Map<Long, Double> best;
+
+    private static List<Long> shortestPath;
+
+    private static Map<Long, Double> heuristicDistance;
+
+    private static Map<Long, Node> nodePath;
+
+    private static class Node {
+        private long id;
+        private long pId;
+
+        public Node(long myId, long parentId) {
+            id = myId;
+            pId = parentId;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+            Node that = (Node) obj;
+            return Objects.equals(this.id, that.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(this.id);
+        }
+    }
+
     /**
      * Return a List of longs representing the shortest path from the node
      * closest to a start location and the node closest to the destination
@@ -25,8 +63,68 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        long startId = g.closest(stlon, stlat);
+        long destId = g.closest(destlon, destlat);
+
+        verticesRouter = new PriorityQueue<>(10, distanceComparator);
+        best = new HashMap<>();
+        heuristicDistance = new HashMap<>();
+        nodePath = new HashMap<>();
+
+        verticesRouter.add(startId);
+        best.put(startId, 0.0);
+        heuristicDistance.put(startId, g.distance(startId, destId));
+        
+        long currId = verticesRouter.remove();
+        // Create the start Node
+        Node pNode = new Node(currId, -1);
+        nodePath.put(currId, pNode);
+        while(currId != destId) {
+            // relax all adjacent Nodes
+            for (long adj : g.adjacent(currId)) {
+                // Calculate the distance between start Node and adjacent Node
+                double distanceStart2Adj =  best.get(currId) + g.distance(adj, currId);
+                // If find a shorter way to adjacent Node
+                if (best.get(adj) == null || distanceStart2Adj < best.get(adj)) {
+                    heuristicDistance.put(adj, g.distance(adj, destId));
+                    best.put(adj, distanceStart2Adj);
+                    verticesRouter.add(adj);
+                }
+                // Store currNode as parent Node for every adjacent Node
+                if (nodePath.get(adj) == null || distanceStart2Adj < best.get(adj)) {
+                    nodePath.put(adj, new Node(adj, currId));
+                }
+            }
+            currId = verticesRouter.remove();
+        }
+        
+        shortestPath = new ArrayList<>();
+        while (currId != -1) {
+            shortestPath.add(0, currId);
+            // System.out.println(nodePath.get(currId).id);
+            currId = nodePath.get(currId).pId;
+        }
+
+        return shortestPath; 
     }
+
+    /**
+     * Compare the estimated total distances of two nodes
+     */
+    private static Comparator<Long> distanceComparator = new Comparator<Long>() {
+        @Override
+        public int compare(Long id1, Long id2) {
+            double d1 = best.get(id1) + heuristicDistance.get(id1);
+            double d2 = best.get(id2) + heuristicDistance.get(id2);
+            if (d1 < d2) {
+                return -1;
+            }
+            if (d1 > d2) {
+                return 1;
+            }
+            return 0;
+        }
+    };
 
     /**
      * Create the list of directions corresponding to a route on the graph.
