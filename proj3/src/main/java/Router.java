@@ -3,119 +3,91 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class provides a shortestPath method for finding routes between two points
- * on the map. Start by using Dijkstra's, and if your code isn't fast enough for your
- * satisfaction (or the autograder), upgrade your implementation by switching it to A*.
- * Your code will probably not be fast enough to pass the autograder unless you use A*.
- * The difference between A* and Dijkstra's is only a couple of lines of code, and boils
+ * This class provides a shortestPath method for finding routes between two
+ * points
+ * on the map. Start by using Dijkstra's, and if your code isn't fast enough for
+ * your
+ * satisfaction (or the autograder), upgrade your implementation by switching it
+ * to A*.
+ * Your code will probably not be fast enough to pass the autograder unless you
+ * use A*.
+ * The difference between A* and Dijkstra's is only a couple of lines of code,
+ * and boils
  * down to the priority you use to order your vertices.
  */
 public class Router {
-    private static PriorityQueue<Long> verticesRouter;
-    // private static Set<Long> markedId;
-
-    /* the value of best is the shortest distances from the start vertex to the key vertices */
-    private static Map<Long, Double> best;
-
     private static List<Long> shortestPath;
-
-    private static Map<Long, Double> heuristicDistance;
-
-    private static Map<Long, Node> nodePath;
-
-    private static class Node {
-        private long id;
-        private long pId;
-
-        public Node(long myId, long parentId) {
-            id = myId;
-            pId = parentId;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null || getClass() != obj.getClass()) {
-                return false;
-            }
-            Node that = (Node) obj;
-            return Objects.equals(this.id, that.id);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(this.id);
-        }
-    }
+    private static Map<Long, Double> distBest;
+    private static Map<Long, Double> heuristic;
 
     /**
      * Return a List of longs representing the shortest path from the node
      * closest to a start location and the node closest to the destination
      * location.
-     * @param g The graph to use.
-     * @param stlon The longitude of the start location.
-     * @param stlat The latitude of the start location.
+     * 
+     * @param g       The graph to use.
+     * @param stlon   The longitude of the start location.
+     * @param stlat   The latitude of the start location.
      * @param destlon The longitude of the destination location.
      * @param destlat The latitude of the destination location.
      * @return A list of node id's in the order visited on the shortest path.
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
-                                          double destlon, double destlat) {
-        long startId = g.closest(stlon, stlat);
+            double destlon, double destlat) {
+        Long nextId = g.closest(stlon, stlat);
         long destId = g.closest(destlon, destlat);
 
-        verticesRouter = new PriorityQueue<>(10, distanceComparator);
-        best = new HashMap<>();
-        heuristicDistance = new HashMap<>();
-        nodePath = new HashMap<>();
+        PriorityQueue<Long> fringe = new PriorityQueue<>(10, distanceComparator);
+        Map<Long, Long> edgeTo = new HashMap<>();
+        distBest = new HashMap<>();
+        heuristic = new HashMap<>();   
 
-        verticesRouter.add(startId);
-        best.put(startId, 0.0);
-        heuristicDistance.put(startId, g.distance(startId, destId));
+        // initialization
+        fringe.add(nextId);
+        edgeTo.put(nextId, null);
+        distBest.put(nextId, 0.0);
+        heuristic.put(nextId, g.distance((long) nextId, destId));
         
-        long currId = verticesRouter.remove();
-        // Create the start Node
-        Node pNode = new Node(currId, -1);
-        nodePath.put(currId, pNode);
-        while(currId != destId) {
-            // relax all adjacent Nodes
-            for (long adj : g.adjacent(currId)) {
-                // Calculate the distance between start Node and adjacent Node
-                double distanceStart2Adj =  best.get(currId) + g.distance(adj, currId);
-                // If find a shorter way to adjacent Node
-                if (best.get(adj) == null || distanceStart2Adj < best.get(adj)) {
-                    heuristicDistance.put(adj, g.distance(adj, destId));
-                    best.put(adj, distanceStart2Adj);
-                    verticesRouter.add(adj);
-                }
-                // Store currNode as parent Node for every adjacent Node
-                if (nodePath.get(adj) == null || distanceStart2Adj < best.get(adj)) {
-                    nodePath.put(adj, new Node(adj, currId));
-                }
+        while (nextId != destId) {
+            nextId = fringe.remove();
+            for (long adj : g.adjacent(nextId)) {
+                relax(nextId, adj, destId, fringe, edgeTo, distBest, g);
             }
-            currId = verticesRouter.remove();
-        }
-        
-        shortestPath = new ArrayList<>();
-        while (currId != -1) {
-            shortestPath.add(0, currId);
-            // System.out.println(nodePath.get(currId).id);
-            currId = nodePath.get(currId).pId;
         }
 
-        return shortestPath; 
+        shortestPath = new ArrayList<>();
+        while (nextId != null) {
+            shortestPath.add(0, nextId);
+            nextId = edgeTo.get(nextId);
+        }
+
+        return shortestPath;
     }
 
     /**
-     * Compare the estimated total distances of two nodes
+     * relax the edges of all adjcacent Nodes
+     */
+    private static void relax(long v, long w, long destId, PriorityQueue<Long> fringe, 
+                            Map<Long, Long> edgeTo, Map<Long, Double> distBest, GraphDB g) {
+
+        double distToW = distBest.get(v) + g.distance(v, w);
+
+        if (distBest.get(w) == null || distToW < distBest.get(w)) {
+            distBest.put(w, distToW);
+            heuristic.put(w, distToW + g.distance(destId, w));
+            fringe.add(w);
+            edgeTo.put(w, v);
+        }
+    }
+
+    /**
+     * Compare the estimated total distances of two nodes for Priority Queue
      */
     private static Comparator<Long> distanceComparator = new Comparator<Long>() {
         @Override
         public int compare(Long id1, Long id2) {
-            double d1 = best.get(id1) + heuristicDistance.get(id1);
-            double d2 = best.get(id2) + heuristicDistance.get(id2);
+            double d1 = heuristic.get(id1);
+            double d2 = heuristic.get(id2);
             if (d1 < d2) {
                 return -1;
             }
@@ -128,16 +100,16 @@ public class Router {
 
     /**
      * Create the list of directions corresponding to a route on the graph.
-     * @param g The graph to use.
+     * 
+     * @param g     The graph to use.
      * @param route The route to translate into directions. Each element
      *              corresponds to a node from the graph in the route.
      * @return A list of NavigatiionDirection objects corresponding to the input
-     * route.
+     *         route.
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
         return null; // FIXME
     }
-
 
     /**
      * Class to represent a navigation direction, which consists of 3 attributes:
@@ -158,12 +130,12 @@ public class Router {
         /** Number of directions supported. */
         public static final int NUM_DIRECTIONS = 8;
 
-        /** A mapping of integer values to directions.*/
+        /** A mapping of integer values to directions. */
         public static final String[] DIRECTIONS = new String[NUM_DIRECTIONS];
 
         /** Default name for an unknown way. */
         public static final String UNKNOWN_ROAD = "unknown road";
-        
+
         /** Static initializer. */
         static {
             DIRECTIONS[START] = "Start";
@@ -176,7 +148,7 @@ public class Router {
             DIRECTIONS[SHARP_RIGHT] = "Sharp right";
         }
 
-        /** The direction a given NavigationDirection represents.*/
+        /** The direction a given NavigationDirection represents. */
         int direction;
         /** The name of the way I represent. */
         String way;
@@ -198,8 +170,10 @@ public class Router {
         }
 
         /**
-         * Takes the string representation of a navigation direction and converts it into
+         * Takes the string representation of a navigation direction and converts it
+         * into
          * a Navigation Direction object.
+         * 
          * @param dirAsString The string representation of the NavigationDirection.
          * @return A NavigationDirection object representing the input string.
          */
@@ -247,8 +221,8 @@ public class Router {
         public boolean equals(Object o) {
             if (o instanceof NavigationDirection) {
                 return direction == ((NavigationDirection) o).direction
-                    && way.equals(((NavigationDirection) o).way)
-                    && distance == ((NavigationDirection) o).distance;
+                        && way.equals(((NavigationDirection) o).way)
+                        && distance == ((NavigationDirection) o).distance;
             }
             return false;
         }
