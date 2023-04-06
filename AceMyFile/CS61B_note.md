@@ -2498,6 +2498,18 @@ To quicksort N items:
 
 <a href="https://docs.google.com/presentation/d/1QjAs-zx1i0_XWlLqsKtexb-iueao9jNLkN-gW9QxAD0/edit">Quicksort Demo</a>
 
+
+
+### Hoare Partitioning
+
+<img src="\note_pics\HoarePartitioning.png" style="zoom:50%;" />
+
+The implementation is based on:
+
+<img src="\note_pics\TonyHoare.png" style="zoom:67%;" />
+
+
+
 ### Performance Caveats
 
 #### Best Case
@@ -2522,11 +2534,36 @@ The worst case for runtime occurs when the pivot chosen at each partition lands 
 
 In comparison, Mergesort seems to be a lot better, since Quicksort suffers from a theoretical worst case runtime of Θ(N^2^). So how can Quicksort be the fastest sort empirically? Quicksort's advantage empirically comes from the fact that on average, Quicksort is Θ(N log N).
 
+<img src="\note_pics\quicksortvsMergesort2.png" style="zoom:63%;" />
+
+
+
 #### Avoiding the Worst Case of Quicksort
 
 As you can see from above, the performance of Quicksort (both in terms of order of growth and in constant factors) depends critically upon **how you select the pivot, how you partition around the pivot, and other optimizations that you can add to speed things up.** 
 
 Given certain conditions, Quicksort can result in Θ(N^2^), which is much worse than Θ(N log N). Some of these conditions include **bad ordering,** where the array is already in sorted order (or almost sorted order), and **bad elements,** where the array has all duplicates. 
+
+There are four ways to avoid worst case in Quicksort:
+
+1. Randomness: pick a random pivot shuffle before sorting.
+2. Smart pivot selection: Calculate or approximate the median.
+3. Introspect: Switch to another sort if recursion goes deep.
+4. Preprocess the array: but knowing an array before sorting it is hard.
+
+### Quick selection
+
+Computing the exact median would be great for picking an item to partition around. Gives us a "safe quick sort".
+
+But it turns out that exact median computation is slow.
+
+However, it turns out that partitioning can be useful to find the exact median, and the result algorithm is the best known median identification algorithm.
+
+### Sorting Stability
+
+ A sort is stable if the order of equal items is preserved. This is desirable, for example, if we want to sort on two different properties of our objects. Know how to show the stability or instability of an algorithm. 
+
+<img src="\note_pics\sortStability.png" style="zoom:67%;" />
 
 ### Summary
 
@@ -2538,7 +2575,82 @@ Empirically, Quicksort is the fastest sort in the average case, with Θ(N log N)
 
 However, Quicksort has a bad worst case runtime of Θ(N^2^), which occurs in specific cases where the pivot is consistently chosen near the edge of the array. In comparison, Mergesort has a worst case runtime of Θ(N log N).
 
+<img src="\note_pics\sortingSummary.png" style="zoom:50%;" />
 
+**Quicksort is the fastest**, but the prerequisites are:
+
+-  optimal pivot selection
+- optimal partition algorithm
+- optimal avoiding worst cases
+
+## Sort Summary
+
+<img src="\note_pics\SortSummary.png" style="zoom:50%;" />
+
+**Optimizing Sorts.** We can play a few tricks to speed up a sort.
+
+- One is to switch to insertion sort for small problems (< 15 items). Another is to exploit existing order in the array. 
+
+- A sort that exploits existing order is sometimes called “adaptive”. Python and Java utilize a sort called *Timsort* that has a number of improvements, resulting in, for example Θ(N) performance on almost sorted arrays. 
+
+- A third trick, for worst case N^2^ sorts only, is to make them switch to a worst case N log ⁡N sort if they detect that they have exceeded a reasonable number of operations.
+- Exploiting restrictions on set of keys, if numberof keys are constant, e.g. [3,4,1,2,3,4 ..., 2,2,2,1,3,4,2,3]
+
+**In Java**, Array.sort(someArray) uses:
+
+- Mergesort(specifically the TimSort variant) if someArray consists of Objects.
+- Quicksort if someArray consists of primitives.
+
+### Sorting Bounds
+
+#### Math!
+
+**Math Problem Out of Nowhere 1.** We showed that N!∈Ω((N/2)).
+
+**Math Problem Out of Nowhere.** We showed that log(N!)∈Ω(N log N), and that N log N∈Ω(log(N!)). Therefore log(N!)∈Θ(N log N).
+
+#### Puppy, Cat, Dog Problem
+
+if we have puppy, cat and dog each inside one of three boxes, and only try to identify who is in which box by using a scale to weigh the box(Assuming the weight of puppy < cat < dog). By reducing this problem to a sorting problem,  since there are 3! = 6 permutations, we need at least ceil(lg(6)) = 3 questions to resolve the answer. And for N boxes with N animals inside,  there are N! permutations, meaning we need lg(N!) questions to win the game of puppy-cat-dog, and by extension, we need at least lg(N!) to sort N items with yes/no questions. 
+
+Since **log(N!)∈Θ(N log N)**, we can say that the hypothetical best sorting algorithm that uses yes/no questions requires Ω(N log N) yes/no questions. **Thus, there is no comparison based algorithm that has a worst case that is a better order of growth than Θ(N log N) compares. **
+
+#### Conclusion
+
+No comparison based sort's comparisons times will be less than order N log N! 
+
+<img src="\note_pics\sortBound.png" style="zoom:85%;" />
+
+
+
+## Radix Sort
+
+**Terminology.**
+
+- Radix - just another word for ‘base’ as in the base of a number system. For example, the radix for words written in lowercase English letters is 26. For number written in Arabic numerals it is 10.
+- Radix sort - a sort that works with one character at a time (by grouping objects that have the same digit in the same position).
+
+**Counting Sort.** Allows you to sort N keys that are integers between 0 and R-1 in θ(N + R) time. Beats linearithmic lower bound by avoiding any binary compares. This is a completely different philosophy for how things should be sorted. This is the most important concept for this lecture.
+
+<img src="\note_pics\countingSort.png" style="zoom:45%;" />
+
+Counter sort is not based on  "puppy, cat and Dog" , so it can break runtime restrain. 
+
+It is also a hard to use this when the keys aren't numerical or consecutive or have a lots of keys are the same.
+
+<img src="\note_pics\countSortDemo.png" style="zoom:50%;" />
+
+**LSD.** In the LSD algorithm, we sort by each digit, working from right to left. Requires examination of θ(WN) digits, where W is the length of the longest key. Runtime is θ(WN + WR), though we usually think of R as a constant and just say θ(WN). The θ(WR) part of the runtime is due to the creation fo length R arrows for counting sort. We usually do LSD sort using counting sort as a subroutine, but it’s worth thinking about whether other sorts might work as well.
+
+<img src="\note_pics\LSDRadixSort.png" style="zoom:40%;" />
+
+**LSD vs Comparison Sorting.** Our comparison sorts, despite requiring θ(N log N) time, can still be faster than LSD sort, which is linear in the length of our input θ(WN). For extremely large N, LSD sort will naturally win, but log N is typically pretty small. Know which algorithm is best in the two extreme cases of very long dissimilar strings and very long, nearly equal strings.
+
+**MSD.** In MSD sorting, we work from left to right, and solve each resulting subproblem independently. Thus, for each problem, we may have as many as R subproblem. Worst case runtime is exactly the same as LSD sort, θ(WN + WR), though can be much better. In the very best case, where we only have to look at the top character (only possible for R > N), we have a runtime of θ(N + R).
+
+Sorting runtime of sorts
+
+<img src="\note_pics\sortingRuntine.png" style="zoom:50%;" />
 
 # Project 1
 
