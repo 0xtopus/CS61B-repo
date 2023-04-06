@@ -2444,6 +2444,8 @@ Mergesort has a runtime of Θ(N log ⁡N).
 
 The auxiliary array used during the merge step requires Θ(N)\Theta(N)Θ(N) extra space. Note that in-place mergesort is possible; however it is very complex and the runtime suffers by a significant constant factor, so we will not cover it here.
 
+<a href="https://cs61b-2.gitbook.io/cs61b-textbook/15.-asymptotics-ii/15.4-mergesort">reference</a>
+
 ### Insertion Sort
 
 #### Naive Insertion Sort
@@ -2488,7 +2490,7 @@ The core idea behind Quicksort involves **partitioning.**
 
 ### Tony Hoare’s Quicksort algorithm
 
-To quicksort N items: 
+**Quick Sort Algorithm**: 
 
 1. Partition on the leftmost item as the pivot. 
 2. Recursively quicksort the left half. 
@@ -2498,7 +2500,7 @@ To quicksort N items:
 
 <a href="https://docs.google.com/presentation/d/1QjAs-zx1i0_XWlLqsKtexb-iueao9jNLkN-gW9QxAD0/edit">Quicksort Demo</a>
 
-
+<a href="https://cs61b-2.gitbook.io/cs61b-textbook/30.-quicksort/30.2-quicksort-algorithm">reference</a>
 
 ### Hoare Partitioning
 

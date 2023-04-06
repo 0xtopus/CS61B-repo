@@ -1,5 +1,6 @@
-import edu.princeton.cs.algs4.Queue;
+import static org.junit.Assert.*;
 
+import edu.princeton.cs.algs4.Queue;
 public class QuickSort {
     /**
      * Returns a new queue that contains the given queues catenated together.
@@ -47,13 +48,74 @@ public class QuickSort {
     private static <Item extends Comparable> void partition(
             Queue<Item> unsorted, Item pivot,
             Queue<Item> less, Queue<Item> equal, Queue<Item> greater) {
-        // Your code here!
+        
+        for (Item item : unsorted) {
+            if (pivot.compareTo(item) > 0) {
+                less.enqueue(item);
+            } else if (pivot.compareTo(item) < 0) {
+                greater.enqueue(item);
+            } else if (pivot.compareTo(item) == 0) {
+                equal.enqueue(item);
+            }
+        }
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> quickSort(
             Queue<Item> items) {
-        // Your code here!
+
+        if (items.size() == 0) {
+            return new Queue<>();
+        }
+        Item pivot = getRandomItem(items);
+        Queue<Item> less = new Queue<>();
+        Queue<Item> greater = new Queue<>();
+        Queue<Item> equal = new Queue<>();
+        partition(items, pivot, less, equal, greater);
+        less = quickSort(less);
+        greater = quickSort(greater);
+        items = catenate(less, equal);
+        items = catenate(items, greater);
         return items;
+    }
+
+    public static void main(String[] args) {
+        Queue<String> students = new Queue<>();
+        students.enqueue("Alice");
+        students.enqueue("Vanessa");
+        students.enqueue("Alan");
+        students.enqueue("Ethan");
+        students.enqueue("Harry");
+        students.enqueue("Bob");
+        students.enqueue("Ethan");
+
+        System.out.println("Before sorting:");
+        for (String stu : students) {
+            System.out.println(stu);
+        }
+
+        // sorted by the lexicographic order
+        students = quickSort(students);
+
+        System.out.println("\nAfter sorting:");
+        for (String stu : students) {
+            System.out.println(stu);
+        }
+
+        Queue<String> expected = new Queue<>();
+        expected.enqueue("Alan");
+        expected.enqueue("Alice");
+        expected.enqueue("Bob");
+        expected.enqueue("Ethan");
+        expected.enqueue("Ethan");
+        expected.enqueue("Harry");
+        expected.enqueue("Vanessa");
+
+        int size = expected.size();
+
+        for (int i = 0; i < size; i++) {
+            assertEquals(expected.dequeue(), students.dequeue());
+        }
+        System.out.println("\ntest passed!");
     }
 }
