@@ -123,8 +123,7 @@ public class GraphBuildingHandler extends DefaultHandler {
                 //System.out.println("Way Name: " + v);
             }
 //            System.out.println("Tag with k=" + k + ", v=" + v + ".");
-        } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
-                .equals("name")) {
+        } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k").equals("name")) {
             /* While looking at a node, we found a <tag...> with k="name". */
             /* TODO Create a location. */
             /* Hint: Since we found this <tag...> INSIDE a node, we should probably remember which

@@ -1,4 +1,11 @@
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.Comparator;
+
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,9 +56,12 @@ public class Router {
         heuristic.put(nextId, g.distance((long) nextId, destId));
         
         while (nextId != destId) {
+            if (fringe.isEmpty()) {
+                break;
+            }
             nextId = fringe.remove();
             for (long adj : g.adjacent(nextId)) {
-                relax(nextId, adj, destId, fringe, edgeTo, distBest, g);
+                relax(nextId, adj, destId, fringe, edgeTo, g);
             }
         }
 
@@ -68,7 +78,7 @@ public class Router {
      * relax the edges of all adjcacent Nodes
      */
     private static void relax(long v, long w, long destId, PriorityQueue<Long> fringe, 
-                            Map<Long, Long> edgeTo, Map<Long, Double> distBest, GraphDB g) {
+                            Map<Long, Long> edgeTo, GraphDB g) {
 
         double distToW = distBest.get(v) + g.distance(v, w);
 
