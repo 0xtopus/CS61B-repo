@@ -2627,6 +2627,8 @@ No comparison based sort's comparisons times will be less than order N log N!
 
 ## Radix Sort
 
+You can do a quick review of Counting Sort and Radix Sort by visiting <a href="https://sp18.datastructur.es/materials/lab/lab13/lab13">this Lab</a>.
+
 **Terminology.**
 
 - Radix - just another word for ‘base’ as in the base of a number system. For example, the radix for words written in lowercase English letters is 26. For number written in Arabic numerals it is 10.
@@ -2653,6 +2655,97 @@ It is also a hard to use this when the keys aren't numerical or consecutive or h
 Sorting runtime of sorts
 
 <img src="\note_pics\sortingRuntine.png" style="zoom:50%;" />
+
+
+
+## Compression
+
+**Compression Model #1: Algorithms Operating on Bits.** Given a sequence of bits B, we put them through a compression algorithm C to form a new bitstream C(B). We can run C(B) through a corresponding decompression algorithm to recover B. Ideally, C(B) is less than B.
+
+**Variable Length Codewords.** Basic idea: Use variable length codewords to represent symbols, with shorter keywords going with more common symbols. For example, instead of representing every English character by a 8 bit ASCII value, we can represent more common values with shorter sequences. 
+
+**Prefix Free Codes.** If some codewords are prefixes of others, then we have ambiguity, as seen in Morse Code. A prefix free code is a code where no codeword is a prefix of any other. Prefix free codes can be uniquely decoded.
+
+### **Shannon-Fano Coding.** 
+
+Shannon-Fano coding is an intuitive procedure for generating a prefix free code. First, one counts the occurrence of all symbols. Then you recursively split characters into halves over and over based on frequencies, with each half either having a 1 or a 0 appended to the end of the codeword.
+
+<img src="\note_pics\Shanno-FanoCoding.png" style="zoom:50%;" />
+
+But Shannon-Fano Coding is **NOT** optimal.
+
+### **Huffman Coding.** 
+
+Huffman coding generates a provably optimal prefix free code, unlike Shannon-Fano, which can be suboptimal. 
+
+1. First, one counts the occurrence of all symbols, and create a “node” for each symbol. 
+2. We then merge the two lowest occurrence nodes into a tree with a new supernode as root, with each half either having a 1 or a 0 appended to the beginning of the codeword.
+3.  Repeat this until all symbols are part of the tree. Resulting code is optimal.
+
+<img src="\note_pics\HuffmanCoding.png" style="zoom:50%;" />
+
+
+
+**Two ways of Huffman implementation**
+
+<img src="\note_pics\2HuffmanUsage.png" style="zoom:40%;" />
+
+Approach 2 is applied in the real world.
+
+-  If we have an image file of something like the hugplant.bmp from lecture, we can break it into 8 bit chunks and then Huffman encode it. If we give this file to someone else, they probably won’t know how to decompress it, since **Huffman coding is not a standard compression algorithm supported by major operating systems.** Thus, we also need to provide the Huffman decoding algorithm. 
+
+### **Data Structures**
+
+To implement Huffman Coding:
+
+- Compression: Count frequencies, build an **encoding array** and a **decoding trie**, write the trie to the output, and then look up each symbol in the encoding array and write out the appropriate bit sequence to the output. 
+
+<img src="\note_pics\Compression.png" style="zoom:40%;" />
+
+- Decompression: Read in the trie, then repeatedly use longest prefix matching to recover the original symbol(take advantage of prefix-free code!).
+
+<img src="\note_pics\Decompression.png" style="zoom:45%;" />
+
+
+
+**Huffman Demos**
+
+Compression Demo:
+
+<img src="\note_pics\HuffmanCompressionDemo.png" style="zoom:40%;" />
+
+
+
+Decompression Demo:
+
+<img src="\note_pics\HuffmanDecompressionDemo.png" style="zoom:40%;" />
+
+
+
+**Huffman Coding Summary**
+
+Given a file X.txt that we'd like to compress into X.huf:
+
+- Consider each b-bit symbol (e.g. 8-bit chunks, Unicode characters, etc.) of X.txt, counting occurrences of each of the 2^b^ possibilities, where b is the size of each symbol in bits.
+- Use Huffman code construction algorithm to create a decoding tire and encoding map. Store this tire at the beginning of X.huf.
+- Use encoding map to write codeword for each symbol of input into X.huf.
+
+To decompress X.huf:
+
+- Read in the decoding queue trie.
+- Repeatedly use the decoding tire's longestPrefixOf operation until all bits in X.huf  have been converted back to their uncompressed form.
+
+### General Principle Behind Compression
+
+**General Principles Behind Compression.** More generally, the goal is to exploit redundancy and existing order in the input.
+
+**Universal Compression is Impossible.** It is impossible to create an algorithm that can compress any bitstream by 50%. Otherwise, you could just compress repeatedly until you ended up with just 1 bit, which is clearly absurd. A second argument is that for an input bitstream of say, size 1000, only 1 in 2^499 is capable of being compressed by 50%, due to the pigeonhole principle.
+
+
+
+**Compression Model #2: Self Extracting Bits.** It seems to make more sense to include not just the compressed bits when considering the size of our output, but also **the algorithm** used to do the decompression.
+
+ 
 
 # Project 1
 
