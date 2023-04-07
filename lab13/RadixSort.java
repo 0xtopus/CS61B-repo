@@ -16,8 +16,39 @@ public class RadixSort {
      * @return String[] the sorted array
      */
     public static String[] sort(String[] asciis) {
-        // TODO: Implement LSD Sort
-        return null;
+
+        String[] asciisToDestroy = new String[asciis.length];
+        for (int i = 0; i < asciis.length; i++) {
+            asciisToDestroy[i] = new String(asciis[i]);
+        }
+
+        int maxLength = 0;
+        for (String str : asciis) {
+            maxLength = maxLength > str.length() ? maxLength : str.length();
+        }
+        
+        for (int i = maxLength - 1; i >= 0; i--) {
+            sortHelperLSD(asciisToDestroy, i);            
+        }
+
+        return asciisToDestroy;
+    }
+
+    // main() method to test and debug
+    public static void main(String[] args) {
+/*         String str = "asghdiuadh";
+        try {
+            str.charAt(1000);
+        } catch (StringIndexOutOfBoundsException e) {
+            System.out.println("lose!");
+        } */
+        String[] strings = new String[]{"jeg", "jobber", "med", "dette", "i", "100", "arhundrer"};
+        // String[] strings = new String[]{"jeg", "liker", "luken", "mat"};
+        strings = sort(strings);
+        for (String string : strings) {
+            System.out.println(string);
+        }
+
     }
 
     /**
@@ -28,6 +59,40 @@ public class RadixSort {
      */
     private static void sortHelperLSD(String[] asciis, int index) {
         // Optional LSD helper method for required LSD radix sort
+        int[] count = new int[256];
+        int[] starts = new int[256];
+        
+        int[] lettersAtIndex = new int[asciis.length];
+
+        for (int i = 0; i < asciis.length; i++) {
+            int letterAscii;
+            try {
+                // System.out.println(asciis[i].charAt(index));
+                letterAscii = (int) asciis[i].charAt(index);
+            } catch (StringIndexOutOfBoundsException e) {
+                letterAscii = 0;
+            }
+
+            lettersAtIndex[i] = letterAscii;
+            count[letterAscii]++;
+        }
+
+        for (int i = 0; i < starts.length - 1; i++) {
+            starts[i + 1] = starts[i] + count[i];
+        }
+
+        String[] sortedAsciis = new String[asciis.length];
+        for (int i = 0; i < asciis.length; i++) {
+            int item = lettersAtIndex[i];
+            int place = starts[item];
+            sortedAsciis[place] = asciis[i];
+            starts[item]++;
+        }
+
+        for (int i = 0; i < sortedAsciis.length; i++) {
+            asciis[i] = sortedAsciis[i];
+        }
+
         return;
     }
 
