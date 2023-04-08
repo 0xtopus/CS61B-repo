@@ -92,18 +92,23 @@ System.arraycopy(x,0,y,3,2); // the result: copy x[0],x[1] to y[3],y[4]
 - this demonstrates one way to copy information from one array to another. `System.arraycopy` takes five parameters:
 
   - The array to use as a source
-
 - Where to start in the source array
 
   - The array to use as a destination
-
 - Where to start in the destination array
 
   - How many items to copy
-
 - **Shallow copy**: However, `arraycopy()`only creates a ==shallow copy== of an array, i.e. it only makes a **primative data type 1D array** <a href="#Immutable Data Type">immutable</a>. If you want to make a deep copies of **2D arrays** or **reference type 1D arrays**, please <a href="#array-deep-copy">check here</a>.
 
-  
+
+
+- **Arrays.copyOf()**:  a method in Java that is used to create a new array with the same or different size as the original array with the same elements. It takes two arguments, the original array and the new length of the new copied array. Here are some uses of Arrays.copyOf() in Java:
+  1. Resizing an Array: When an array in Java needs to be resized, you can use this method to create a new array that has a different size than the original array.
+  2. Cloning an Array: To create a new array with the same elements as a given array, Arrays.copyOf() method can be used.
+  3. Creating a Backup copy: When working with an array and making changes to it, you may need to create a backup copy. Here, Arrays.copyOf() method can be used to create a new array with the same values as the original array.
+  4. Truncating an Array: When you need to reduce the size of an array, Arrays.copyOf() method can be used to create a new array with fewer elements.
+
+
 
 - **Array resizing**: 
 
@@ -2585,7 +2590,7 @@ However, Quicksort has a bad worst case runtime of Θ(N^2^), which occurs in spe
 - optimal partition algorithm
 - optimal avoiding worst cases
 
-## Sort Summary
+## Comparison Based Sort Summary
 
 <img src="\note_pics\SortSummary.png" style="zoom:50%;" />
 
@@ -2655,6 +2660,44 @@ It is also a hard to use this when the keys aren't numerical or consecutive or h
 Sorting runtime of sorts
 
 <img src="\note_pics\sortingRuntine.png" style="zoom:50%;" />
+
+## Sort Conclusion
+
+In real life, sometimes it is hard to tell which sort is better since there are many differencs between hypothetical analysis and empirical analysis.(e.g. Just-In-Time Compiler)
+
+Comparing Radix Sort to Merge Sort, we can deem that Radix Sort will always be hypothetically faster. However, it depends on many factors in practice such as the feature of the data you sort, the Just-In-Time compiler optimization, and sometimes you might find after a small tweak on presumed "slower" sort it just gets faster than the previously presumed "optimal" one.
+
+<img src="\note_pics\LSDVSMS.png" style="zoom:67%;" />
+
+**Which one to use: Radix or Mergesort?**
+
+In real world applications, you'd profile different implementations on real data and pick the best one.
+
+But in the **very large N limit**, it's easy. Radix is simply faster!
+
+- Treating alphabet size as constant, LSD Sort has runtime θ(WN)
+- Comparison sorts have runtime θ(N log N) in the worst case.
+
+
+
+**JIT compiler: An Unexpected Factor**
+
+<img src="\note_pics\Just-In-TimeCompiler.png" style="zoom:50%;" />
+
+**Bottom Line: Algorithms Can Be Hard to Compare**
+
+Comparing algorithms that have the same order of growth is challenging.
+
+- Have to perform computational experiments.
+- In modern programming environments, experiments can be tricky due to optimizations like JIT in Java.
+
+Note: there's always the chance that some small optimization to make an algorithm faster.(e.g. Vladimir Yaroslavskiy's quicksort)  
+
+
+
+**Sorting Landscape**
+
+<img src="\note_pics\sortingLandscape.png" style="zoom:50%;" />
 
 
 
@@ -2745,7 +2788,15 @@ To decompress X.huf:
 
 **Compression Model #2: Self Extracting Bits.** It seems to make more sense to include not just the compressed bits when considering the size of our output, but also **the algorithm** used to do the decompression.
 
- 
+ ## P = NP
+
+New Bing:
+
+The N = NP problem is a major unsolved problem in theoretical computer science. [It asks whether every problem whose solution can be quickly verified can also be quickly solved](https://en.wikipedia.org/wiki/P_versus_NP_problem). For example, if you are given a Sudoku puzzle, you can easily check if a given solution is correct, but it may be hard to find the solution in the first place. Problems that can be quickly verified are called NP problems, and problems that can be quickly solved are called P problems. [The N = NP problem asks if P and NP are the same class of problems, or if there are some NP problems that are harder to solve than to verify](https://en.wikipedia.org/wiki/P_versus_NP_problem). [This problem is very important because it has implications for many fields such as mathematics, cryptography, artificial intelligence, and economics](https://en.wikipedia.org/wiki/P_versus_NP_problem). [It is also one of the seven Millennium Prize Problems that offer a $1 million reward for a correct solution](https://en.wikipedia.org/wiki/P_versus_NP_problem).
+
+To make it more comprehensible, imagine that you have a lock and a bunch of keys. A P problem is like finding the right key to open the lock. You can try each key one by one until you find the one that works. The time it takes to find the right key depends on how many keys you have, but it grows slowly as the number of keys increases. An NP problem is like verifying that a given key opens the lock. You can just insert the key and see if it turns. The time it takes to verify the key does not depend on how many keys you have, but only on the size of the key and the lock. An NP-complete problem is like finding the right key to open any lock. If you have a way to find the right key for one lock, you can use it to find the right key for any other lock by transforming the locks into each other. [However, no one knows if there is a fast way to find the right key for any lock, or if you have to try every possible key until you find the one that works](https://www.britannica.com/science/NP-complete-problem).
+
+
 
 # Project 1
 
