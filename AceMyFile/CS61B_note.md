@@ -1032,6 +1032,52 @@ Comparator<String> reverseOrder = new Comparator<String>() {
 Arrays.sort(names, reverseOrder); // names = {"Charlie", "Bob", "Alice"}
 ```
 
+## Bitwise Operations
+
+From: <a href="https://sp18.datastructur.es/materials/lab/lab14/lab14#task-3-generating-a-fractal-sound">lab14</a>
+
+One feature of Java that we haven’t discussed in 61B this semester are bitwise operations. These include `&`, `|`, `>>`, `>>>`, and `<<`. These operations take two integers and perform operations on those integers in a bitwise manner.
+
+#### The & Operation
+
+As an example of a bitwise operation, consider the following expression:
+
+```
+int x = 231 & 62;
+```
+
+After this expression executes, the integer x will be 38. The reason is that the `&` operation generates a new integer where the ith bit is 1 if the ith bit of 231 is 1 AND the ith bit of 62 is 1, and 0 otherwise. Or written out:
+
+```
+231: 11100111
+62:  00111110
+
+x:   00100110
+```
+
+Note that x has a 1 only in positions where 231 and 62 have a 1. If we convert `00100110` from binary into decimal, we get 38, since 32 + 4 + 2 = 38.
+
+#### The » Operation
+
+As another example, consider the expression:
+
+```
+int x = 231 >>> 3;
+```
+
+After this expression executes, the integer x will be 28. The reason is that the `>>>` operation moves all bits in the number 3 bits to the right, filling in any top digits with zeros. Or written out:
+
+```
+231:       11100111
+231 >>> 1: 01110011
+231 >>> 2: 00111001
+231 >>> 3: 00011100
+```
+
+If we convert `00011100` from binary into decimal, we get 16 + 8 + 4 = 28.
+
+
+
 ## Style Guide
 
 here is the <a href="https://sp19.datastructur.es/materials/guides/style-guide.html">style guide</a> for CS 61B.
