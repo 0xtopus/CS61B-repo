@@ -1192,7 +1192,6 @@ you should have installed the CS 61B plugin, which allows you to locally check s
 
   
 
-
 # Data Structure
 
 ## Linked List
@@ -1425,7 +1424,7 @@ Let's consider an approach using a *single array of integers*.
 
 For example, we represent `{0, 1, 2, 4}, {3, 5}, {6}` as:
 
-<img src="\note_pics\quickFindDisjointSet.png" style="zoom:100%;" />
+<img src=".\note_pics\quickFindDisjointSet.png" style="zoom:100%;" />
 
 ### Quick Union
 
@@ -1732,7 +1731,7 @@ Imagine a plot with many dots on it, and each dot has a coordinate (x, y). Now l
 
 **quad trees**
 
-<img src="\note_pics\QuadTree.png" style="zoom:40%;" />
+<img src=".\note_pics\QuadTree.png" style="zoom:40%;" />
 
 For a 2D plot, we can partition the space into four parts (NW, NE, SW, and SE as shown above) around a dot. When adding the next dot, we connect it to the corresponding sub-node in the tree based on its location. The more nodes we add, the more segments we get.
 
@@ -1744,13 +1743,13 @@ Effectively, spaces where there are many points are broken down into more finely
 
 If we are looking for points inside a green rectangle as shown below, from any node we can decide whether the green rectangle lies within one or more quadrants, and only explore the branches/subtrees corresponding to those quadrants. All other quadrants can be safely ignored and pruned away. Below, we see that the green rectangle lies only in the northeast quadrant, and so the NW, SE, and SW quadrants can all be pruned away and left unexplored. We can proceed recursively and end up with a final node (i.e. D) of candidates, among which only B meets our requirements.
 
-<img src="\note_pics\QuadTreeSearch.png" style="zoom:67%;" />
+<img src=".\note_pics\QuadTreeSearch.png" style="zoom:67%;" />
 
 **Higher dimensions**
 
 For example, if we want to represent a 3D space and dots inside the space, we have to use eight sub-nodes to represent the parts of space in corresponding directions(see the diagram below) around a dot and the tree we use is called Oct-tree.
 
-![](\note_pics\OctTrees.png)
+![](.\note_pics\OctTrees.png)
 
 Or... we can use **K-D Trees** instead.
 
@@ -1758,7 +1757,7 @@ Or... we can use **K-D Trees** instead.
 
 "K-D" simply means "k dimensions" if you are curious.
 
-<img src="\note_pics\KDTree.png" style="zoom:40%;" />
+<img src=".\note_pics\KDTree.png" style="zoom:40%;" />
 
 Here is a demo of 2D K-D tree implementation.
 
@@ -1774,7 +1773,7 @@ To find the point that is the nearest neighbor to a query point, we follow this 
 - Continue recursively for each subspace identified as containing a possibly better point.
 - In the end, our "best so far" is the best point; the point closest to the query point.
 
-<img src="\note_pics\KDTreeNearestDemo.png" style="zoom:45%;" />
+<img src=".\note_pics\KDTreeNearestDemo.png" style="zoom:45%;" />
 
 And pseudocode of finding nearest neighbor is like:
 
@@ -2057,11 +2056,11 @@ A graph consists of:
 
 #### **Depth-First Traversal(DFT)**:
 
-<img src="\note_pics\depthFirstTraversal.png" style="zoom:67%;" />
+<img src=".\note_pics\depthFirstTraversal.png" style="zoom:67%;" />
 
 - DFS: Find a path by using DFT(depth-first Traversal):
 
-<img src="\note_pics\depthFirstTraversalDemo.png" style="zoom:67%;" />
+<img src=".\note_pics\depthFirstTraversalDemo.png" style="zoom:67%;" />
 
 ##### DFS Preorder:
 
@@ -2091,13 +2090,13 @@ A graph consists of:
                     set distTo[n] = distTo[v] + 1
     ```
 
-  <img src="\note_pics\BFPDemo.png" style="zoom:67%;" />
+  <img src=".\note_pics\BFPDemo.png" style="zoom:67%;" />
 
   BFS Order: Act in order of distance from source.
 
   - 0 1 24 53 68 7
 
-<img src="\note_pics\DFSvsBFS.png" style="zoom:67%;" />
+<img src=".\note_pics\DFSvsBFS.png" style="zoom:67%;" />
 
 #### Summary
 
@@ -2153,13 +2152,13 @@ we can now consider how a graph should be represented inside of a computer. We w
 
 In an adjacency list, an array is created that has the same size as the number of vertices in the graph. Each position in the array represents one of the vertices in the graph. Each of these positions point to a list. These lists are called adjacency lists, as each element in the list represents a neighbor of the vertex.
 
-<img src="\note_pics\adjecencyList.png" style="zoom:80%;" />
+<img src=".\note_pics\adjecencyList.png" style="zoom:80%;" />
 
 2. The Adjacency Matrix
 
 In this data structure, we have a two dimensional array of size N×N (where N is the number of vertices) which contains boolean values. The (*i*, *j*)th entry of this matrix is true when there is an edge from *i* to *j* and false when no edge exists. Thus, each vertex has a row and a column in the matrix, and the value in that table says true or false whether or not that edge exists.
 
-<img src="\note_pics\adjacencyMatrix.png" style="zoom:80%;" />
+<img src=".\note_pics\adjacencyMatrix.png" style="zoom:80%;" />
 
 ### Efficiency
 
@@ -2167,11 +2166,11 @@ Your choice of underlying data structure can impact the runtime and memory usage
 
 Further, DFS/BFS on a graph backed by adjacency lists runs in O(V+E), while on a graph backed by an adjacency matrix runs in O(V^2). See the [slides](https://docs.google.com/presentation/d/11iacyiFt3QUrzo1yAU_xoXAjGTH4UzV7o6CR04HYRrI/) for help in understanding why.
 
-<img src="\note_pics\graphRuntimes.png" style="zoom:67%;" />
+<img src=".\note_pics\graphRuntimes.png" style="zoom:67%;" />
 
 ### Summary
 
-<img src="\note_pics\graphSummary.png" style="zoom:67%;" />
+<img src=".\note_pics\graphSummary.png" style="zoom:67%;" />
 
 
 
@@ -2233,7 +2232,7 @@ def relax(edge p,q):
        PQ.changePriority(q, distTo[q])
 ```
 
-<img src="\note_pics\DijkstrasAlgorithm.png" style="zoom:67%;" />
+<img src=".\note_pics\DijkstrasAlgorithm.png" style="zoom:67%;" />
 
 
 
@@ -2241,7 +2240,7 @@ def relax(edge p,q):
 
 Because it is based on **Priority Queue**, so we can take it as:
 
-<img src="\note_pics\DijkstrasRuntime.png" style="zoom:67%;" />
+<img src=".\note_pics\DijkstrasRuntime.png" style="zoom:67%;" />
 
 ### A* Algorithm
 
@@ -2249,7 +2248,7 @@ If you run Dijkstra's in<a ref="https://qiao.github.io/PathFinding.js/visual/"> 
 
 
 
-<img src="\note_pics\AStar.png" style="zoom:50%;" />
+<img src=".\note_pics\AStar.png" style="zoom:50%;" />
 
 **the better your original estimate from the node to the target, the better your estimate from the source to the target, the better your A* algorithm runs.**
 
@@ -2264,7 +2263,7 @@ The takeaway here is that heuristics need to be good. There are two definitions 
 
 https://cs61b-2.gitbook.io/cs61b-textbook/24.-shortest-paths/24.4-summary
 
-<img src="\note_pics\ShortestPathsSummary.png" style="zoom:67%;" />
+<img src=".\note_pics\ShortestPathsSummary.png" style="zoom:67%;" />
 
 - <a ref="https://cs61b-2.gitbook.io/cs61b-textbook/24.-shortest-paths/24.5-exercises">This exercise</a> helps you understand better.
 
@@ -2374,7 +2373,7 @@ We also learned about how to find MSTs of a graph with two algorithms:
 
 **And all algorithm are just fine to use since their runtimes are all at log level.**
 
-<img src="\note_pics\MSTruntimes.png" style="zoom:50%;" />
+<img src=".\note_pics\MSTruntimes.png" style="zoom:50%;" />
 
 <a href="https://cs61b-2.gitbook.io/cs61b-textbook/25.-minimum-spanning-trees/25.5-mst-exercises">Exercises here</a>.
 
@@ -2396,11 +2395,11 @@ hint: consider log a + log b = log ab.
 
 One important thing to note is that these are **abstract** data types (ADTs), which means that we define the behavior of the data structure, not the implementation. There are multiple possible implementations for each of the data structures, and we can even use one data structure in the implementation of another! We often use these ADTs to create even more complex data structures. 
 
-<img src="\note_pics\allDataStructures.png" style="zoom:50%;" />
+<img src=".\note_pics\allDataStructures.png" style="zoom:50%;" />
 
-<img src="\note_pics\allDatastructures2.png" style="zoom:50%;" />
+<img src=".\note_pics\allDatastructures2.png" style="zoom:50%;" />
 
-<img src="\note_pics\moreDataStructures.png" style="zoom:50%;" />
+<img src=".\note_pics\moreDataStructures.png" style="zoom:50%;" />
 
 **Data Structure**:  A particular way of organizing data.
 
@@ -2414,7 +2413,7 @@ Knowing the types of data that you are storing can give you great power in creat
 
 - Tries theoretically have better performances for searching and insertion than hash tables or balanced search trees
 
-<img src="\note_pics\trie.png" style="zoom:50%;" />
+<img src=".\note_pics\trie.png" style="zoom:50%;" />
 
 - There are more implementations for how to store the children of every node of the trie, specifically three. These three are all fine, but hash table is the most natural
   - *DataIndexedCharMap* (Con: excessive use of space, Pro: speed efficient)
@@ -2477,7 +2476,7 @@ In this approach, we can use a process known as *bottom-up heapification* to con
 
 By using this approach, we avoid the need for an extra copy of the data. Once heapified, we use the naive heapsort approach of popping off the maximum and placing it at the end of our array. In doing so, we maintain an "unsorted" front portion of the array (representing the heap) and a "sorted" back portion of the the array (representing the sorted items so far).
 
-<img src="\note_pics\inPlaceHeapSorting.png" style="zoom:67%;" />
+<img src=".\note_pics\inPlaceHeapSorting.png" style="zoom:67%;" />
 
 You can see a demo of this algorithm [here](https://docs.google.com/presentation/d/1SzcQC48OB9agStD0dFRgccU-tyjD6m3esrSC-GLxmNc/edit?usp=sharing).
 
@@ -2527,7 +2526,7 @@ Asymptotically, both selection and insertion sort run in Θ(N^2^) on a reverse-s
 
 ### Runtime
 
- <img src="\note_pics\sortRuntime.png" style="zoom:50%;" />
+ <img src=".\note_pics\sortRuntime.png" style="zoom:50%;" />
 
 ## Quick Sort
 
@@ -2547,7 +2546,7 @@ The core idea behind Quicksort involves **partitioning.**
 2. Recursively quicksort the left half. 
 3. Recursively quicksort the right half. 
 
-<img src="\note_pics\quickSort.png" style="zoom:50%;" />
+<img src=".\note_pics\quickSort.png" style="zoom:50%;" />
 
 <a href="https://docs.google.com/presentation/d/1QjAs-zx1i0_XWlLqsKtexb-iueao9jNLkN-gW9QxAD0/edit">Quicksort Demo</a>
 
@@ -2555,11 +2554,11 @@ The core idea behind Quicksort involves **partitioning.**
 
 ### Hoare Partitioning
 
-<img src="\note_pics\HoarePartitioning.png" style="zoom:50%;" />
+<img src=".\note_pics\HoarePartitioning.png" style="zoom:50%;" />
 
 The implementation is based on:
 
-<img src="\note_pics\TonyHoare.png" style="zoom:67%;" />
+<img src=".\note_pics\TonyHoare.png" style="zoom:67%;" />
 
 
 
@@ -2569,7 +2568,7 @@ The implementation is based on:
 
 For instance, the best case runtime is when the pivot chosen always lands in the middle (in other words, the partition always picks the median element of the array). 
 
-<img src="\note_pics\quickSortBestCase.png" style="zoom:50%;" />
+<img src=".\note_pics\quickSortBestCase.png" style="zoom:50%;" />
 
 In the best case, the total work done at each level is approximately O(N). To see this, the first partition pivots on one element and requires checking all N elements to determine whether they go on the right or the left of the pivot element. The second layer repeats this, but for N/2 elements on two separate pivots (since we are recursively partitioning on the two halves). Thus, each level is O(N) work. 
 
@@ -2579,15 +2578,15 @@ The overall runtime becomes Θ(NH)\Theta(NH)Θ(NH), where H = # of layers = Θ(l
 
 The worst case for runtime occurs when the pivot chosen at each partition lands at the beginning of the array. In this scenario, each layer still has to do O(N) work, but now there are H = # of layers = N layers, since every single element has to be pivoted on. Thus, the worst case runtime is Θ(N^2^).
 
-<img src="\note_pics\quickSortWorstCase.png" style="zoom:50%;" />
+<img src=".\note_pics\quickSortWorstCase.png" style="zoom:50%;" />
 
 #### Quicksort vs Mergesort
 
-![](\note_pics\quicksortvsMergeSort.png)
+![](.\note_pics\quicksortvsMergeSort.png)
 
 In comparison, Mergesort seems to be a lot better, since Quicksort suffers from a theoretical worst case runtime of Θ(N^2^). So how can Quicksort be the fastest sort empirically? Quicksort's advantage empirically comes from the fact that on average, Quicksort is Θ(N log N).
 
-<img src="\note_pics\quicksortvsMergesort2.png" style="zoom:63%;" />
+<img src=".\note_pics\quicksortvsMergesort2.png" style="zoom:63%;" />
 
 
 
@@ -2616,7 +2615,7 @@ However, it turns out that partitioning can be useful to find the exact median, 
 
  A sort is stable if the order of equal items is preserved. This is desirable, for example, if we want to sort on two different properties of our objects. Know how to show the stability or instability of an algorithm. 
 
-<img src="\note_pics\sortStability.png" style="zoom:67%;" />
+<img src=".\note_pics\sortStability.png" style="zoom:67%;" />
 
 ### Summary
 
@@ -2628,7 +2627,7 @@ Empirically, Quicksort is the fastest sort in the average case, with Θ(N log N)
 
 However, Quicksort has a bad worst case runtime of Θ(N^2^), which occurs in specific cases where the pivot is consistently chosen near the edge of the array. In comparison, Mergesort has a worst case runtime of Θ(N log N).
 
-<img src="\note_pics\sortingSummary.png" style="zoom:50%;" />
+<img src=".\note_pics\sortingSummary.png" style="zoom:50%;" />
 
 **Quicksort is the fastest**, but the prerequisites are:
 
@@ -2638,7 +2637,7 @@ However, Quicksort has a bad worst case runtime of Θ(N^2^), which occurs in spe
 
 ## Comparison Based Sort Summary
 
-<img src="\note_pics\SortSummary.png" style="zoom:50%;" />
+<img src=".\note_pics\SortSummary.png" style="zoom:50%;" />
 
 **Optimizing Sorts.** We can play a few tricks to speed up a sort.
 
@@ -2672,7 +2671,7 @@ Since **log(N!)∈Θ(N log N)**, we can say that the hypothetical best sorting a
 
 No comparison based sort's comparisons times will be less than order N log N! 
 
-<img src="\note_pics\sortBound.png" style="zoom:85%;" />
+<img src=".\note_pics\sortBound.png" style="zoom:85%;" />
 
 
 
@@ -2687,17 +2686,17 @@ You can do a quick review of Counting Sort and Radix Sort by visiting <a href="h
 
 **Counting Sort.** Allows you to sort N keys that are integers between 0 and R-1 in θ(N + R) time. Beats linearithmic lower bound by avoiding any binary compares. This is a completely different philosophy for how things should be sorted. This is the most important concept for this lecture.
 
-<img src="\note_pics\countingSort.png" style="zoom:45%;" />
+<img src=".\note_pics\countingSort.png" style="zoom:45%;" />
 
 Counter sort is not based on  "puppy, cat and Dog" , so it can break runtime restrain. 
 
 It is also a hard to use this when the keys aren't numerical or consecutive or have a lots of keys are the same.
 
-<img src="\note_pics\countSortDemo.png" style="zoom:50%;" />
+<img src=".\note_pics\countSortDemo.png" style="zoom:50%;" />
 
 **LSD.** In the LSD algorithm, we sort by each digit, working from right to left. Requires examination of θ(WN) digits, where W is the length of the longest key. Runtime is θ(WN + WR), though we usually think of R as a constant and just say θ(WN). The θ(WR) part of the runtime is due to the creation fo length R arrows for counting sort. We usually do LSD sort using counting sort as a subroutine, but it’s worth thinking about whether other sorts might work as well.
 
-<img src="\note_pics\LSDRadixSort.png" style="zoom:40%;" />
+<img src=".\note_pics\LSDRadixSort.png" style="zoom:40%;" />
 
 **LSD vs Comparison Sorting.** Our comparison sorts, despite requiring θ(N log N) time, can still be faster than LSD sort, which is linear in the length of our input θ(WN). For extremely large N, LSD sort will naturally win, but log N is typically pretty small. Know which algorithm is best in the two extreme cases of very long dissimilar strings and very long, nearly equal strings.
 
@@ -2705,7 +2704,7 @@ It is also a hard to use this when the keys aren't numerical or consecutive or h
 
 Sorting runtime of sorts
 
-<img src="\note_pics\sortingRuntine.png" style="zoom:50%;" />
+<img src=".\note_pics\sortingRuntine.png" style="zoom:50%;" />
 
 ## Sort Conclusion
 
@@ -2713,7 +2712,7 @@ In real life, sometimes it is hard to tell which sort is better since there are 
 
 Comparing Radix Sort to Merge Sort, we can deem that Radix Sort will always be hypothetically faster. However, it depends on many factors in practice such as the feature of the data you sort, the Just-In-Time compiler optimization, and sometimes you might find after a small tweak on presumed "slower" sort it just gets faster than the previously presumed "optimal" one.
 
-<img src="\note_pics\LSDVSMS.png" style="zoom:67%;" />
+<img src=".\note_pics\LSDVSMS.png" style="zoom:67%;" />
 
 **Which one to use: Radix or Mergesort?**
 
@@ -2728,7 +2727,7 @@ But in the **very large N limit**, it's easy. Radix is simply faster!
 
 **JIT compiler: An Unexpected Factor**
 
-<img src="\note_pics\Just-In-TimeCompiler.png" style="zoom:50%;" />
+<img src=".\note_pics\Just-In-TimeCompiler.png" style="zoom:50%;" />
 
 **Bottom Line: Algorithms Can Be Hard to Compare**
 
@@ -2743,7 +2742,7 @@ Note: there's always the chance that some small optimization to make an algorith
 
 **Sorting Landscape**
 
-<img src="\note_pics\sortingLandscape.png" style="zoom:50%;" />
+<img src=".\note_pics\sortingLandscape.png" style="zoom:50%;" />
 
 
 
@@ -2759,7 +2758,7 @@ Note: there's always the chance that some small optimization to make an algorith
 
 Shannon-Fano coding is an intuitive procedure for generating a prefix free code. First, one counts the occurrence of all symbols. Then you recursively split characters into halves over and over based on frequencies, with each half either having a 1 or a 0 appended to the end of the codeword.
 
-<img src="\note_pics\Shanno-FanoCoding.png" style="zoom:50%;" />
+<img src=".\note_pics\Shanno-FanoCoding.png" style="zoom:50%;" />
 
 But Shannon-Fano Coding is **NOT** optimal.
 
@@ -2771,13 +2770,13 @@ Huffman coding generates a provably optimal prefix free code, unlike Shannon-Fan
 2. We then merge the two lowest occurrence nodes into a tree with a new supernode as root, with each half either having a 1 or a 0 appended to the beginning of the codeword.
 3.  Repeat this until all symbols are part of the tree. Resulting code is optimal.
 
-<img src="\note_pics\HuffmanCoding.png" style="zoom:50%;" />
+<img src=".\note_pics\HuffmanCoding.png" style="zoom:50%;" />
 
 
 
 **Two ways of Huffman implementation**
 
-<img src="\note_pics\2HuffmanUsage.png" style="zoom:40%;" />
+<img src=".\note_pics\2HuffmanUsage.png" style="zoom:40%;" />
 
 Approach 2 is applied in the real world.
 
@@ -2789,11 +2788,11 @@ To implement Huffman Coding:
 
 - Compression: Count frequencies, build an **encoding array** and a **decoding trie**, write the trie to the output, and then look up each symbol in the encoding array and write out the appropriate bit sequence to the output. 
 
-<img src="\note_pics\Compression.png" style="zoom:40%;" />
+<img src=".\note_pics\Compression.png" style="zoom:40%;" />
 
 - Decompression: Read in the trie, then repeatedly use longest prefix matching to recover the original symbol(take advantage of prefix-free code!).
 
-<img src="\note_pics\Decompression.png" style="zoom:45%;" />
+<img src=".\note_pics\Decompression.png" style="zoom:45%;" />
 
 
 
@@ -2801,13 +2800,13 @@ To implement Huffman Coding:
 
 Compression Demo:
 
-<img src="\note_pics\HuffmanCompressionDemo.png" style="zoom:40%;" />
+<img src=".\note_pics\HuffmanCompressionDemo.png" style="zoom:40%;" />
 
 
 
 Decompression Demo:
 
-<img src="\note_pics\HuffmanDecompressionDemo.png" style="zoom:40%;" />
+<img src=".\note_pics\HuffmanDecompressionDemo.png" style="zoom:40%;" />
 
 
 
