@@ -175,7 +175,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
                 Node predecessor = findPredecessor(p);
                 if (predecessor == null) {
                     Node pRight = p.right;
-                    p = p.left;
+                    p.key = p.left.key;
+                    p.value = p.left.value;
+                    p.left = p.left.left;
                     p.right = pRight;
                 } else {
                     p.value = predecessor.value;
@@ -186,38 +188,21 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
                 } */
                 return p;
             } else if (p.left != null) {
-                // p has one left sub-node
- /*                if (p.left.left != null) {
-                    Node pLL = p.left.left;
-                    p.left = pLL;
-                } 
-                if (p.left.right != null){
-                    Node pLR = p.left.right;
-                    p.right = pLR;
-                } */
+                // p only has one left sub-node
+
                 p.value = p.left.value;
                 p.key = p.left.key;
-                p.left = null;
-/*                 if (p.right.right == null || p.right.left != null) {
-                    p.right = null;
-                } */
+                p.right = p.left.right;
+                p.left = p.left.left;
+
                 return p;
             } else if (p.right != null) {
-                // p has one right sub-node
-/*                 if (p.right.left != null) {
-                    Node pRL = p.right.left;
-                    p.left = pRL;
-                } 
-                if (p.right.right != null){
-                    Node pRR = p.right.right;
-                    p.right = pRR;
-                } */
+                // p only has one right sub-node
                 p.value = p.right.value;
                 p.key = p.right.key;
-                p.right = null;
-/*                 if (p.right.right == null || p.right.left != null) {
-                    p.right = null;
-                } */
+                p.left = p.right.left;
+                p.right = p.right.right;
+
                 return p;
             }
         }
@@ -253,21 +238,4 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         return ks.iterator();
     }
 
-    /*
-     * private class BSTMapIterator implements Iterator<K> {
-     *      private Set<K> ks;
-     * 
-     *      private BSTMapIterator() {
-     *           ks = keySet();
-     *      }
-     * 
-     *      private Boolean hasNext() {
-     * 
-     *      }
-     * 
-     *      private void next() {
-     *          ks.iterator();
-     *       }
-     * }
-     */
 }
