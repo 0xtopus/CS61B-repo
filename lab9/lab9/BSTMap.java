@@ -183,9 +183,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
                     p.value = predecessor.value;
                     p.key = predecessor.key;
                 }
-/*                 if (predecessor.right == null) {
-                    p.left = p.left.left;
-                } */
+
                 return p;
             } else if (p.left != null) {
                 // p only has one left sub-node

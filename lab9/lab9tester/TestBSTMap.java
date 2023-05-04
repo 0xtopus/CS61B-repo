@@ -223,41 +223,41 @@ public class TestBSTMap {
     
         // b.remove("bag");
         
-    // put all keys in b into a string array
-    Set<String> keySet = b.keySet();
-    String[] keys = new String[b.size()]; 
-    int i = 0;
-    for (String key : keySet) {
-        keys[i++] = key;
-    }
+        // put all keys in b into a string array
+        Set<String> keySet = b.keySet();
+        String[] keys = new String[b.size()]; 
+        int i = 0;
+        for (String key : keySet) {
+            keys[i++] = key;
+        }
+        
+        // shuffle the keys in the string array
+        Random rand = new Random();
+        for (int j = keys.length - 1; j > 0; j--) {
+            int k = rand.nextInt(j + 1);
+            String temp = keys[j];
+            keys[j] = keys[k];
+            keys[k] = temp;
+        }
+
+        keys[0] = "alf";
+        keys[1] = "eyes";
+        keys[2] = "flat";
+        keys[3] = "elf";
+        keys[4] = "glut";
+        keys[5] = "dog";
+        keys[6] = "cat";
+        keys[7] = "bag";
+
     
-    // shuffle the keys in the string array
-    Random rand = new Random();
-    for (int j = keys.length - 1; j > 0; j--) {
-        int k = rand.nextInt(j + 1);
-        String temp = keys[j];
-        keys[j] = keys[k];
-        keys[k] = temp;
-    }
-
-    keys[0] = "alf";
-    keys[1] = "eyes";
-    keys[2] = "flat";
-    keys[3] = "elf";
-    keys[4] = "glut";
-    keys[5] = "dog";
-    keys[6] = "cat";
-    keys[7] = "bag";
-
-   
-    // remove keys one by one according to the array
-    for (String key : keys) {
-        System.out.println("--------------------");
-        System.out.println(key);
-        int count = b.get(key);
-        assertEquals((Integer) count, b.remove(key));
-        assertNull(b.remove(key));
-    }
+        // remove keys one by one according to the array
+        for (String key : keys) {
+            System.out.println("--------------------");
+            System.out.println(key);
+            int count = b.get(key);
+            assertEquals((Integer) count, b.remove(key));
+            assertNull(b.remove(key));
+        }
     }
 
     public static void main(String[] args) {
